@@ -108,7 +108,7 @@ h1{font-size:clamp(38px,4.7vw,62px);line-height:1.06;margin:9px 0 12px;color:#4d
 .section-title{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:28px 0 14px}
 .section-title h2{margin:0;font-size:31px;color:#4f3928}.section-title p{margin:0;color:#7a5d45;font-size:13px}
 .mosaic{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-.hotels{grid-column:span 7}.attractions{grid-column:span 5}.food{grid-column:span 4}.before{grid-column:span 4}.mapcard{grid-column:span 4}.services{grid-column:span 12}.expedia{grid-column:span 12}
+.hotels{grid-column:span 7}.attractions{grid-column:span 5}.food{grid-column:span 4}.before{grid-column:span 4}.mapcard{grid-column:span 4}.services{grid-column:span 12}
 .card h3{margin:0 0 5px;color:#4f3928;font-size:24px}.card p{color:#765942;line-height:1.55;margin:0 0 15px}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .btn{
@@ -128,11 +128,6 @@ h1{font-size:clamp(38px,4.7vw,62px);line-height:1.06;margin:9px 0 12px;color:#4d
 .detail-panel{display:none;margin-top:12px;padding:13px;border-radius:14px;background:#f7ede1;color:#654b37;line-height:1.7}
 .detail-panel.open{display:block}
 .mapframe{width:100%;height:270px;border:0;border-radius:17px;background:#eadbc8}
-.expedia{
-  background:linear-gradient(180deg,#f9f2e8,#efe1cf);border:1px solid rgba(93,67,49,.15);
-  border-radius:24px;padding:20px
-}
-.expedia h3{font-size:25px;margin:0 0 5px}.expedia p{margin:0 0 15px;color:#765942}
 .savebar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:22px 0 42px;padding:18px 0;border-top:1px solid rgba(93,67,49,.15)}
 .savebar strong{font-size:18px}.savebar small{display:block;color:#80654d;margin-top:3px}
 footer{padding:22px 0 36px;border-top:1px solid rgba(93,67,49,.14);color:#80654d;font-size:12px;line-height:1.7}
@@ -144,7 +139,7 @@ footer{padding:22px 0 36px;border-top:1px solid rgba(93,67,49,.14);color:#80654d
   .searchbox{grid-template-columns:1fr 1fr}
   .feature-ribbon{grid-template-columns:repeat(3,1fr)}
   .top-grid{grid-template-columns:1fr}
-  .mosaic{grid-template-columns:1fr}.hotels,.attractions,.food,.before,.mapcard,.services,.expedia{grid-column:1}
+  .mosaic{grid-template-columns:1fr}.hotels,.attractions,.food,.before,.mapcard,.services{grid-column:1}
   .service-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:600px){
@@ -210,7 +205,7 @@ footer{padding:22px 0 36px;border-top:1px solid rgba(93,67,49,.14);color:#80654d
 #results{
   display:block!important;
 }
-#planner,#hotels,#attractions,#services,#before,#lead,#expedia-search{
+#planner,#hotels,#attractions,#services,#before,#lead{
   scroll-margin-top:18px;
 }
 nav a{
@@ -325,7 +320,7 @@ nav a{
 <h3>מלונות</h3>
 <p>בחר איפה אתה רוצה לבדוק מלון.</p>
 <div class="actions">
-<details class="native-details hotel-native"><summary class="btn brown">בדיקת מלונות</summary><div class="native-panel"><div class="actions"><a class="btn" href="https://www.booking.com/searchresults.html?ss=Limassol%2C%20Cyprus" id="bookingBtn" rel="noopener" target="_blank">Booking.com</a><a class="btn" href="https://www.expedia.com/Hotel-Search?destination=Limassol%2C%20Cyprus" id="expediaBtn" rel="noopener" target="_blank">Expedia</a><a class="btn" href="https://www.agoda.com/search?textToSearch=Limassol%2C%20Cyprus" id="agodaBtn" rel="noopener" target="_blank">Agoda</a></div><div class="status">Booking ו‑Agoda כרגע קישורי חיפוש רגילים; Expedia מחובר לווידג׳ט השותפים באתר.</div></div></details>
+<details class="native-details hotel-native"><summary class="btn brown">בדיקת מלונות</summary><div class="native-panel"><div class="actions"><a class="btn" href="https://www.booking.com/searchresults.html?ss=Limassol%2C%20Cyprus" id="bookingBtn" rel="noopener" target="_blank">Booking.com</a><a class="btn" href="https://www.expedia.com/Hotel-Search?destination=Limassol%2C%20Cyprus" id="expediaBtn" rel="noopener" target="_blank">Expedia</a><a class="btn" href="https://www.agoda.com/search?textToSearch=Limassol%2C%20Cyprus" id="agodaBtn" rel="noopener" target="_blank">Agoda</a></div><div class="status">בחר בין Booking, Expedia ו‑Agoda לפי המחיר והזמינות שמתאימים לך.</div></div></details>
 </div>
 </div>
 <div class="card attractions" id="attractions">
@@ -356,15 +351,10 @@ nav a{
 <div class="service-grid">
 <div class="service"><strong>📶 eSIM</strong><small>Airalo — כרגע כקישור רגיל, בלי עמלת שותפים.</small><a class="btn brown" href="https://www.airalo.com/he/cyprus-esim" id="esimBtn" rel="noopener" target="_blank">פתח Airalo</a></div>
 <div class="service"><strong>🚗 רכב</strong><small>חיפוש רכב דרך DiscoverCars.</small><a class="btn brown" href="https://www.discovercars.com/cyprus/limassol/?a_aid=Nadavavitan050" id="carBtn" rel="noopener" target="_blank">בדוק רכב</a></div>
-<div class="service"><strong>✈️ טיסות</strong><small>אפשר להמשיך דרך Expedia באזור ההזמנה.</small><a class="btn brown" href="https://www.expedia.com/Flights" id="flightBtn" rel="noopener" target="_blank" type="button">בדיקת טיסות</a></div>
+<div class="service"><strong>✈️ טיסות</strong><small>בדיקת טיסות דרך Expedia.</small><a class="btn brown" href="https://www.expedia.com/Flights" id="flightBtn" rel="noopener" target="_blank" type="button">בדיקת טיסות</a></div>
 <div class="service"><strong>🎟️ חוויות</strong><small>GetYourGuide עם קישור השותפים שלך.</small><a class="btn brown" href="https://www.getyourguide.com/s/?q=Limassol%2C%20Cyprus&amp;partner_id=GJ3WGHV&amp;utm_medium=online_publisher&amp;cmp=take_me_site" id="gygBtn" rel="noopener" target="_blank">GetYourGuide</a></div>
 </div>
 </div>
-<div class="expedia" id="expedia-search">
-<h3>Expedia — מלונות וטיסות</h3>
-<p>בדיקת זמינות ומחירים דרך הווידג׳ט הרשמי שחיברנו.</p>
-<div class="eg-widget" data-camref="1101l6tkXW" data-lobs="stays,flights" data-network="pz" data-program="us-expedia" data-pubref="" data-widget="search"></div>
-<div class="status local-note">הווידג׳ט של Expedia נטען באתר החי. אם הוא לא מופיע בתצוגת קובץ מקומית, השתמש בכפתורי Expedia למעלה.</div></div>
 </div>
 <section class="lead-card" id="lead"><h3>רוצה שנבנה לך הצעה אישית?</h3><p>מלא כמה פרטים קצרים ונחזור אליך עם כיוון שמתאים לחופשה שלך.</p><a class="btn brown lead-btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" rel="noopener" target="_blank">פתח טופס הצעה</a></section><div class="savebar">
 <div><strong>רוצה לשמור או לשתף?</strong><small>נשמור את הבחירה במכשיר או נפתח שיתוף.</small></div>
@@ -378,7 +368,6 @@ nav a{
 TAKE ME מרכז מידע וקישורי הזמנה לשירותי צד שלישי. חלק מהקישורים עשויים להיות קישורי שותפים, ללא תוספת מחיר עבורך. מחירים, זמינות ומידע מעשי עשויים להשתנות ולכן כדאי לאמת פרטים חשובים מול הספק או מקור רשמי.
 </footer>
 </div>
-<script class="eg-widgets-script" src="https://creator.expediagroup.com/products/widgets/assets/eg-widgets.js"></script>
 <script>
 (function(){
   'use strict';

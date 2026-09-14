@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>TAKE ME — חופשה במקום אחד</title>
+<meta content="TAKE ME מרכז מלונות, אטרקציות, מסעדות, eSIM, רכב, מזג אוויר ומידע חשוב לנסיעה במקום אחד." name="description"/>
+<style>
+:root{
+  --bg:#eee3d4;
+  --paper:#faf4eb;
+  --paper2:#f2e4d2;
+  --brown:#5c4331;
+  --brown2:#765942;
+  --deep:#3f2e22;
+  --gold:#bf9658;
+  --line:#d6c1a5;
+  --white:#fffaf3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,255,255,.55),transparent 28%),
+    linear-gradient(180deg,#e6d5bf 0%,#efe5d8 48%,#f5eee6 100%);
+  color:var(--deep);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:1180px;margin:auto;padding:0 18px}
+header{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  padding:22px 0 14px;
+}
+.brand{font-size:54px;font-weight:950;letter-spacing:.075em;line-height:1;color:var(--gold)}
+.brand span{color:#d9ba83}
+.tagline{font-size:13px;color:#8d6c48;margin-top:7px}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{font-size:13px;font-weight:800;color:#765942;padding:7px 0;border-bottom:1px solid transparent}
+nav a:hover{border-color:var(--gold)}
+.hero{
+  min-height:610px;border-radius:34px;overflow:hidden;position:relative;
+  background:
+    linear-gradient(90deg,rgba(239,226,210,.94) 0%,rgba(239,226,210,.78) 50%,rgba(239,226,210,.28) 76%,rgba(239,226,210,.08) 100%),
+    url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=90') center/cover no-repeat;
+  border:1px solid rgba(93,67,49,.10);
+  box-shadow:0 24px 60px rgba(73,49,28,.10);
+}
+.hero-inner{
+  width:min(760px,68%);min-height:610px;padding:48px 42px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.13em;color:#a77e49}
+h1{font-size:clamp(38px,4.7vw,62px);line-height:1.06;margin:9px 0 12px;color:#4d3727}
+.hero p{font-size:17px;line-height:1.55;color:#70543f;margin:0 0 22px;max-width:630px}
+.searchbox{
+  display:grid;grid-template-columns:1.35fr .9fr .9fr .8fr .9fr 1fr;
+  gap:7px;padding:9px;border-radius:22px;
+  background:rgba(250,244,235,.97);border:1px solid rgba(93,67,49,.15);
+  box-shadow:0 12px 28px rgba(73,49,28,.07);
+}
+.field{min-height:70px;padding:9px 10px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(93,67,49,.12)}
+.field:last-of-type{border-left:0}
+.field label{font-size:10px;font-weight:900;color:#89694d;margin-bottom:5px}
+.field input,.field select{width:100%;border:0;outline:0;background:transparent;color:#4c3728;font-weight:800}
+.primary{
+  border:0;border-radius:14px;background:linear-gradient(180deg,#896649,#6a4d37);
+  color:#fff8ee;font-weight:900;cursor:pointer;min-height:70px;padding:0 14px;
+}
+.primary:hover{background:linear-gradient(180deg,#79583f,#5d432f)}
+.inspire{
+  margin-top:12px;padding:12px;border:1px solid rgba(93,67,49,.17);
+  border-radius:17px;background:rgba(236,219,197,.55)
+}
+.inspire-title{display:flex;gap:8px;align-items:baseline;margin-bottom:8px}
+.inspire-title strong{color:#5c4331}.inspire-title small{color:#82654d}
+.inspire-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.inspire textarea{
+  min-height:52px;resize:none;border:1px solid var(--line);border-radius:12px;
+  background:#fbf6ef;color:#5d4330;padding:13px;outline:0
+}
+.secondary{
+  border:0;border-radius:12px;background:#8a6749;color:white;font-weight:900;cursor:pointer;padding:0 16px
+}
+.feature-ribbon{
+  margin:18px 0 28px;display:grid;grid-template-columns:repeat(6,1fr);
+  background:linear-gradient(180deg,#f5eadc,#e9d7c0);border:1px solid rgba(93,67,49,.13);
+  border-radius:20px;overflow:hidden
+}
+.rib{padding:14px 12px;border-left:1px solid rgba(93,67,49,.11);display:flex;gap:9px;align-items:center}
+.rib:last-child{border-left:0}.rib .ico{font-size:18px}.rib strong{display:block;font-size:12px}.rib small{display:block;color:#8b6f57;font-size:10px;margin-top:2px}
+#results{display:none}.show{display:block!important}
+.top-grid{display:grid;grid-template-columns:1.45fr .75fr;gap:16px;margin-bottom:18px}
+.card{
+  background:linear-gradient(180deg,var(--paper),var(--paper2));border:1px solid rgba(93,67,49,.15);
+  border-radius:24px;padding:22px;box-shadow:0 10px 24px rgba(73,49,28,.045)
+}
+.trip h2{font-size:38px;margin:4px 0;color:#513a29}.meta{color:#775a43;line-height:1.6}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{padding:8px 11px;border-radius:999px;border:1px solid rgba(93,67,49,.17);background:#f7ede1;color:#644a35;font-weight:800;font-size:12px}
+.plan-output{
+  display:none;
+  margin:0 0 18px;
+  padding:22px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#6f523b,#5a412f);
+  color:#f7e7ce;
+  border:1px solid rgba(191,150,88,.30);
+  box-shadow:0 14px 32px rgba(73,49,28,.10);
+}
+.plan-output.show{display:block;animation:planIn .28s ease-out}
+.plan-output .kicker{font-size:11px;font-weight:900;color:#d9ba83;letter-spacing:.08em}
+.plan-output h2{font-size:32px;margin:5px 0 7px;color:#fff3df}
+.plan-output p{margin:0 0 14px;color:#e2ccb0;line-height:1.55}
+.plan-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.plan-stat{padding:12px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}
+.plan-stat small{display:block;color:#d8bea0;font-size:10px;margin-bottom:3px}
+.plan-stat strong{font-size:17px;color:#fff4e0}
+.plan-actions{display:flex;gap:8px;flex-wrap:wrap}
+.plan-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border-radius:999px;background:#f5e8d5;color:#5b4230;font-weight:900}
+@keyframes planIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.weather{background:linear-gradient(180deg,#70533c,#5b4230);color:#f1dcc0}
+.weather h3{margin:0 0 6px;font-size:23px}.weather p{margin:0 0 12px;color:#dfc8a7;font-size:12px}
+.days{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.day{padding:11px;border-radius:14px;background:rgba(255,255,255,.08);text-align:center;color:#f3dfc1}
+.day b{font-size:19px;display:block}.day span{font-size:11px}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:28px 0 14px}
+.section-title h2{margin:0;font-size:31px;color:#4f3928}.section-title p{margin:0;color:#7a5d45;font-size:13px}
+.mosaic{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.hotels{grid-column:span 7}.attractions{grid-column:span 5}.food{grid-column:span 4}.before{grid-column:span 4}.mapcard{grid-column:span 4}.services{grid-column:span 12}
+.card h3{margin:0 0 5px;color:#4f3928;font-size:24px}.card p{color:#765942;line-height:1.55;margin:0 0 15px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border-radius:999px;
+  border:1px solid rgba(93,67,49,.20);background:#f8eee2;color:#604630;font-weight:900;cursor:pointer
+}
+.btn.brown{background:linear-gradient(180deg,#896649,#6a4d37);color:#fff8ee;border:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.provider-panel{display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(93,67,49,.14)}
+.provider-panel.open{display:block}
+.service-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.service{
+  display:flex;flex-direction:column;gap:7px;padding:17px;border-radius:18px;
+  background:#f9f0e5;border:1px solid rgba(93,67,49,.13)
+}
+.service strong{font-size:18px}.service small{color:#856a53;line-height:1.4}.service .btn{margin-top:auto}
+.detail-panel{display:none;margin-top:12px;padding:13px;border-radius:14px;background:#f7ede1;color:#654b37;line-height:1.7}
+.detail-panel.open{display:block}
+.mapframe{width:100%;height:270px;border:0;border-radius:17px;background:#eadbc8}
+.savebar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:22px 0 42px;padding:18px 0;border-top:1px solid rgba(93,67,49,.15)}
+.savebar strong{font-size:18px}.savebar small{display:block;color:#80654d;margin-top:3px}
+footer{padding:22px 0 36px;border-top:1px solid rgba(93,67,49,.14);color:#80654d;font-size:12px;line-height:1.7}
+.status{font-size:12px;color:#8a6c51;margin-top:8px}
+@media(max-width:900px){
+  header{align-items:flex-start}.brand{font-size:44px}
+  .hero-inner{width:100%;background:rgba(224,204,180,.89);min-height:0;margin:0;padding:34px 24px}
+  .hero{min-height:0;background-position:center}
+  .searchbox{grid-template-columns:1fr 1fr}
+  .feature-ribbon{grid-template-columns:repeat(3,1fr)}
+  .top-grid{grid-template-columns:1fr}
+  .mosaic{grid-template-columns:1fr}.hotels,.attractions,.food,.before,.mapcard,.services{grid-column:1}
+  .service-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .wrap{padding:0 12px}
+  header{padding-top:15px;display:block}.brand{font-size:38px}.tagline{font-size:11px}
+  nav{overflow:auto;flex-wrap:nowrap;gap:14px;margin-top:12px;padding-bottom:4px}nav a{flex:0 0 auto}
+  .hero{border-radius:23px}.hero-inner{padding:24px 14px}
+  h1{font-size:30px}.hero p{font-size:14px}
+  .searchbox{grid-template-columns:1fr;gap:0}.field{border-left:0;border-bottom:1px solid rgba(93,67,49,.10);min-height:58px}.primary{min-height:54px;margin-top:6px}
+  .inspire-row{grid-template-columns:1fr}.secondary{min-height:45px}
+  .feature-ribbon{grid-template-columns:repeat(2,1fr)}.rib{padding:11px 9px}
+  .trip h2{font-size:30px}.days{grid-template-columns:repeat(2,1fr)}
+  .plan-output{padding:17px 14px;border-radius:18px}.plan-output h2{font-size:27px}.plan-stats{grid-template-columns:1fr}.plan-actions{display:grid;grid-template-columns:1fr}.plan-actions a{width:100%}
+  .section-title{display:block}.section-title p{margin-top:5px}
+  .card{padding:16px;border-radius:18px}.service-grid{grid-template-columns:1fr}
+  .actions{display:grid;grid-template-columns:1fr}.btn{width:100%}
+  .savebar{display:block}.savebar .actions{margin-top:12px}
+}
+
+.lead-card{
+  margin:24px 0 10px;
+  padding:24px;
+  border-radius:22px;
+  background:linear-gradient(180deg,#6f523b,#5b4230);
+  color:#f3dfc2;
+  border:1px solid rgba(191,150,88,.22);
+}
+.lead-card h3{margin:0 0 6px;font-size:26px;color:#f3dfc2}
+.lead-card p{margin:0 0 14px;color:#dfc7a5;line-height:1.55}
+.lead-btn{display:inline-flex;width:auto}
+@media(max-width:600px){
+  .lead-card{padding:18px 14px;border-radius:18px}
+  .lead-btn{width:100%}
+}
+
+.native-details{margin-top:10px}
+.native-details summary{
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+}
+.native-details summary::-webkit-details-marker{display:none}
+.native-panel{
+  margin-top:12px;
+  padding:13px;
+  border-radius:14px;
+  background:#f7ede1;
+  color:#654b37;
+  line-height:1.65;
+}
+.lead-embed{
+  width:100%;
+  min-height:720px;
+  border:0;
+  border-radius:16px;
+  background:#fffaf3;
+  margin-top:10px;
+}
+@media(max-width:600px){
+  .lead-embed{min-height:820px}
+}
+
+/* FINAL NAV FIX */
+#results{
+  display:block!important;
+}
+#planner,#planOutput,#hotels,#attractions,#food-section,#services,#before,#lead{
+  scroll-margin-top:18px;
+}
+nav a{
+  cursor:pointer!important;
+  pointer-events:auto!important;
+  position:relative!important;
+  z-index:50!important;
+}
+
+/* FINAL LOCAL-SAFE FIX */
+.lead-card{
+  min-height:0!important;
+}
+.lead-card iframe,
+.lead-embed{
+  display:none!important;
+}
+.local-note{
+  margin-top:10px;
+  color:#80654d!important;
+}
+#flightBtn,#expediaBtn,.lead-btn{
+  pointer-events:auto!important;
+  cursor:pointer!important;
+  position:relative!important;
+  z-index:40!important;
+}
+</style>
+<meta content="TAKE ME — חופשה במקום אחד" property="og:title"/><meta content="מלונות, אטרקציות, מסעדות, eSIM, רכב, מזג אוויר ומידע שימושי — במקום אחד." property="og:description"/><meta content="website" property="og:type"/><meta content="#5c4331" name="theme-color"/></head>
+<body>
+<div class="wrap">
+<header>
+<div>
+<div class="brand">TAKE <span>ME</span></div>
+<div class="tagline">תבחר יעד, אנחנו נדאג לשאר.</div>
+</div>
+<nav>
+<a href="#planner">תכנון</a>
+<a href="#hotels">מלונות</a>
+<a href="#attractions">אטרקציות</a>
+<a href="#services">שירותים</a>
+<a href="#before">לפני הנסיעה</a>
+<a href="#lead">הצעה אישית</a></nav>
+</header>
+<section class="hero" id="planner">
+<div class="hero-inner">
+<div class="eyebrow">TAKE ME</div>
+<h1>תבחר יעד, אנחנו נדאג לשאר.</h1>
+<p>מלונות, אטרקציות, מסעדות, מזג אוויר, eSIM ומידע שימושי — במקום אחד.</p>
+<div class="searchbox">
+<div class="field">
+<label for="dest">לאן נוסעים?</label>
+<input autocomplete="off" id="dest" list="destinations" value="לימסול, קפריסין"/>
+<datalist id="destinations">
+<option value="לימסול, קפריסין"><option value="פאפוס, קפריסין"><option value="לרנקה, קפריסין">
+<option value="אתונה, יוון"><option value="דובאי, איחוד האמירויות"><option value="מרבלה, ספרד">
+<option value="ברצלונה, ספרד"><option value="פריז, צרפת"><option value="לונדון, אנגליה">
+<option value="רומא, איטליה"><option value="אמסטרדם, הולנד"><option value="פראג, צ׳כיה">
+</option></option></option></option></option></option></option></option></option></option></option></option></datalist>
+</div>
+<div class="field"><label for="from">יציאה</label><input id="from" type="date"/></div>
+<div class="field"><label for="to">חזרה</label><input id="to" type="date"/></div>
+<div class="field"><label for="budget">תקציב</label>
+<select id="budget"><option value="7000">₪7,000</option><option selected="" value="10000">₪10,000</option><option value="15000">₪15,000</option><option value="20000">₪20,000</option><option value="30000">₪30,000</option></select>
+</div>
+<div class="field"><label for="travelers">נוסעים</label>
+<select id="travelers"><option value="1">1 נוסע</option><option selected="" value="2">2 נוסעים</option><option value="3">3 נוסעים</option><option value="4">4 נוסעים</option><option value="5">5 נוסעים</option><option value="6">6 נוסעים</option></select>
+</div>
+<button class="primary" id="build" type="button">בנה לי חופשה</button>
+</div>
+<div class="inspire">
+<div class="inspire-title"><strong>לא בטוח לאן?</strong><small>כתוב מה חשוב לך ונציע כיוון.</small></div>
+<div class="inspire-row">
+<textarea id="freeText" placeholder="למשל: זוג, ים, חיי לילה, 4 לילות, עד 10,000 ₪"></textarea>
+<button class="secondary" id="suggest">תציעו לי יעד</button>
+</div>
+<div class="status" id="suggestStatus"></div>
+</div>
+</div>
+</section>
+<div class="feature-ribbon">
+<div class="rib"><span class="ico">☀️</span><div><strong>מזג אוויר</strong><small>תחזית ליעד</small></div></div>
+<div class="rib"><span class="ico">🏨</span><div><strong>מלונות</strong><small>בחירת ספק</small></div></div>
+<div class="rib"><span class="ico">🎟️</span><div><strong>אטרקציות</strong><small>סיורים וחוויות</small></div></div>
+<div class="rib"><span class="ico">🍽️</span><div><strong>מסעדות</strong><small>אוכל ובילוי</small></div></div>
+<div class="rib"><span class="ico">📶</span><div><strong>eSIM</strong><small>גלישה בחו״ל</small></div></div>
+<div class="rib"><span class="ico">🧳</span><div><strong>לפני שטסים</strong><small>מידע שימושי</small></div></div>
+</div>
+<section id="results">
+<div class="plan-output" id="planOutput" aria-live="polite">
+<div class="kicker">החופשה שבנינו לך</div>
+<h2 id="planHeadline">הכיוון שלך מוכן</h2>
+<p id="planSummary">בחר יעד ופרטים ונציג כאן תוצאה מותאמת.</p>
+<div class="plan-stats">
+<div class="plan-stat"><small>משך</small><strong id="planNights">—</strong></div>
+<div class="plan-stat"><small>תקציב כולל</small><strong id="planBudget">—</strong></div>
+<div class="plan-stat"><small>תקציב ליום</small><strong id="planDaily">—</strong></div>
+</div>
+<div class="plan-actions">
+<a href="#hotels">🏨 מלונות</a>
+<a href="#attractions">🎟️ אטרקציות</a>
+<a href="#food-section">🍽️ מסעדות</a>
+<a href="#services">📶 רכב ו‑eSIM</a>
+</div>
+</div>
+<div class="top-grid">
+<div class="card trip">
+<div style="font-size:11px;font-weight:900;color:#a37b49">החופשה שלך</div>
+<h2 id="tripTitle">לימסול, קפריסין</h2>
+<div class="meta" id="tripMeta">2 נוסעים · תקציב ₪10,000</div>
+<div class="chips">
+<span class="chip" id="nightChip">בחר תאריכים</span>
+<span class="chip" id="budgetChip">₪10,000</span>
+<span class="chip" id="travChip">2 נוסעים</span>
+</div>
+</div>
+<div class="card weather">
+<h3>מזג האוויר</h3>
+<p id="weatherStatus">בחר יעד וננסה להביא תחזית עדכנית.</p>
+<div class="days" id="weatherDays"></div>
+</div>
+</div>
+<div class="section-title">
+<div><h2>כל מה שצריך לחופשה</h2><p>בלי לקפוץ בין עשרות אתרים.</p></div>
+</div>
+<div class="mosaic">
+<div class="card hotels" id="hotels">
+<h3>מלונות</h3>
+<p>בחר איפה אתה רוצה לבדוק מלון.</p>
+<div class="actions">
+<details class="native-details hotel-native"><summary class="btn brown">בדיקת מלונות</summary><div class="native-panel"><div class="actions"><a class="btn" href="https://www.booking.com/searchresults.html?ss=Limassol%2C%20Cyprus" id="bookingBtn" rel="noopener" target="_blank">Booking.com</a><a class="btn" href="https://www.expedia.com/Hotel-Search?destination=Limassol%2C%20Cyprus" id="expediaBtn" rel="noopener" target="_blank">Expedia</a><a class="btn" href="https://www.agoda.com/search?textToSearch=Limassol%2C%20Cyprus" id="agodaBtn" rel="noopener" target="_blank">Agoda</a></div><div class="status">בחר בין Booking, Expedia ו‑Agoda לפי המחיר והזמינות שמתאימים לך.</div></div></details>
+</div>
+</div>
+<div class="card attractions" id="attractions">
+<h3>אטרקציות</h3>
+<p>סיורים, כרטיסים וחוויות לפי היעד שבחרת.</p>
+<div class="actions">
+<a class="btn brown" href="https://www.getyourguide.com/s/?q=Limassol%2C%20Cyprus&amp;partner_id=GJ3WGHV&amp;utm_medium=online_publisher&amp;cmp=take_me_site" id="attractionBtn" rel="noopener" target="_blank">פתח אטרקציות</a>
+</div>
+</div>
+<div class="card food" id="food-section">
+<h3>מסעדות ובילוי</h3>
+<p>חיפוש מהיר של מסעדות, בתי קפה ומקומות בילוי באזור.</p>
+<div class="actions"><a class="btn brown" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9E%D7%A1%D7%A2%D7%93%D7%95%D7%AA%20Limassol%2C%20Cyprus" id="foodBtn" rel="noopener" target="_blank">מסעדות באזור</a><a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9E%D7%A1%D7%A2%D7%93%D7%95%D7%AA%20%D7%9B%D7%A9%D7%A8%D7%95%D7%AA%20Limassol%2C%20Cyprus" id="kosherBtn" rel="noopener" target="_blank">מסעדות כשרות</a></div>
+</div>
+<div class="card before" id="before">
+<h3>לפני הנסיעה</h3>
+<p>מטבע, שפה, חשמל ונהיגה — בלי לחפש לבד.</p>
+<div class="actions"><details class="native-details before-native"><summary class="btn brown">פתח מידע</summary><div class="native-panel" id="beforePanel">מטבע, שפה, שקע חשמל וצד הנהיגה יוצגו לפי היעד. מומלץ תמיד לאמת דרישות כניסה מול מקור רשמי.</div></details></div>
+</div>
+<div class="card mapcard">
+<h3>מפה</h3>
+<p>מבט מהיר על היעד שבחרת.</p>
+<iframe class="mapframe" id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="מפת היעד"></iframe>
+</div>
+<div class="card services" id="services">
+<h3>שירותים שימושיים</h3>
+<p>כל הקישורים החשובים במקום אחד.</p>
+<div class="service-grid">
+<div class="service"><strong>📶 eSIM</strong><small>Airalo — כרגע כקישור רגיל, בלי עמלת שותפים.</small><a class="btn brown" href="https://www.airalo.com/he/cyprus-esim" id="esimBtn" rel="noopener" target="_blank">פתח Airalo</a></div>
+<div class="service"><strong>🚗 רכב</strong><small>חיפוש רכב דרך DiscoverCars.</small><a class="btn brown" href="https://www.discovercars.com/cyprus/limassol/?a_aid=Nadavavitan050" id="carBtn" rel="noopener" target="_blank">בדוק רכב</a></div>
+<div class="service"><strong>✈️ טיסות</strong><small>בדיקת טיסות דרך Expedia.</small><a class="btn brown" href="https://www.expedia.com/Flights" id="flightBtn" rel="noopener" target="_blank" type="button">בדיקת טיסות</a></div>
+<div class="service"><strong>🎟️ חוויות</strong><small>GetYourGuide עם קישור השותפים שלך.</small><a class="btn brown" href="https://www.getyourguide.com/s/?q=Limassol%2C%20Cyprus&amp;partner_id=GJ3WGHV&amp;utm_medium=online_publisher&amp;cmp=take_me_site" id="gygBtn" rel="noopener" target="_blank">GetYourGuide</a></div>
+</div>
+</div>
+</div>
+<section class="lead-card" id="lead"><h3>רוצה שנבנה לך הצעה אישית?</h3><p>מלא כמה פרטים קצרים ונחזור אליך עם כיוון שמתאים לחופשה שלך.</p><a class="btn brown lead-btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" rel="noopener" target="_blank">פתח טופס הצעה</a></section><div class="savebar">
+<div><strong>רוצה לשמור או לשתף?</strong><small>נשמור את הבחירה במכשיר או נפתח שיתוף.</small></div>
+<div class="actions">
+<button class="btn" id="saveBtn" type="button">שמור</button>
+<button class="btn brown" id="shareBtn" type="button">שתף</button>
+</div>
+</div>
+</section>
+<footer>
+TAKE ME מרכז מידע וקישורי הזמנה לשירותי צד שלישי. חלק מהקישורים עשויים להיות קישורי שותפים, ללא תוספת מחיר עבורך. מחירים, זמינות ומידע מעשי עשויים להשתנות ולכן כדאי לאמת פרטים חשובים מול הספק או מקור רשמי.
+</footer>
+</div>
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const fmt = n => new Intl.NumberFormat('he-IL').format(Number(n||0))+' ₪';
+
+  const cityProfiles = [
+    {re:/לימסול|limassol/i, country:'קפריסין', currency:'אירו (€)', language:'יוונית / אנגלית', plug:'G (בריטי)', drive:'שמאל', car:'cyprus/limassol'},
+    {re:/פאפוס|paphos/i, country:'קפריסין', currency:'אירו (€)', language:'יוונית / אנגלית', plug:'G (בריטי)', drive:'שמאל', car:'cyprus/paphos'},
+    {re:/לרנקה|larnaca/i, country:'קפריסין', currency:'אירו (€)', language:'יוונית / אנגלית', plug:'G (בריטי)', drive:'שמאל', car:'cyprus/larnaca'},
+    {re:/אתונה|athens/i, country:'יוון', currency:'אירו (€)', language:'יוונית', plug:'C / F', drive:'ימין', car:'greece/athens'},
+    {re:/דובאי|dubai/i, country:'איחוד האמירויות', currency:'דירהם (AED)', language:'ערבית / אנגלית', plug:'G', drive:'ימין', car:'united-arab-emirates/dubai'},
+    {re:/מרבלה|marbella/i, country:'ספרד', currency:'אירו (€)', language:'ספרדית', plug:'C / F', drive:'ימין', car:'spain/marbella'},
+    {re:/ברצלונה|barcelona/i, country:'ספרד', currency:'אירו (€)', language:'ספרדית', plug:'C / F', drive:'ימין', car:'spain/barcelona'},
+    {re:/פריז|paris/i, country:'צרפת', currency:'אירו (€)', language:'צרפתית', plug:'C / E', drive:'ימין', car:'france/paris'},
+    {re:/לונדון|london/i, country:'בריטניה', currency:'ליש"ט (£)', language:'אנגלית', plug:'G', drive:'שמאל', car:'united-kingdom/london'},
+    {re:/רומא|rome/i, country:'איטליה', currency:'אירו (€)', language:'איטלקית', plug:'C / F / L', drive:'ימין', car:'italy/rome'},
+    {re:/אמסטרדם|amsterdam/i, country:'הולנד', currency:'אירו (€)', language:'הולנדית / אנגלית', plug:'C / F', drive:'ימין', car:'netherlands/amsterdam'},
+    {re:/פראג|prague/i, country:'צ׳כיה', currency:'קורונה צ׳כית', language:'צ׳כית / אנגלית', plug:'E', drive:'ימין', car:'czech-republic/prague'}
+  ];
+
+  function profile(dest){
+    return cityProfiles.find(x=>x.re.test(dest)) || {country:'היעד שבחרת',currency:'בדיקה לפי היעד',language:'בדיקה לפי היעד',plug:'בדיקה לפי היעד',drive:'בדיקה לפי היעד',car:''};
+  }
+  function nights(){
+    const a=$('from').value,b=$('to').value;
+    if(!a||!b) return 0;
+    const diff=(new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000;
+    return Math.max(0,Math.round(diff));
+  }
+  function bookingUrl(dest){
+    let u='https://www.booking.com/searchresults.html?ss='+encodeURIComponent(dest);
+    if($('from').value)u+='&checkin='+encodeURIComponent($('from').value);
+    if($('to').value)u+='&checkout='+encodeURIComponent($('to').value);
+    u+='&group_adults='+encodeURIComponent($('travelers').value)+'&no_rooms=1';
+    return u;
+  }
+  function agodaUrl(dest){
+    return 'https://www.agoda.com/search?textToSearch='+encodeURIComponent(dest);
+  }
+  function gygUrl(dest){
+    return 'https://www.getyourguide.com/s/?q='+encodeURIComponent(dest)+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site';
+  }
+  function carUrl(dest){
+    const p=profile(dest);
+    return 'https://www.discovercars.com/'+(p.car||'')+(p.car?'/':'')+'?a_aid=Nadavavitan050';
+  }
+  function airaloUrl(dest){
+    return /קפריסין|לימסול|פאפוס|לרנקה|cyprus|limassol|paphos|larnaca/i.test(dest)
+      ? 'https://www.airalo.com/he/cyprus-esim'
+      : 'https://www.airalo.com/he/';
+  }
+  function mapsSearch(q){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q)}
+  function renderBefore(dest){
+    const p=profile(dest);
+    $('beforePanel').innerHTML=
+      '<b>מטבע:</b> '+p.currency+'<br>'+
+      '<b>שפה:</b> '+p.language+'<br>'+
+      '<b>שקע:</b> '+p.plug+'<br>'+
+      '<b>נהיגה:</b> בצד '+p.drive+'<br>'+
+      '<span style="font-size:12px;color:#866a52">מומלץ לאמת דרישות כניסה ומידע רשמי לפני הטיסה.</span>';
+  }
+  async function loadWeather(dest){
+    $('weatherStatus').textContent='טוען תחזית…';
+    $('weatherDays').innerHTML='';
+    try{
+      const g=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(dest)+'&count=1&language=he&format=json');
+      const gj=await g.json();
+      const r=gj.results&&gj.results[0];
+      if(!r) throw new Error('not found');
+      const w=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+r.latitude+'&longitude='+r.longitude+'&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=4');
+      const j=await w.json();
+      const d=j.daily;
+      $('weatherStatus').textContent='4 ימים קדימה';
+      $('weatherDays').innerHTML=d.time.map((date,i)=>{
+        const day=new Date(date+'T12:00:00').toLocaleDateString('he-IL',{weekday:'short'});
+        return '<div class="day"><span>'+day+'</span><b>'+Math.round(d.temperature_2m_max[i])+'°</b><span>'+Math.round(d.temperature_2m_min[i])+'° מינ׳</span></div>';
+      }).join('');
+    }catch(e){
+      $('weatherStatus').textContent='התחזית לא נטענה כרגע.';
+      $('weatherDays').innerHTML='<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent('מזג אוויר '+dest)+'">בדוק מזג אוויר</a>';
+    }
+  }
+  function updateLinks(dest){
+    $('bookingBtn').href=bookingUrl(dest);
+    $('agodaBtn').href=agodaUrl(dest);
+    $('attractionBtn').href=gygUrl(dest);
+    $('gygBtn').href=gygUrl(dest);
+    $('foodBtn').href=mapsSearch('מסעדות '+dest);$('kosherBtn').href=mapsSearch('מסעדות כשרות '+dest);
+    $('esimBtn').href=airaloUrl(dest);
+    $('carBtn').href=carUrl(dest);
+    $('mapFrame').src='https://www.google.com/maps?q='+encodeURIComponent(dest)+'&output=embed';
+  }
+  function build(scroll=true){
+    const dest=($('dest').value||'').trim();
+    if(!dest){
+      $('suggestStatus').textContent='בחר יעד כדי שנוכל לבנות לך חופשה.';
+      $('dest').focus();
+      return;
+    }
+    const n=nights();
+    const budget=Number($('budget').value||0);
+    const travelers=Number($('travelers').value||1);
+    const daily=n?Math.round(budget/n):0;
+    const p=profile(dest);
+
+    $('tripTitle').textContent=dest;
+    $('tripMeta').textContent=travelers+' נוסעים · תקציב '+fmt(budget);
+    $('nightChip').textContent=n?n+' לילות':'תאריכים טרם נבחרו';
+    $('budgetChip').textContent=fmt(budget);
+    $('travChip').textContent=travelers+' נוסעים';
+
+    $('planHeadline').textContent=dest+' — הכיוון שלך מוכן';
+    $('planNights').textContent=n?n+' לילות':'בחר תאריכים';
+    $('planBudget').textContent=fmt(budget);
+    $('planDaily').textContent=n?fmt(daily):'אחרי בחירת תאריכים';
+
+    let summary='ריכזנו לך את כל מה שצריך לחופשה במקום אחד: מלונות, אטרקציות, מסעדות, רכב, eSIM ומידע חשוב לנסיעה.';
+    if(n){
+      summary='ל־'+travelers+' נוסעים, '+n+' לילות ובתקציב '+fmt(budget)+'. זה בערך '+fmt(daily)+' ליום לכל החופשה. עכשיו אפשר לפתוח את האפשרויות שמתחת ולבדוק מחירים וזמינות.';
+    }
+    $('planSummary').textContent=summary;
+    $('planOutput').classList.add('show');
+
+    updateLinks(dest);
+    renderBefore(dest);
+    loadWeather(dest);
+    $('results').classList.add('show');
+    if(scroll)$('planOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  if($('build'))$('build').addEventListener('click',(e)=>{e.preventDefault();try{build(true)}catch(err){console.error(err)}});
+  
+  
+  
+  
+  $('suggest').addEventListener('click',()=>{
+    const t=$('freeText').value.toLowerCase();
+    let dest='לימסול, קפריסין',why='חופשה נוחה וקלה לתכנון.';
+    if(/יוקר|שופינג|קניות/.test(t)){dest='דובאי, איחוד האמירויות';why='מתאים ליוקרה, קניות ומלונות ברמה גבוהה.'}
+    else if(/חיי לילה|מסיבות|ים/.test(t)){dest='מרבלה, ספרד';why='מתאים לים, חופים וחיי לילה.'}
+    else if(/משפחה|ילדים/.test(t)){dest='פאפוס, קפריסין';why='מתאים למשפחה, חופים וקצב נוח.'}
+    else if(/אוכל|עיר|רומנט/.test(t)){dest='רומא, איטליה';why='מתאים לעיר, אוכל ואווירה זוגית.'}
+    $('dest').value=dest;
+    const money=t.match(/(\d[\d,\.]*)\s*(?:₪|שקל|אלף)?/);
+    if(money){
+      let num=Number(money[1].replace(/,/g,''));
+      if(/אלף/.test(t)&&num<100)num*=1000;
+      const opts=[7000,10000,15000,20000,30000];
+      $('budget').value=String(opts.reduce((a,b)=>Math.abs(b-num)<Math.abs(a-num)?b:a));
+    }
+    $('suggestStatus').textContent=why+' מילאנו את החיפוש — אפשר לשנות כל פרט.';
+    build(false);
+  });
+  $('saveBtn').addEventListener('click',()=>{
+    const data={dest:$('dest').value,from:$('from').value,to:$('to').value,budget:$('budget').value,travelers:$('travelers').value};
+    localStorage.setItem('takeMeTrip',JSON.stringify(data));
+    $('saveBtn').textContent='נשמר ✓';
+    setTimeout(()=>$('saveBtn').textContent='שמור',1400);
+  });
+  $('shareBtn').addEventListener('click',async()=>{
+    const text='TAKE ME — '+$('dest').value+' · '+($('travelers').value)+' נוסעים · '+fmt($('budget').value);
+    try{
+      if(navigator.share) await navigator.share({title:'TAKE ME',text,url:location.href});
+      else {await navigator.clipboard.writeText(text+' '+location.href); alert('הקישור הועתק');}
+    }catch(e){}
+  });
+
+  ['dest','from','to','budget','travelers'].forEach(id=>{
+    $(id).addEventListener('change',()=>{ if($('results').classList.contains('show')) build(false); });
+  });
+
+  try{
+    const saved=JSON.parse(localStorage.getItem('takeMeTrip')||'null');
+    if(saved){
+      ['dest','from','to','budget','travelers'].forEach(k=>{if(saved[k])$(k).value=saved[k]});
+    }
+  }catch(e){}
+  updateLinks($('dest').value);
+})();
+</script>
+<script>
+(function(){
+  const byId=id=>document.getElementById(id);
+  function enc(v){return encodeURIComponent(v||'')}
+  function dest(){return (byId('dest')&&byId('dest').value||'Limassol, Cyprus').trim()}
+  function refreshNativeLinks(){
+    const d=dest();
+    const booking=byId('bookingBtn');
+    const agoda=byId('agodaBtn');
+    const att=byId('attractionBtn');
+    const gyg=byId('gygBtn');
+    const food=byId('foodBtn');
+    const kosher=byId('kosherBtn');
+    if(booking) booking.href='https://www.booking.com/searchresults.html?ss='+enc(d);
+    if(agoda) agoda.href='https://www.agoda.com/search?textToSearch='+enc(d);
+    const g='https://www.getyourguide.com/s/?q='+enc(d)+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site';
+    if(att) att.href=g;
+    if(gyg) gyg.href=g;
+    if(food) food.href='https://www.google.com/maps/search/?api=1&query='+enc('מסעדות '+d);
+    if(kosher) kosher.href='https://www.google.com/maps/search/?api=1&query='+enc('מסעדות כשרות '+d);
+  }
+  refreshNativeLinks();
+  const d=byId('dest');
+  if(d){d.addEventListener('change',refreshNativeLinks);d.addEventListener('input',refreshNativeLinks)}
+})();
+</script><script>
+window.addEventListener('load', function(){
+  try{
+    var results=document.getElementById('results');
+    if(results) results.classList.add('show');
+
+    var d=document.getElementById('dest');
+    if(d){
+      d.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+  }catch(e){}
+});
+
+document.addEventListener('click', function(e){
+  var link=e.target.closest('nav a[href^="#"]');
+  if(!link) return;
+  var id=link.getAttribute('href').slice(1);
+  var target=document.getElementById(id);
+  if(target){
+    e.preventDefault();
+    target.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+});
+</script><script>
+(function(){
+  function updateExpediaHotel(){
+    var d=document.getElementById('dest');
+    var e=document.getElementById('expediaBtn');
+    if(!e) return;
+    var dest=(d&&d.value?d.value:'Limassol, Cyprus').trim();
+    e.href='https://www.expedia.com/Hotel-Search?destination='+encodeURIComponent(dest);
+  }
+  updateExpediaHotel();
+  var d=document.getElementById('dest');
+  if(d){
+    d.addEventListener('input',updateExpediaHotel);
+    d.addEventListener('change',updateExpediaHotel);
+  }
+})();
+</script></body>
+</html>

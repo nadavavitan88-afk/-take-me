@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TAKE ME — כל החופשה שלך, במקום אחד</title>
+<meta name="theme-color" content="#5c4331">
+<style>
+:root{--paper:#fffaf3;--ink:#402f23;--brown:#624733;--gold:#bf9658;--line:#d8c3a7;--muted:#80634b;--good:#3f6b4b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#ead8c0,#f8f2ea);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}.wrap{max-width:1080px;margin:auto;padding:0 14px 44px}header{display:flex;justify-content:space-between;align-items:end;padding:18px 0 12px}.brand{font-size:44px;font-weight:950;letter-spacing:.06em;color:var(--gold)}.tag{font-size:12px;color:var(--muted)}
+.hero{border:1px solid var(--line);border-radius:26px;padding:28px;background:linear-gradient(90deg,rgba(246,231,211,.97),rgba(246,231,211,.86)),url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=85') center/cover;box-shadow:0 16px 36px #553b2718}.eyebrow{font-size:11px;font-weight:900;color:#966d3a;letter-spacing:.1em}.hero h1{font-size:clamp(32px,5vw,56px);line-height:1.05;margin:7px 0 9px}.hero p{color:#6f523d;line-height:1.55;max-width:760px}
+.search{display:grid;grid-template-columns:1fr 1.15fr .8fr .8fr .65fr .55fr .55fr auto;gap:7px;margin-top:14px;padding:9px;background:#fffaf3e8;border:1px solid var(--line);border-radius:18px}.field{background:#fffaf4;border:1px solid #ead7be;border-radius:12px;padding:8px}.field label{display:block;font-size:10px;font-weight:900;color:#84654c;margin-bottom:4px}.field input,.field select{width:100%;border:0;background:transparent;outline:none;color:#4c3728;font-weight:800}.go,.ai-go{border:0;border-radius:13px;background:linear-gradient(#876247,#604532);color:white;font-weight:950;padding:0 16px;cursor:pointer;min-height:58px}.status{font-size:11px;color:#80634b;margin-top:8px}.status.ok{color:var(--good)}
+.result{display:none;margin-top:14px;padding:17px;border-radius:19px;background:#5b4230;color:#f9e8d2}.result.show{display:block}.result h2{margin:4px 0 7px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 13px;border-radius:999px;border:1px solid #d6bfa2;background:#fff8ef;color:#513b2b;font-weight:900;cursor:pointer}.btn.primary{background:#d2a76b;border:0}.btn.dark{background:#6b4e39;color:white;border:0}
+.ai{margin:22px 0;padding:22px;border-radius:22px;background:linear-gradient(145deg,#fff8ee,#ead6bd);border:1px solid #d1b893;box-shadow:0 14px 34px #3d2b1e1a}.ai h2{margin:0 0 5px;font-size:29px}.ai p{font-size:12px;color:#765941;line-height:1.5}.ai-row{display:grid;grid-template-columns:1fr auto;gap:8px}.ai textarea{width:100%;min-height:100px;resize:vertical;border:1px solid #d8c3a7;border-radius:15px;background:#fffaf3;padding:13px;outline:none;color:#4c3728}.ai-results{display:none;margin-top:12px;background:#5b4230;padding:12px;border-radius:16px}.ai-results.show{display:block}.dest-card{background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:14px;padding:13px;margin-top:9px}.dest-card h3{margin:0 0 5px}.dest-card small{color:#80634b}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.mini{padding:15px;background:#f8eddf;border:1px solid #dcc8ad;border-radius:15px}.mini b{display:block}.mini small{color:#80634b}.footer{border-top:1px solid #d5c1a5;padding-top:18px;color:#80644d;font-size:10px}
+@media(max-width:850px){.search{grid-template-columns:1fr 1fr}.go{grid-column:span 2}.grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){header{display:block}.brand{font-size:38px}.hero{padding:20px 12px}.search{grid-template-columns:1fr}.go{grid-column:auto}.ai-row{grid-template-columns:1fr}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div><div class="brand">TAKE ME</div><div class="tag">בחר יעד. אנחנו נסדר את השאר.</div></div></header>
+
+<section class="hero" id="planner">
+<div class="eyebrow">TAKE ME · הכול מתחיל כאן</div><h1>כל החופשה שלך,<br>במקום אחד.</h1><p>יעד, תאריכים, תקציב ונוסעים — ומשם טיסות, מלונות, אטרקציות, רכב ו-eSIM.</p>
+<div class="search">
+<div class="field"><label>מאיפה?</label><input id="origin" value="תל אביב (TLV)"></div>
+<div class="field"><label>לאן?</label><input id="dest" list="destList" placeholder="לדוגמה: דובאי"><datalist id="destList"></datalist></div>
+<div class="field"><label>יציאה</label><input id="from" type="date"></div><div class="field"><label>חזרה</label><input id="to" type="date"></div>
+<div class="field"><label>תקציב</label><select id="budget"><option>6000</option><option>8000</option><option selected>10000</option><option>15000</option><option>20000</option><option>30000</option></select></div>
+<div class="field"><label>מבוגרים</label><select id="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+<div class="field"><label>ילדים</label><select id="children"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+<button class="go" id="build" type="button">בנה לי חופשה</button></div>
+<div class="status" id="status">המנוע מוכן ✓</div>
+<div class="result" id="result"><small>החופשה שלך</small><h2 id="resultTitle"></h2><div id="resultText"></div><div class="actions" id="mainActions"></div></div>
+</section>
+
+<section class="ai" id="freeSearch"><div class="eyebrow">TAKE ME SMART SEARCH</div><h2>🤖 תאר את החופשה שלך</h2><p>לדוגמה: זוג, 3 לילות, דובאי, חיי לילה וחופים, תקציב 10,000 ₪.</p><div class="ai-row"><textarea id="aiPrompt" placeholder="כתוב כאן מה אתם מחפשים..."></textarea><button class="ai-go" id="aiBuild" type="button">מצא לי חופשה</button></div><div class="status" id="aiStatus">כתוב חופשה בכמה מילים.</div><div class="ai-results" id="aiResults"></div></section>
+
+<div class="grid"><div class="mini"><b>✈️ טיסות</b><small>חיפוש לפי יעד, תאריכים ונוסעים</small></div><div class="mini"><b>🏨 מלונות</b><small>חיפוש מלונות לפי היעד</small></div><div class="mini"><b>🎟️ אטרקציות</b><small>GetYourGuide</small></div><div class="mini"><b>🚗 רכב</b><small>DiscoverCars</small></div><div class="mini"><b>📶 eSIM</b><small>Airalo</small></div><div class="mini"><b>🍽️ מסביב</b><small>אוכל, מזג אוויר ומפה</small></div></div>
+<div class="footer">TAKE ME · מחירים וזמינות סופיים מוצגים באתר הספק.</div>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const destinations=[
+{city:'דובאי',country:'איחוד האמירויות',en:'Dubai',iata:'DXB',car:'united-arab-emirates/dubai'},
+{city:'לימסול',country:'קפריסין',en:'Limassol',iata:'LCA',car:'cyprus/limassol'},
+{city:'לרנקה',country:'קפריסין',en:'Larnaca',iata:'LCA',car:'cyprus/larnaca'},
+{city:'פאפוס',country:'קפריסין',en:'Paphos',iata:'PFO',car:'cyprus/paphos'},
+{city:'אתונה',country:'יוון',en:'Athens',iata:'ATH',car:'greece/athens'},
+{city:'כרתים',country:'יוון',en:'Crete',iata:'HER',car:'greece/crete'},
+{city:'רודוס',country:'יוון',en:'Rhodes',iata:'RHO',car:'greece/rhodes'},
+{city:'ברצלונה',country:'ספרד',en:'Barcelona',iata:'BCN',car:'spain/barcelona'},
+{city:'מרבלה',country:'ספרד',en:'Marbella',iata:'AGP',car:'spain/malaga'},
+{city:'רומא',country:'איטליה',en:'Rome',iata:'FCO',car:'italy/rome'},
+{city:'מילאנו',country:'איטליה',en:'Milan',iata:'MXP',car:'italy/milan'},
+{city:'פריז',country:'צרפת',en:'Paris',iata:'PAR',car:'france/paris'},
+{city:'לונדון',country:'בריטניה',en:'London',iata:'LON',car:'united-kingdom/london'},
+{city:'פראג',country:'צ׳כיה',en:'Prague',iata:'PRG',car:'czech-republic/prague'},
+{city:'בודפשט',country:'הונגריה',en:'Budapest',iata:'BUD',car:'hungary/budapest'},
+{city:'וינה',country:'אוסטריה',en:'Vienna',iata:'VIE',car:'austria/vienna'},
+{city:'אמסטרדם',country:'הולנד',en:'Amsterdam',iata:'AMS',car:'netherlands/amsterdam'},
+{city:'ברלין',country:'גרמניה',en:'Berlin',iata:'BER',car:'germany/berlin'},
+{city:'טביליסי',country:'גאורגיה',en:'Tbilisi',iata:'TBS',car:'georgia/tbilisi'},
+{city:'בטומי',country:'גאורגיה',en:'Batumi',iata:'BUS',car:'georgia/batumi'},
+{city:'בנגקוק',country:'תאילנד',en:'Bangkok',iata:'BKK',car:'thailand/bangkok'},
+{city:'פוקט',country:'תאילנד',en:'Phuket',iata:'HKT',car:'thailand/phuket'},
+{city:'ניו יורק',country:'ארה״ב',en:'New York',iata:'NYC',car:'united-states/new-york'},
+{city:'מיאמי',country:'ארה״ב',en:'Miami',iata:'MIA',car:'united-states/miami'}];
+
+const profiles={
+'דובאי':['יוקרה','קניות','משפחה','ילדים','חוף','מסעדות'],
+'לימסול':['זוג','חוף','חיי לילה','מסעדות'],
+'לרנקה':['זול','חוף','משפחה','קצר'],
+'פאפוס':['משפחה','ילדים','רגוע','חוף'],
+'אתונה':['זוג','אוכל','קניות','חיי לילה','זול'],
+'כרתים':['משפחה','ילדים','חוף','ריזורט'],
+'רודוס':['משפחה','חוף','זוג'],
+'ברצלונה':['זוג','חוף','חיי לילה','קניות'],
+'מרבלה':['זוג','חוף','חיי לילה','יוקרה'],
+'רומא':['זוג','רומנטי','אוכל'],
+'מילאנו':['קניות','יוקרה','זוג'],
+'פריז':['זוג','רומנטי','קניות'],
+'לונדון':['משפחה','ילדים','קניות'],
+'פראג':['זוג','רומנטי','זול'],
+'בודפשט':['זוג','זול','חיי לילה'],
+'וינה':['זוג','תרבות','רגוע'],
+'אמסטרדם':['זוג','חיי לילה','תרבות'],
+'ברלין':['חיי לילה','מסיבות','תרבות'],
+'טביליסי':['זול','אוכל','קצר'],
+'בטומי':['זול','חוף','חיי לילה'],
+'בנגקוק':['אוכל','קניות','חיי לילה'],
+'פוקט':['זוג','חוף','משפחה','ריזורט'],
+'ניו יורק':['קניות','אוכל','חיי לילה'],
+'מיאמי':['חוף','חיי לילה','קניות']};
+
+const norm=s=>String(s||'').toLowerCase().replace(/[׳״'".,]/g,'').trim();
+function originCode(){const m=$('origin').value.match(/\(([A-Z]{3})\)/);return m?m[1]:'TLV'}
+function findDest(v){const n=norm(v);return destinations.find(d=>n.includes(norm(d.city))||n.includes(norm(d.en))||n===norm(d.iata))}
+function flightLink(d){
+  const f=$('from').value,t=$('to').value,a=$('adults').value,c=$('children').value;
+  const p=new URLSearchParams({load:'1',FromAirport:originCode(),ToAirport:d.iata,FromTime:'362',ToTime:'362',NumAdult:a});
+  if(+c)p.set('NumChild',c);
+  return `https://www.expedia.com/go/flight/search/Roundtrip/${encodeURIComponent(f)}/${encodeURIComponent(t)}?${p.toString()}`;
+}
+function hotelLink(d){
+  const p=new URLSearchParams({destination:d.en,startDate:$('from').value,endDate:$('to').value,adults:$('adults').value});
+  if(+$('children').value)p.set('children',$('children').value);
+  return 'https://www.expedia.com/Hotel-Search?'+p.toString();
+}
+function gygLink(d){return 'https://www.getyourguide.com/s/?q='+encodeURIComponent(d.city+', '+d.country)+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site'}
+function carLink(d){return 'https://www.discovercars.com/'+d.car+'/?a_aid=Nadavavitan050'}
+function esimLink(d){return d.country==='קפריסין'?'https://www.airalo.com/he/cyprus-esim':'https://www.airalo.com/he/'}
+function openUrl(url){window.location.href=url;}
+function actionHtml(d){
+  return `<button class="btn primary flightBtn" type="button" data-city="${d.city}">✈️ טיסות</button>
+  <button class="btn hotelBtn" type="button" data-city="${d.city}">🏨 מלונות</button>
+  <a class="btn" target="_blank" rel="noopener" href="${gygLink(d)}">🎟️ אטרקציות</a>
+  <a class="btn" target="_blank" rel="noopener" href="${carLink(d)}">🚗 רכב</a>
+  <a class="btn" target="_blank" rel="noopener" href="${esimLink(d)}">📶 eSIM</a>`;
+}
+function bindActionButtons(scope=document){
+  scope.querySelectorAll('.flightBtn').forEach(b=>b.onclick=()=>{
+    const d=destinations.find(x=>x.city===b.dataset.city);
+    if(d) openUrl(flightLink(d));
+  });
+  scope.querySelectorAll('.hotelBtn').forEach(b=>b.onclick=()=>{
+    const d=destinations.find(x=>x.city===b.dataset.city);
+    if(d) openUrl(hotelLink(d));
+  });
+}
+function showMain(d){
+  $('dest').value=d.city+', '+d.country;
+  $('resultTitle').textContent=d.city+', '+d.country;
+  $('resultText').textContent=`${$('from').value} עד ${$('to').value} · ${$('adults').value} מבוגרים · תקציב ₪${Number($('budget').value).toLocaleString('he-IL')}`;
+  $('mainActions').innerHTML=actionHtml(d);
+  bindActionButtons($('mainActions'));
+  $('result').classList.add('show');
+  $('status').textContent='החיפוש מוכן ✓';
+  $('status').className='status ok';
+}
+$('build').onclick=()=>{
+  const d=findDest($('dest').value);
+  if(!d){$('status').textContent='כתוב או בחר יעד מהרשימה.';return;}
+  showMain(d);
+};
+
+$('aiBuild').onclick=()=>{
+  const raw=$('aiPrompt').value.trim();
+  if(raw.length<4){$('aiStatus').textContent='כתוב קצת יותר פרטים.';return;}
+  const text=norm(raw);
+  let scored=destinations.map(d=>{
+    let s=0;
+    if(text.includes(norm(d.city))||text.includes(norm(d.en)))s+=30;
+    (profiles[d.city]||[]).forEach(tag=>{if(text.includes(norm(tag)))s+=4});
+    if(text.includes('ילדים')&&(profiles[d.city]||[]).includes('משפחה'))s+=5;
+    if(text.includes('חוף')&&(profiles[d.city]||[]).includes('חוף'))s+=5;
+    if(text.includes('חיי לילה')&&(profiles[d.city]||[]).includes('חיי לילה'))s+=5;
+    return {d,s};
+  }).sort((a,b)=>b.s-a.s).slice(0,3);
+
+  const out=$('aiResults');
+  out.innerHTML='<b style="color:#f9e8d2">מצאתי 3 כיוונים שמתאימים למה שכתבת</b>'+
+  scored.map(({d},i)=>`<div class="dest-card"><h3>${i+1}. ${d.city}, ${d.country}</h3><small>${(profiles[d.city]||[]).slice(0,4).join(' · ')}</small><div class="actions">${actionHtml(d)}<button class="btn dark choose" data-city="${d.city}">בחר יעד</button></div></div>`).join('');
+  out.classList.add('show');
+  $('aiStatus').textContent='הכנתי 3 הצעות בתוך TAKE ME ✓';
+  $('aiStatus').className='status ok';
+  bindActionButtons(out);
+  out.querySelectorAll('.choose').forEach(b=>b.onclick=()=>{
+    const d=destinations.find(x=>x.city===b.dataset.city);
+    showMain(d);
+    $('planner').scrollIntoView({behavior:'smooth'});
+  });
+};
+
+$('destList').innerHTML=destinations.map(d=>`<option value="${d.city}, ${d.country}"></option>`).join('');
+const start=new Date();start.setDate(start.getDate()+30);
+const end=new Date(start);end.setDate(end.getDate()+4);
+const iso=d=>d.toISOString().slice(0,10);
+$('from').value=iso(start);$('to').value=iso(end);
+$('from').min=$('to').min=iso(new Date());
+})();
+</script>
+</body></html>

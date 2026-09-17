@@ -82,7 +82,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 <section class="ai-planner" id="aiPlanner">
   <div class="eyebrow">TAKE ME AI · ספר לנו מה בא לך</div>
   <h2>🤖 תאר את החופשה שלך</h2>
-  <p>לדוגמה: “זוג, 4 לילות באוקטובר, חופים וחיי לילה, עד 8,000 ₪” — ונמקד עבורך יעד וחיפוש.</p>
+  <p>לדוגמה: “זוג, 4 לילות באוקטובר, חופים וחיי לילה, עד 8,000 ₪” — ה‑AI יציע 3 יעדים מתאימים כאן בתוך TAKE ME.</p>
   <div class="ai-row">
     <textarea class="ai-input" id="aiPrompt" placeholder="מה אתם מחפשים? תקציב, תאריכים, סגנון חופשה, ילדים, חופים, חיי לילה, כשר..."></textarea>
     <button class="ai-go" type="button" id="aiBuild">מצא לי חופשה</button>
@@ -249,41 +249,26 @@ function buildTrip(){
 }
 
 
-function aiRecommend(){
-  const raw=$("aiPrompt").value.trim(), s=norm(raw), out=$("aiAnswer"), st=$("aiStatus");
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+async function aiRecommend(){
+  const raw=$("aiPrompt").value.trim(), out=$("aiAnswer"), st=$("aiStatus");
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי שאוכל למקד את החיפוש.";st.className="status error";return;}
-  let d=null, why="";
-  const direct=destinations.find(x=>s.includes(norm(x.city))||s.includes(norm(x.en)));
-  if(direct){d=direct;why="בחרת את היעד הזה בתיאור שלך.";}
-  else if(/חיי לילה|מסיבות|מועדונים|חוף|חופים/.test(s)){
-    d=destinations.find(x=>x.city==="מרבלה"); why="מתאים במיוחד לשילוב של חופים וחיי לילה.";
-  } else if(/ילדים|משפחה|משפח/.test(s)){
-    d=destinations.find(x=>x.city==="פאפוס"); why="אפשרות נוחה לחופשה משפחתית קצרה מישראל.";
-  } else if(/רומנט|זוג|אוכל|קולינר/.test(s)){
-    d=destinations.find(x=>x.city==="רומא"); why="מתאים לחופשה זוגית עם אוכל, טיולים ואווירה.";
-  } else if(/קניות|שופינג|יוקר|מלון מפואר/.test(s)){
-    d=destinations.find(x=>x.city==="דובאי"); why="מתאים לשופינג, מלונות וחופשה עירונית מפנקת.";
-  } else {
-    d=destinations.find(x=>x.city==="אתונה"); why="בחירה גמישה לחופשה עירונית קצרה עם הרבה אפשרויות.";
-  }
-
-  const budgetMatch=raw.replace(/,/g,"").match(/(?:₪|ש.?ח|עד)\s*(\d{4,6})|(\d{4,6})\s*(?:₪|ש.?ח)/i);
-  if(budgetMatch){
-    const val=Number(budgetMatch[1]||budgetMatch[2]);
-    const opts=[6000,8000,10000,15000,20000,30000];
-    $("budget").value=String(opts.reduce((a,b)=>Math.abs(b-val)<Math.abs(a-val)?b:a));
-  }
-  const people=raw.match(/(\d+)\s*(?:מבוגרים|אנשים|נוסעים)/);
-  if(people) $("adults").value=String(Math.min(6,Math.max(1,Number(people[1]))));
-  if(/זוג/.test(s)) $("adults").value="2";
-
-  $("dest").value=d.city+", "+d.country;
-  updateLinks(d);
-  out.innerHTML="<b>הכיוון שלנו: "+d.city+", "+d.country+"</b><br>"+why+
-    '<div class="ai-actions"><button type="button" class="btn" id="aiFill">העבר לחיפוש למעלה</button>'+
-    '<a class="btn brown" href="'+$("packageLive").href+'" target="_blank" rel="noopener">בדוק טיסה + מלון</a></div>';
-  out.classList.add("show"); st.textContent="מצאתי כיוון שמתאים לתיאור שלך ✓";st.className="status ok";
-  document.getElementById("aiFill").onclick=()=>{buildTrip();document.getElementById("planner").scrollIntoView({behavior:"smooth"});};
+  const btn=$("aiBuild"); btn.disabled=true; btn.textContent="ה-AI בונה לך הצעות…";
+  st.textContent="מנתח תקציב, סגנון והרכב נוסעים…";st.className="status";out.classList.remove("show");
+  try{
+    const res=await fetch('/api/plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:raw,origin:$("origin").value,from:$("from").value,to:$("to").value,budget:$("budget").value,adults:$("adults").value,children:$("children").value})});
+    const data=await res.json(); if(!res.ok) throw new Error(data.error||'AI request failed');
+    const cards=(data.recommendations||[]).slice(0,3).map((r,i)=>{
+      const q=encodeURIComponent((r.city||'')+', '+(r.country||''));
+      const expedia='https://www.expedia.com/Hotel-Search?destination='+q;
+      const gyg='https://www.getyourguide.com/s/?q='+q+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site';
+      return `<div style="background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:14px;padding:13px;margin-top:9px"><b style="font-size:18px">${i+1}. ${esc(r.city)}, ${esc(r.country)}</b><div style="margin-top:5px">${esc(r.why)}</div><small style="display:block;margin-top:7px;color:#80634b">${esc(r.vibe||'')} ${r.estimatedBudget?`· תקציב משוער: ${esc(r.estimatedBudget)}`:''}</small><div class="ai-actions"><a class="btn brown" href="${expedia}" target="_blank" rel="noopener">בדוק מלונות וחבילות</a><a class="btn" href="${gyg}" target="_blank" rel="noopener">אטרקציות</a><button type="button" class="btn aiUse" data-city="${esc(r.city)}">בחר יעד</button></div></div>`;
+    }).join('');
+    out.innerHTML=`<b>${esc(data.summary||'מצאתי עבורך 3 כיוונים מתאימים')}</b>${cards}<div style="font-size:10px;margin-top:10px;color:#d8c3a7">המלצות ה-AI הן לתכנון; מחירים וזמינות סופיים מוצגים אצל ספק ההזמנה.</div>`;
+    out.classList.add("show");st.textContent="ה-AI הכין 3 הצעות בתוך TAKE ME ✓";st.className="status ok";
+    out.querySelectorAll('.aiUse').forEach(b=>b.onclick=()=>{const d=destinations.find(x=>norm(x.city)===norm(b.dataset.city));$("dest").value=d?d.city+', '+d.country:b.dataset.city; if(d) updateLinks(d); document.getElementById("planner").scrollIntoView({behavior:"smooth"});});
+  }catch(e){st.textContent="לא הצלחתי לקבל תשובה מה-AI כרגע. נסה שוב בעוד רגע.";st.className="status error";out.innerHTML='<b>החיפוש לא הושלם.</b><br>לא הועברת לשום אתר חיצוני. נסה שוב.';out.classList.add('show');}
+  finally{btn.disabled=false;btn.textContent="מצא לי חופשה";}
 }
 $("aiBuild").addEventListener("click",aiRecommend);
 $("aiPrompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")aiRecommend();});

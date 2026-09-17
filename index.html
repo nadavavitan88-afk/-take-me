@@ -82,7 +82,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 <section class="ai-planner" id="aiPlanner">
   <div class="eyebrow">TAKE ME AI · ספר לנו מה בא לך</div>
   <h2>🤖 תאר את החופשה שלך</h2>
-  <p>לדוגמה: “זוג, 4 לילות באוקטובר, חופים וחיי לילה, עד 8,000 ₪” — ה‑AI יציע 3 יעדים מתאימים כאן בתוך TAKE ME.</p>
+  <p>לדוגמה: “זוג, 4 לילות באוקטובר, חופים וחיי לילה, עד 8,000 ₪” — ונמקד עבורך יעד וחיפוש.</p>
   <div class="ai-row">
     <textarea class="ai-input" id="aiPrompt" placeholder="מה אתם מחפשים? תקציב, תאריכים, סגנון חופשה, ילדים, חופים, חיי לילה, כשר..."></textarea>
     <button class="ai-go" type="button" id="aiBuild">מצא לי חופשה</button>
@@ -250,25 +250,71 @@ function buildTrip(){
 
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
-async function aiRecommend(){
+function aiRecommend(){
   const raw=$("aiPrompt").value.trim(), out=$("aiAnswer"), st=$("aiStatus");
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי שאוכל למקד את החיפוש.";st.className="status error";return;}
-  const btn=$("aiBuild"); btn.disabled=true; btn.textContent="ה-AI בונה לך הצעות…";
+  const text=norm(raw);
+  const btn=$("aiBuild"); btn.disabled=true; btn.textContent="מכין לך הצעות…";
   st.textContent="מנתח תקציב, סגנון והרכב נוסעים…";st.className="status";out.classList.remove("show");
-  try{
-    const res=await fetch('/api/plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:raw,origin:$("origin").value,from:$("from").value,to:$("to").value,budget:$("budget").value,adults:$("adults").value,children:$("children").value})});
-    const data=await res.json(); if(!res.ok) throw new Error(data.error||'AI request failed');
-    const cards=(data.recommendations||[]).slice(0,3).map((r,i)=>{
-      const q=encodeURIComponent((r.city||'')+', '+(r.country||''));
-      const expedia='https://www.expedia.com/Hotel-Search?destination='+q;
-      const gyg='https://www.getyourguide.com/s/?q='+q+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site';
-      return `<div style="background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:14px;padding:13px;margin-top:9px"><b style="font-size:18px">${i+1}. ${esc(r.city)}, ${esc(r.country)}</b><div style="margin-top:5px">${esc(r.why)}</div><small style="display:block;margin-top:7px;color:#80634b">${esc(r.vibe||'')} ${r.estimatedBudget?`· תקציב משוער: ${esc(r.estimatedBudget)}`:''}</small><div class="ai-actions"><a class="btn brown" href="${expedia}" target="_blank" rel="noopener">בדוק מלונות וחבילות</a><a class="btn" href="${gyg}" target="_blank" rel="noopener">אטרקציות</a><button type="button" class="btn aiUse" data-city="${esc(r.city)}">בחר יעד</button></div></div>`;
-    }).join('');
-    out.innerHTML=`<b>${esc(data.summary||'מצאתי עבורך 3 כיוונים מתאימים')}</b>${cards}<div style="font-size:10px;margin-top:10px;color:#d8c3a7">המלצות ה-AI הן לתכנון; מחירים וזמינות סופיים מוצגים אצל ספק ההזמנה.</div>`;
-    out.classList.add("show");st.textContent="ה-AI הכין 3 הצעות בתוך TAKE ME ✓";st.className="status ok";
-    out.querySelectorAll('.aiUse').forEach(b=>b.onclick=()=>{const d=destinations.find(x=>norm(x.city)===norm(b.dataset.city));$("dest").value=d?d.city+', '+d.country:b.dataset.city; if(d) updateLinks(d); document.getElementById("planner").scrollIntoView({behavior:"smooth"});});
-  }catch(e){st.textContent="לא הצלחתי לקבל תשובה מה-AI כרגע. נסה שוב בעוד רגע.";st.className="status error";out.innerHTML='<b>החיפוש לא הושלם.</b><br>לא הועברת לשום אתר חיצוני. נסה שוב.';out.classList.add('show');}
-  finally{btn.disabled=false;btn.textContent="מצא לי חופשה";}
+
+  const profiles={
+    "לימסול":{tags:["זוג","חוף","ים","חיי לילה","מסעדות","יוקרה","קצר"],cost:3,why:"שילוב נוח של ים, מסעדות, בילויים ואווירה זוגית, קרוב לישראל."},
+    "לרנקה":{tags:["זול","חוף","ים","משפחה","קצר","רגוע"],cost:1,why:"יעד קרוב ונוח לחופשה קצרה, עם חוף ועלויות יחסית נגישות."},
+    "פאפוס":{tags:["משפחה","ילדים","חוף","ים","רגוע","זוג"],cost:2,why:"מתאימה במיוחד לחופשה רגועה, זוגית או משפחתית, עם חופים ואטרקציות."},
+    "אתונה":{tags:["זוג","אוכל","מסעדות","קניות","חיי לילה","עיר","זול","קצר"],cost:2,why:"עיר קרובה עם אוכל מצוין, קניות, בילויים והרבה אפשרויות בתקציבים שונים."},
+    "כרתים":{tags:["משפחה","ילדים","חוף","ים","ריזורט","רגוע"],cost:2,why:"בחירה חזקה לחופים, ריזורטים וחופשה משפחתית או רגועה."},
+    "רודוס":{tags:["משפחה","ילדים","חוף","ים","זוג","קצר"],cost:2,why:"אי נוח לחופשת ים קצרה עם שילוב טוב של חופים, מלונות ועיר עתיקה."},
+    "מרבלה":{tags:["זוג","חוף","ים","חיי לילה","מסיבות","יוקרה","מסעדות"],cost:4,why:"מתאימה במיוחד למי שמחפש חופים, מסעדות, חיי לילה ואווירה יוקרתית."},
+    "ברצלונה":{tags:["זוג","חוף","ים","חיי לילה","אוכל","קניות","עיר"],cost:3,why:"משלבת עיר, חוף, אוכל, קניות וחיי לילה במקום אחד."},
+    "רומא":{tags:["זוג","רומנטי","אוכל","מסעדות","עיר","תרבות"],cost:3,why:"בחירה מצוינת לזוגות שמחפשים אוכל, אווירה רומנטית, היסטוריה ושיטוט בעיר."},
+    "מילאנו":{tags:["זוג","קניות","יוקרה","עיר","אוכל"],cost:4,why:"מתאימה לקניות, אופנה, מסעדות וחופשה עירונית ברמה גבוהה."},
+    "פריז":{tags:["זוג","רומנטי","יוקרה","אוכל","עיר","קניות"],cost:4,why:"יעד זוגי ורומנטי עם אוכל, קניות ואטרקציות עירוניות."},
+    "לונדון":{tags:["משפחה","ילדים","קניות","עיר","תרבות","אוכל"],cost:5,why:"מלאה באטרקציות, קניות, מופעים ואפשרויות שמתאימות גם למשפחות."},
+    "פראג":{tags:["זוג","רומנטי","זול","עיר","אוכל","קצר"],cost:2,why:"עיר יפה ונוחה לזוגות, עם מרכז קומפקטי ועלויות יחסית נגישות."},
+    "בודפשט":{tags:["זוג","זול","חיי לילה","אוכל","עיר","קצר"],cost:2,why:"נותנת תמורה טובה לתקציב עם אוכל, בילויים, ספא וחיי לילה."},
+    "וינה":{tags:["זוג","תרבות","עיר","רגוע","משפחה"],cost:3,why:"עיר מסודרת ואלגנטית שמתאימה לתרבות, אוכל וחופשה רגועה."},
+    "אמסטרדם":{tags:["זוג","חיי לילה","עיר","אוכל","תרבות"],cost:4,why:"מתאימה לחופשה עירונית תוססת עם אוכל, מוזיאונים וחיי לילה."},
+    "ברלין":{tags:["חיי לילה","מסיבות","עיר","זול","תרבות"],cost:3,why:"חזקה במיוחד בחיי לילה, תרבות ואווירה עירונית צעירה."},
+    "דובאי":{tags:["משפחה","ילדים","יוקרה","קניות","חוף","ים","מסעדות"],cost:5,why:"מתאימה ליוקרה, קניות, מלונות ברמה גבוהה ואטרקציות למשפחות."},
+    "טביליסי":{tags:["זול","אוכל","זוג","עיר","קצר"],cost:1,why:"יעד נגיש בתקציב עם אוכל, אווירה מקומית וחופשה עירונית קצרה."},
+    "בטומי":{tags:["זול","חוף","ים","חיי לילה","זוג"],cost:1,why:"משלבת ים, בילויים ומחירים נגישים יחסית."},
+    "בנגקוק":{tags:["אוכל","קניות","חיי לילה","זול","עיר"],cost:3,why:"מתאימה למי שמחפש אוכל, שווקים, קניות וחיי לילה בחופשה ארוכה יותר."},
+    "פוקט":{tags:["זוג","חוף","ים","משפחה","ריזורט","חיי לילה"],cost:4,why:"בחירה חזקה לחופשת חופים וריזורטים, לזוגות וגם למשפחות."},
+    "ניו יורק":{tags:["עיר","קניות","אוכל","חיי לילה","יוקרה"],cost:5,why:"מתאימה לחופשה עירונית עמוסת קניות, אוכל, מופעים ואטרקציות."},
+    "מיאמי":{tags:["חוף","ים","חיי לילה","מסיבות","יוקרה","קניות"],cost:5,why:"חזקה בחופים, חיי לילה, קניות ואווירה תוססת."}
+  };
+  const aliases={"חופים":"חוף","ים":"ים","מסיבה":"מסיבות","בילויים":"חיי לילה","מועדונים":"חיי לילה","לילה":"חיי לילה","קולינריה":"אוכל","מסעדה":"מסעדות","שופינג":"קניות","רומנטיקה":"רומנטי","רומנטית":"רומנטי","ילד":"ילדים","ילדים":"ילדים","משפחתי":"משפחה","משפחתית":"משפחה","יוקרתי":"יוקרה","יוקרתית":"יוקרה","שקט":"רגוע","בטן גב":"חוף"};
+  const wanted=[];
+  Object.entries(aliases).forEach(([word,tag])=>{if(text.includes(norm(word))) wanted.push(tag);});
+  ["זוג","משפחה","ילדים","חוף","ים","חיי לילה","מסיבות","אוכל","מסעדות","קניות","יוקרה","רומנטי","רגוע","עיר","תרבות"].forEach(tag=>{if(text.includes(norm(tag))) wanted.push(tag);});
+  const explicit=destinations.find(d=>text.includes(norm(d.city))||text.includes(norm(d.en)));
+  const nums=(raw.match(/[\d,]+/g)||[]).map(x=>Number(x.replace(/,/g,''))).filter(Boolean);
+  const mentionedBudget=nums.find(n=>n>=1000) || Number($("budget").value) || 10000;
+  const low=mentionedBudget<=7000, high=mentionedBudget>=16000;
+  const scored=destinations.map(d=>{
+    const p=profiles[d.city]||{tags:[],cost:3,why:"יעד מגוון שמתאים לחופשה בחו״ל."};
+    let score=0;
+    wanted.forEach(t=>{if(p.tags.includes(t))score+=3;});
+    if(low) score+=(p.cost<=2?4:-p.cost); else if(high) score+=(p.cost>=3?2:0); else score+=(p.cost<=4?1:0);
+    if(explicit&&explicit.city===d.city) score+=20;
+    if(text.includes("3 לילות")||text.includes("4 לילות")||text.includes("סופש")||text.includes("סוף שבוע")) if(p.tags.includes("קצר")) score+=3;
+    return {d,p,score};
+  }).sort((a,b)=>b.score-a.score);
+  const picks=[];
+  if(explicit){const x=scored.find(x=>x.d.city===explicit.city);if(x)picks.push(x);}
+  for(const x of scored){if(picks.length>=3)break;if(!picks.some(y=>y.d.city===x.d.city))picks.push(x);}
+  const cards=picks.map((x,i)=>{
+    const d=x.d,p=x.p,q=encodeURIComponent(d.city+', '+d.country);
+    const hotel='https://www.expedia.com/Hotel-Search?destination='+q;
+    const gyg='https://www.getyourguide.com/s/?q='+q+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site';
+    const fit=wanted.filter(t=>p.tags.includes(t)).slice(0,4);
+    const vibe=fit.length?'מתאים במיוחד ל: '+fit.join(' · '):'אפשרות מאוזנת לפי הבקשה שלך';
+    return `<div style="background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:14px;padding:13px;margin-top:9px"><b style="font-size:18px">${i+1}. ${esc(d.city)}, ${esc(d.country)}</b><div style="margin-top:5px">${esc(p.why)}</div><small style="display:block;margin-top:7px;color:#80634b">${esc(vibe)}</small><div class="ai-actions"><a class="btn brown" href="${hotel}" target="_blank" rel="noopener">בדוק מלונות וחבילות</a><a class="btn" href="${gyg}" target="_blank" rel="noopener">אטרקציות</a><button type="button" class="btn aiUse" data-city="${esc(d.city)}">בחר יעד</button></div></div>`;
+  }).join('');
+  out.innerHTML=`<b>מצאתי 3 כיוונים שמתאימים למה שכתבת</b>${cards}<div style="font-size:10px;margin-top:10px;color:#d8c3a7">ההתאמה נעשית במנוע TAKE ME ללא שירות AI חיצוני. מחירים וזמינות סופיים מוצגים אצל ספק ההזמנה.</div>`;
+  out.classList.add("show");st.textContent="הכנתי 3 הצעות בתוך TAKE ME ✓";st.className="status ok";
+  out.querySelectorAll('.aiUse').forEach(b=>b.onclick=()=>{const d=destinations.find(x=>norm(x.city)===norm(b.dataset.city));$("dest").value=d?d.city+', '+d.country:b.dataset.city;if(d)updateLinks(d);document.getElementById("planner").scrollIntoView({behavior:"smooth"});});
+  btn.disabled=false;btn.textContent="מצא לי חופשה";
 }
 $("aiBuild").addEventListener("click",aiRecommend);
 $("aiPrompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")aiRecommend();});

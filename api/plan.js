@@ -6,9 +6,9 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const apiKey = process.env.AI_GATEWAY_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: "AI Gateway is not configured" });
+    return res.status(500).json({ error: "Gemini is not configured" });
   }
 
   const body = req.body || {};
@@ -64,8 +64,8 @@ module.exports = async function handler(req, res) {
 `;
 
   try {
-    const gatewayResponse = await fetch(
-      "https://ai-gateway.vercel.sh/v1/chat/completions",
+    const geminiResponse = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
       {
         method: "POST",
         headers: {
@@ -73,7 +73,7 @@ module.exports = async function handler(req, res) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "openai/gpt-5.6-sol",
+          model: "gemini-3.8-flash",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: context }
@@ -83,10 +83,10 @@ module.exports = async function handler(req, res) {
       }
     );
 
-    const payload = await gatewayResponse.json();
+    const payload = await geminiResponse.json();
 
-    if (!gatewayResponse.ok) {
-      console.error("AI Gateway error", gatewayResponse.status, payload);
+    if (!geminiResponse.ok) {
+      console.error("Gemini API error", geminiResponse.status, payload);
       return res.status(502).json({ error: "שירות ה-AI לא זמין כרגע" });
     }
 

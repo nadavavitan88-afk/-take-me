@@ -107,7 +107,33 @@ module.exports = async function handler(req, res) {
       return res.status(502).json({ error: "לא התקבלה המלצה" });
     }
 
-    result.recommendations = result.recommendations.slice(0, 3);
+    // When the user names a destination, never leak recommendations for other destinations.
+    // The model sometimes returns extra destinations despite the instruction, so enforce it here.
+    const destinationAliases = [
+      ["דובאי", ["דובאי", "Dubai"]],
+      ["אבו דאבי", ["אבו דאבי", "Abu Dhabi"]],
+      ["רומא", ["רומא", "Rome"]],
+      ["לימסול", ["לימסול", "Limassol"]],
+      ["ברצלונה", ["ברצלונה", "Barcelona"]],
+      ["מרבלה", ["מרבלה", "Marbella"]],
+      ["פריז", ["פריז", "Paris"]],
+      ["לונדון", ["לונדון", "London"]],
+      ["אתונה", ["אתונה", "Athens"]],
+      ["פאפוס", ["פאפוס", "Paphos"]]
+    ];
+    const requestedDestination = destinationAliases.find(([, aliases]) =>
+      aliases.some((alias) => userPrompt.toLowerCase().includes(alias.toLowerCase()))
+    );
+    if (requestedDestination) {
+      const aliases = requestedDestination[1];
+      const matching = result.recommendations.filter((recommendation) =>
+        aliases.some((alias) => JSON.stringify(recommendation).toLowerCase().includes(alias.toLowerCase()))
+      );
+      result.recommendations = (matching.length ? matching : [result.recommendations[0]]).slice(0, 1);
+      result.recommendations[0].city = requestedDestination[0];
+    } else {
+      result.recommendations = result.recommendations.slice(0, 3);
+    }
     return res.status(200).json(result);
   } catch (error) {
     console.error("TAKE ME AI error", error);

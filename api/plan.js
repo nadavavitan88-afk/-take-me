@@ -121,8 +121,9 @@ module.exports = async function handler(req, res) {
       ["אתונה", ["אתונה", "Athens"]],
       ["פאפוס", ["פאפוס", "Paphos"]]
     ];
+    const requestText = JSON.stringify(body);
     const requestedDestination = destinationAliases.find(([, aliases]) =>
-      aliases.some((alias) => userPrompt.toLowerCase().includes(alias.toLowerCase()))
+      aliases.some((alias) => requestText.toLowerCase().includes(alias.toLowerCase()))
     );
     if (requestedDestination) {
       const aliases = requestedDestination[1];

@@ -135,6 +135,8 @@ module.exports = async function handler(req, res) {
     } else {
       result.recommendations = result.recommendations.slice(0, 3);
     }
+    // The planner UI currently renders one destination card. Keep the API response aligned with it.
+    result.recommendations = result.recommendations.slice(0, 1);
     return res.status(200).json(result);
   } catch (error) {
     console.error("TAKE ME AI error", error);

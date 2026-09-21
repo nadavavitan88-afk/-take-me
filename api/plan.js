@@ -78,7 +78,7 @@ module.exports = async function handler(req, res) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: process.env.GEMINI_MODEL || "gemini-3.8-flash",
+          model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: context }

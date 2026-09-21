@@ -6,7 +6,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = (process.env.GEMINI_API_KEY || "").trim();
   if (!apiKey) {
     return res.status(500).json({ error: "Gemini is not configured" });
   }
@@ -40,7 +40,9 @@ module.exports = async function handler(req, res) {
       "country": "שם המדינה בעברית",
       "why": "משפט או שניים קצרים למה היעד מתאים",
       "vibe": "3-4 מאפיינים קצרים",
-      "estimatedBudget": "טווח תכנון משוער בשקלים, עם המילה משוער"
+      "estimatedBudget": "טווח תכנון משוער בשקלים, עם המילה משוער",
+      "hotels": [{"name":"שם מלון אמיתי באנגלית","why":"למה מתאים לבקשה"}],
+      "attractions": [{"name":"שם אטרקציה אמיתית","why":"למה מתאימה לבקשה"}]
     }
   ]
 }
@@ -48,13 +50,15 @@ module.exports = async function handler(req, res) {
 כללים:
 - כאשר צוין יעד מפורש: המלצה אחת בלבד, באותו יעד בדיוק.
 - כאשר לא צוין יעד מפורש: בדיוק 3 המלצות שונות.
-- תעדף יעדים פרקטיים מישראל כאשר זה מתאים.
+- לכל יעד הצע 3 מלונות אמיתיים באותו יעד ו-3 אטרקציות באותו יעד. אלה הצעות לבדיקה בלבד; אין לטעון שהמלון זמין או מתאים לתקציב בוודאות. אל תמציא שמות.\n- תעדף יעדים פרקטיים מישראל כאשר זה מתאים.
 - התחשב בתקציב, הרכב נוסעים, תאריכים, חופים, חיי לילה, משפחות, זוגות, קניות וכשרות אם הוזכרו.
 - אל תמציא זמינות, מחיר חי, מבצע או טיסה ספציפית.
 `;
 
   const context = `
 בקשת המשתמש: ${userPrompt}
+יעד מפורש שאומת בטופס (אם ריק, זהה מתוך הבקשה): ${String(body.destination || "").slice(0,100)}
+כאשר נמסר יעד מפורש, השדה city חייב להיות זהה לו.
 נקודת יציאה: ${String(body.origin || "תל אביב")}
 תאריך יציאה: ${String(body.from || "לא צוין")}
 תאריך חזרה: ${String(body.to || "לא צוין")}
@@ -68,12 +72,13 @@ module.exports = async function handler(req, res) {
       "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
       {
         method: "POST",
+        signal: AbortSignal.timeout(45000),
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "gemini-3.8-flash",
+          model: process.env.GEMINI_MODEL || "gemini-3.8-flash",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: context }
@@ -86,8 +91,8 @@ module.exports = async function handler(req, res) {
     const payload = await geminiResponse.json();
 
     if (!geminiResponse.ok) {
-      console.error("Gemini API error", geminiResponse.status, payload);
-      return res.status(502).json({ error: "שירות ה-AI לא זמין כרגע" });
+      console.error("Gemini API error", geminiResponse.status, payload?.error?.status || "upstream_error");
+      return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status });
     }
 
     const text = payload?.choices?.[0]?.message?.content;
@@ -99,7 +104,7 @@ module.exports = async function handler(req, res) {
     try {
       result = JSON.parse(text);
     } catch (error) {
-      console.error("AI JSON parse error", text);
+      console.error("AI JSON parse error");
       return res.status(502).json({ error: "תשובת AI לא תקינה" });
     }
 
@@ -107,39 +112,23 @@ module.exports = async function handler(req, res) {
       return res.status(502).json({ error: "לא התקבלה המלצה" });
     }
 
-    // When the user names a destination, never leak recommendations for other destinations.
-    // The model sometimes returns extra destinations despite the instruction, so enforce it here.
-    const destinationAliases = [
-      ["דובאי", ["דובאי", "Dubai"]],
-      ["אבו דאבי", ["אבו דאבי", "Abu Dhabi"]],
-      ["רומא", ["רומא", "Rome"]],
-      ["לימסול", ["לימסול", "Limassol"]],
-      ["ברצלונה", ["ברצלונה", "Barcelona"]],
-      ["מרבלה", ["מרבלה", "Marbella"]],
-      ["פריז", ["פריז", "Paris"]],
-      ["לונדון", ["לונדון", "London"]],
-      ["אתונה", ["אתונה", "Athens"]],
-      ["פאפוס", ["פאפוס", "Paphos"]]
-    ];
-    const requestText = JSON.stringify(body);
-    const requestedDestination = destinationAliases.find(([, aliases]) =>
-      aliases.some((alias) => requestText.toLowerCase().includes(alias.toLowerCase()))
-    );
-    if (requestedDestination) {
-      const aliases = requestedDestination[1];
-      const matching = result.recommendations.filter((recommendation) =>
-        aliases.some((alias) => JSON.stringify(recommendation).toLowerCase().includes(alias.toLowerCase()))
-      );
-      result.recommendations = (matching.length ? matching : [result.recommendations[0]]).slice(0, 1);
-      result.recommendations[0].city = requestedDestination[0];
-    } else {
-      result.recommendations = result.recommendations.slice(0, 3);
-    }
-    // The planner UI currently renders one destination card. Keep the API response aligned with it.
-    result.recommendations = result.recommendations.slice(0, 1);
+    const requested = typeof body.destination === "string" ? body.destination.trim().slice(0,100) : "";
+    const clean = value => typeof value === "string" ? value.trim().slice(0,500) : "";
+    const items = value => Array.isArray(value) ? value.slice(0,3).map(x => ({
+      name: clean(x?.name), why: clean(x?.why)
+    })).filter(x => x.name) : [];
+    let recommendations = result.recommendations.filter(x => x && clean(x.city));
+    if (requested) {
+      recommendations = recommendations.filter(x => clean(x.city).toLowerCase() === requested.toLowerCase()).slice(0,1);
+    } else recommendations = recommendations.slice(0,3);
+    if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב."});
+    result = {recommendations: recommendations.map(x => ({
+      city:clean(x.city),country:clean(x.country),why:clean(x.why),
+      hotels:items(x.hotels),attractions:items(x.attractions)
+    }))};
     return res.status(200).json(result);
   } catch (error) {
-    console.error("TAKE ME AI error", error);
+    console.error("TAKE ME AI error", error?.name || "Error");
     return res.status(500).json({ error: "תקלה זמנית במנוע ה-AI" });
   }
 };

@@ -270,7 +270,16 @@ async function aiRecommend(){
       return '<article class="destination-result"><h3>'+safe(place)+'</h3><p>'+safe(d.why)+'</p><details class="recommendation-section"><summary>מלונות מומלצים</summary>'+hotels+link("https://www.expedia.com/Hotel-Search?destination="+q,"כל המלונות ביעד")+'</details><details class="recommendation-section"><summary>אטרקציות</summary>'+acts+link("https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","כל האטרקציות ביעד")+'</details></article>';
     }).join("")+'<p class="recommendation-note">המלצות לבדיקה בלבד. מחירים וזמינות יש לוודא באתר הספק.</p>';
     out.classList.add("show");st.textContent="ההמלצות מוכנות";st.className="status ok";
-  }catch(e){st.textContent=e.name==="TimeoutError"?"החיפוש התארך, נסה שוב.":e.message||"החיפוש נכשל";st.className="status error";}
+  }catch(e){
+    if(explicit){
+      const place=explicit.city+", "+explicit.country,q=encodeURIComponent(place);
+      const safe=v=>String(v||"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
+      out.innerHTML='<article class="destination-result"><h3>'+safe(place)+'</h3><p>מצאנו את היעד שביקשת. אפשר לפתוח מכאן מלונות ואטרקציות ולבחור לפי תאריכים ותקציב.</p><details class="recommendation-section" open><summary>מלונות בדובאי</summary><div class="recommendation-item"><strong>חיפוש מלונות לפי התאריכים שלך</strong><p>המחיר והזמינות יוצגו באתר הספק.</p><a class="btn" href="https://www.expedia.com/Hotel-Search?destination='+q+'" target="_blank" rel="noopener">פתח חיפוש מלונות</a></div></details><details class="recommendation-section" open><summary>אטרקציות בדובאי</summary><div class="recommendation-item"><strong>סיורים וחוויות בדובאי</strong><p>אפשר לבחור אטרקציות, סיורים וכרטיסים לפי התאריך.</p><a class="btn" href="https://www.getyourguide.com/s/?q='+q+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="noopener">פתח חיפוש אטרקציות</a></div></details></article><p class="recommendation-note">המלצות מפורטות זמנית לא נטענו; הקישורים עובדים ישירות מול ספקי ההזמנה.</p>';
+      out.classList.add("show");st.textContent="היעד נמצא — אפשר להמשיך להזמנה";st.className="status ok";
+    }else{
+      st.textContent=e.name==="TimeoutError"?"החיפוש התארך, נסה שוב.": "שירות ההמלצות זמנית לא זמין. נסה שוב או כתוב יעד מפורש.";st.className="status error";
+    }
+  }
   finally{btn.disabled=false;btn.textContent="מצא לי חופשה";}
 }
 $("aiBuild").addEventListener("click",aiRecommend);

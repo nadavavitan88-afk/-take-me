@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://take-me-v7-full.vercel.app/sitemap.xml

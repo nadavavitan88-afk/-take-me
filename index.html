@@ -309,4 +309,13 @@ $("engineStatus").textContent="מנוע האתר פעיל ✓";
 $("engineStatus").classList.add("ok");
 })();
 </script>
+<script>
+document.getElementById('build')?.addEventListener('click', function() {
+  if (typeof gtag === 'function') {
+    gtag('event', 'vacation_search', {
+      destination: document.getElementById('dest')?.value || 'unknown'
+    });
+  }
+});
+</script>
 </body></html>

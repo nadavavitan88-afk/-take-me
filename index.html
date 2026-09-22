@@ -318,4 +318,18 @@ document.getElementById('build')?.addEventListener('click', function() {
   }
 });
 </script>
+  <script>
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('a, button');
+  if (!btn) return;
+
+  if (btn.textContent.trim().includes('פתח טופס')) {
+    e.preventDefault();
+    window.open(
+      'https://formspry.com/f/cmu07a01400013o6y1pujeic8',
+      '_blank'
+    );
+  }
+});
+</script>
 </body></html>

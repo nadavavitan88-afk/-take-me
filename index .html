@@ -100,5 +100,22 @@ $('destList').innerHTML=destinations.map(d=>`<option value="${d.city}, ${d.count
 const now=new Date(),from=new Date(now);from.setDate(from.getDate()+30);const to=new Date(from);to.setDate(to.getDate()+4);const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10)};$('from').min=$('to').min=iso(now);$('from').value=iso(from);$('to').value=iso(to);$('budgetOut').textContent=money($('budget').value);renderChildAges();const initial=destinationInfo('לימסול');updateStaticLinks(initial);
 })();
 </script>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const formUrl = 'https://formspry.com/f/cmu07a01400013o6y1pujeic8';
+
+  document.querySelectorAll('a, button').forEach(function (el) {
+    if (el.textContent.includes('פתח טופס')) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.open(formUrl, '_blank');
+      }, true);
+    }
+  });
+});
+</script>
+
 </body>
 </html>

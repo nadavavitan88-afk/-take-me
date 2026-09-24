@@ -13,6 +13,13 @@ module.exports = async function handler(req, res) {
 
   const body = req.body || {};
   const userPrompt = String(body.prompt || "").trim().slice(0, 1800);
+  const children = Number(body.children ?? 0);
+  const ages = body.childAges;
+  if (!Number.isInteger(children) || children < 0 || children > 5 ||
+      (children > 0 && (!Array.isArray(ages) || ages.length !== children ||
+        ages.some(age => !Number.isInteger(age) || age < 0 || age > 17)))) {
+    return res.status(400).json({ error: "נא לבחור גיל תקין לכל ילד" });
+  }
 
   if (userPrompt.length < 5) {
     return res.status(400).json({ error: "נא לתאר את החופשה בכמה מילים" });
@@ -65,6 +72,7 @@ module.exports = async function handler(req, res) {
 תקציב מהטופס: ${body.budget ? "₪" + String(body.budget) : "לא צוין"}
 מבוגרים: ${String(body.adults || 2)}
 ילדים: ${String(body.children || 0)}
+גילאי הילדים בשנים (0 = פחות משנה): ${children ? ages.join(", ") : "אין ילדים"}
 `;
 
   try {

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=gtag('config', 'G-R8YWBD3TZK');"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R8YWBD3TZK"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -48,7 +48,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 </head>
 <body>
 <div class="wrap">
-<header><div><div class="brand">TAKE <span>ME</span></div><div class="tag">בחר יעד. אנחנו נסדר את השאר.</div></div><nav><a href="#planner">חיפוש</a><a href="#extras">כל מה שצריך</a><a href="#lead">עזרה אישית</a></nav></header>
+<header><div><div class="brand">TAKE <span>ME</span></div><div class="tag">תבחר יעד ואנחנו נבנה את הדרך.</div></div><nav><a href="#planner">חיפוש</a><a href="#extras">כל מה שצריך</a><a href="#lead">עזרה אישית</a></nav></header>
 
 <section class="hero" id="planner">
 <div class="eyebrow">TAKE ME · הכול מתחיל כאן</div>
@@ -111,7 +111,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 </div>
 
 <section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><a class="btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener">פתח טופס</a></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: ONE-FILE-2026-09-15</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: 2026-09-25</span></div>
 </div>
 
 <script>
@@ -330,7 +330,7 @@ document.querySelectorAll(".chip").forEach(x=>x.addEventListener("click",()=>x.c
 
 const start=new Date(); start.setDate(start.getDate()+30);
 const end=new Date(start); end.setDate(end.getDate()+4);
-const iso=d=>d.toISOString().slice(0,10);
+const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
 $("from").value=iso(start); $("to").value=iso(end);
 $("from").min=$("to").min=iso(new Date());
 renderChildAges();

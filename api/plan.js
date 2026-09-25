@@ -17,13 +17,23 @@ module.exports = async function handler(req, res) {
   const children = Number(body.children ?? 0);
   const ages = body.childAges;
   const adults = Number(body.adults ?? 2);
-  if (!Number.isInteger(adults) || adults < 0 || adults > 6 || adults + children < 1 || adults + children > 6) {
+  if (!Number.isInteger(adults) || adults < 1 || adults > 6 || adults + children < 1 || adults + children > 6) {
     return res.status(400).json({error:"יש לבחור בין נוסע אחד לשישה נוסעים בסך הכול"});
   }
   if (!Number.isInteger(children) || children < 0 || children > 5 ||
       (children > 0 && (!Array.isArray(ages) || ages.length !== children ||
         ages.some(age => !Number.isInteger(age) || age < 0 || age > 17)))) {
     return res.status(400).json({ error: "נא לבחור גיל תקין לכל ילד" });
+  }
+
+  const from = String(body.from || ""), to = String(body.to || "");
+  const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0,10) === value;
+  const today = new Date().toISOString().slice(0,10);
+  if (!validDate(from) || !validDate(to) || from < today || to <= from) {
+    return res.status(400).json({error:"יש לבחור תאריכי יציאה וחזרה עתידיים ותקינים"});
+  }
+  if (typeof body.destination === "string" && body.destination.length > 100) {
+    return res.status(400).json({error:"יעד לא תקין"});
   }
 
   if (userPrompt.length < 5) {

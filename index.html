@@ -420,7 +420,17 @@ $("modeIsrael").addEventListener("click",()=>setTravelMode("israel"));
 $("aiBuild").addEventListener("click",aiRecommend);
 $("aiPrompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")aiRecommend();});
 
-$("dest").addEventListener("input",renderSuggestions);
+$("dest").addEventListener("input",()=>{
+ const typed=norm($("dest").value);
+ const domestic=israelDestinations.find(d=>norm(d.city).startsWith(typed)||norm(d.en).startsWith(typed));
+ const foreign=destinations.find(d=>norm(d.city).startsWith(typed)||norm(d.en).startsWith(typed));
+ if(typed.length>=2 && domestic && !foreign && travelMode!=="israel"){
+   const value=$("dest").value;setTravelMode("israel");$("dest").value=value;
+ }else if(typed.length>=2 && foreign && !domestic && travelMode!=="abroad"){
+   const value=$("dest").value;setTravelMode("abroad");$("dest").value=value;
+ }
+ renderSuggestions();
+});
 $("dest").addEventListener("focus",renderSuggestions);
 document.addEventListener("click",e=>{if(!e.target.closest("#dest")&&!e.target.closest("#destSuggest"))$("destSuggest").classList.remove("open");});
 $("children").addEventListener("change",renderChildAges);

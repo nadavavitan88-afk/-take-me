@@ -92,7 +92,7 @@ module.exports = async function handler(req, res) {
 
   try {
     // Use Google's native generateContent API rather than the OpenAI compatibility route.
-    const models = [process.env.GEMINI_MODEL, "gemini-2.5-flash", "gemini-2.5-flash-lite"].filter((m,i,a)=>m && a.indexOf(m)===i);
+    const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
     let result;
     let lastStatus = 0;
     let lastReason = "upstream";

@@ -336,10 +336,14 @@ function buildTrip(){
 const curatedDubai={hotels:[{name:"Atlantis, The Palm",why:"ריזורט משפחתי עם פארק מים."},{name:"Jumeirah Beach Hotel",why:"מלון חוף עם בריכות ואטרקציות משפחתיות."},{name:"JA Ocean View Hotel",why:"מלון באזור JBR, בקרבת החוף והטיילת."}],attractions:[{name:"Aquaventure Waterpark",why:"פארק מים למשפחות."},{name:"Dubai Aquarium & Underwater Zoo",why:"אקווריום ואטרקציה מקורה."},{name:"Burj Khalifa At The Top",why:"תצפית על העיר."}]};
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
 async function aiRecommend(){
-  const revision=searchRevision;
+  let revision=searchRevision;
   const raw=$("aiPrompt").value.trim(),out=$("aiAnswer"),st=$("aiStatus"),btn=$("aiBuild");
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי למקד את החיפוש.";st.className="status error";return;}
-  const explicit=activeDestinations().find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)))||findDestination($("dest").value);
+  const domesticMention=israelDestinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
+  const foreignMention=destinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
+  if(domesticMention && !foreignMention && travelMode!=="israel")setTravelMode("israel");
+  const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
+  revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
   if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
   const totalTravelers=Number($("adults").value)+Number($("children").value);

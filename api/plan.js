@@ -3,7 +3,19 @@ module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
   if (req.method === "GET") {
-    return res.status(200).json({ service: "take-me-ai", configured: Boolean((process.env.GEMINI_API_KEY || "").trim()), model: process.env.GEMINI_MODEL || "gemini-flash-latest" });
+    const key=(process.env.GEMINI_API_KEY || "").trim();
+    if (req.query?.diagnose === "models") {
+      if (!key) return res.status(200).json({configured:false,error:"MISSING_KEY"});
+      try {
+        const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=100",{
+          headers:{"x-goog-api-key":key},signal:AbortSignal.timeout(12000)
+        });
+        const payload=await response.json();
+        if (!response.ok) return res.status(200).json({configured:true,status:response.status,error:payload?.error?.status||"UPSTREAM_ERROR",message:String(payload?.error?.message||"").slice(0,180)});
+        return res.status(200).json({configured:true,status:200,models:(payload.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")).map(m=>m.name).filter(n=>n.includes("flash")).slice(0,25)});
+      } catch(e) {return res.status(200).json({configured:true,error:"MODEL_DISCOVERY_FAILED",type:e?.name||"Error"});}
+    }
+    return res.status(200).json({service:"take-me-ai",configured:Boolean(key),model:process.env.GEMINI_MODEL||"gemini-flash-latest"});
   }
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });

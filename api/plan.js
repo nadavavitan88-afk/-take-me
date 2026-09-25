@@ -81,7 +81,7 @@ module.exports = async function handler(req, res) {
   try {
     // Retry temporary upstream overload, then use a stable Flash model.
     const primaryModel = process.env.GEMINI_MODEL || "gemini-flash-latest";
-    const models = [primaryModel, "gemini-2.5-flash"].filter((m,i,a)=>a.indexOf(m)===i);
+    const models = [primaryModel, "gemini-2.5-flash", "gemini-2.0-flash"].filter((m,i,a)=>a.indexOf(m)===i);
     let geminiResponse;
     let usedModel = primaryModel;
     for (let attempt = 0; attempt < 3; attempt++) {
@@ -99,8 +99,8 @@ module.exports = async function handler(req, res) {
           response_format: { type: "json_object" }
         })
       });
-      if (![500,502,503,504].includes(geminiResponse.status) || attempt===2) break;
-      console.warn("Gemini temporary upstream failure; retrying", {status:geminiResponse.status,model:usedModel,attempt:attempt+1});
+      if (![404,500,502,503,504].includes(geminiResponse.status) || attempt===2) break;
+      console.warn("Gemini model unavailable or upstream failure; retrying", {status:geminiResponse.status,model:usedModel,attempt:attempt+1});
       await geminiResponse.body?.cancel();
       await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
     }
@@ -111,7 +111,7 @@ module.exports = async function handler(req, res) {
     catch { console.error("Gemini returned non-JSON response", {status:geminiResponse.status}); return res.status(502).json({error:"שירות ההמלצות החזיר תשובה לא תקינה",code:"GEMINI_INVALID_RESPONSE"}); }
 
     if (!geminiResponse.ok) {
-      console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:usedModel});
+      console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:usedModel,upstreamMessage:String(payload?.error?.message || "").slice(0,350)});
       return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status, reason: geminiResponse.status===401||geminiResponse.status===403?"authentication":geminiResponse.status===429?"quota":geminiResponse.status===404?"model_not_found":"upstream" });
     }
 

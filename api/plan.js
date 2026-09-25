@@ -92,7 +92,7 @@ module.exports = async function handler(req, res) {
 
   try {
     // Use Google's native generateContent API rather than the OpenAI compatibility route.
-    const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+    const models = ["gemini-3.5-flash-lite", "gemini-3.5-flash"];
     let result;
     let lastStatus = 0;
     let lastReason = "upstream";
@@ -134,7 +134,7 @@ module.exports = async function handler(req, res) {
       }
       if (result) break;
     }
-    if (!result) return res.status(502).json({error:"שירות ההמלצות לא הצליח להשיב. נסו שוב מאוחר יותר.",code:"GEMINI_"+lastStatus,reason:lastReason,detail:lastStatus===404?lastDetail:undefined});
+    if (!result) return res.status(502).json({error:"שירות ההמלצות לא הצליח להשיב. נסו שוב מאוחר יותר.",code:"GEMINI_"+lastStatus,reason:lastReason});
 
     if (!Array.isArray(result.recommendations) || result.recommendations.length < 1) {
       return res.status(502).json({ error: "לא התקבלה המלצה", code:"NO_RECOMMENDATIONS" });

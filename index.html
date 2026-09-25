@@ -245,7 +245,7 @@ function expediaHotelLink(place){
 }
 function expediaFlightLink(d){
  const origin=originCode(), destination=(d.iata||"").split("/")[0];
- if(!/^[A-Z]{3}$/.test(destination)) return "https://www.google.com/travel/flights?q="+encodeURIComponent("Flights from "+origin+" to "+(d.en||d.city)+" "+$("from").value+" return "+$("to").value);
+ if(!/^[A-Z]{3}$/.test(destination)) return "https://www.google.com/travel/flights?q="+encodeURIComponent("Round trip flights from "+origin+" to "+(d.en||d.city)+" departing "+$("from").value+" returning "+$("to").value+" for "+$("adults").value+" adults and "+$("children").value+" children");
  const departure=$("from").value, returning=$("to").value;
  const adults=Number($("adults").value), ages=childAges();
  const params=new URLSearchParams({flightType:"roundtrip",mode:"search",trip:"roundtrip",leg1:"from:"+origin+",to:"+destination+",departure:"+departure+"TANYT",leg2:"from:"+destination+",to:"+origin+",departure:"+returning+"TANYT",passengers:"adults:"+adults+",children:"+ages.length+",seniors:0,infantinlap:N"});
@@ -301,7 +301,7 @@ async function aiRecommend(){
     const body={prompt:raw,destination:explicit?explicit.city:"",childAges:childAges()};
     ["origin","from","to","budget","adults","children"].forEach(id=>body[id]=$(id).value);
     const r=await fetch("/api/plan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:AbortSignal.timeout(55000)});
-    const data=await r.json();if(revision!==searchRevision)return;if(!r.ok){const diagnostic=data.code?(" ["+data.code+(data.reason?": "+data.reason:"")+(data.detail?" — "+data.detail:"")+"]"):" [HTTP "+r.status+"]";throw new Error((data.error||"החיפוש נכשל")+diagnostic);}
+    const data=await r.json();if(revision!==searchRevision)return;if(!r.ok){const diagnostic=data.code?(" ["+data.code+(data.reason?": "+data.reason:"")+"]"):" [HTTP "+r.status+"]";throw new Error((data.error||"החיפוש נכשל")+diagnostic);}
     const recs=(explicit?data.recommendations.filter(x=>norm(x.city)===norm(explicit.city)):data.recommendations).slice(0,explicit?1:3);
     if(!recs.length)throw new Error("לא התקבלו המלצות ליעד שביקשת");
     const safe=v=>String(v||"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));

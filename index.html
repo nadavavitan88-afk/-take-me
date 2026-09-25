@@ -168,10 +168,14 @@ function originCode(){
  const m = $("origin").value.match(/\(([A-Z]{3})\)/);
  return m ? m[1] : "TLV";
 }
+function validTravelDates(){
+ const from=$("from").value,to=$("to").value;
+ const today=new Date(), localToday=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");
+ return /^\d{4}-\d{2}-\d{2}$/.test(from)&&/^\d{4}-\d{2}-\d{2}$/.test(to)&&from>=localToday&&to>from&&Number.isFinite(Date.parse(from))&&Number.isFinite(Date.parse(to));
+}
 function nights(){
- const a=$("from").value,b=$("to").value;
- if(!a||!b) return 0;
- return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/86400000);
+ if(!validTravelDates())return 0;
+ return Math.round((new Date($("to").value+"T12:00:00")-new Date($("from").value+"T12:00:00"))/86400000);
 }
 function money(n){return new Intl.NumberFormat("he-IL").format(Math.round(n))+" ₪";}
 function findDestination(q){
@@ -268,7 +272,7 @@ function buildTrip(){
  if(!d){status.textContent="בחר יעד מהרשימה.";status.classList.add("error");$("dest").focus();return;}
  if(n<=0){status.textContent="בחר תאריכי יציאה וחזרה תקינים.";status.classList.add("error");return;}
  const adults=Number($("adults").value), children=Number($("children").value), total=adults+children, budget=Number($("budget").value);
- if(total<1||total>6){status.textContent="בחיפוש חבילת טיסה + מלון יש לבחור בין נוסע אחד לשישה נוסעים.";status.classList.add("error");return;}
+ if(adults<1||total>6){status.textContent="יש לבחור לפחות מבוגר אחד ועד שישה נוסעים בסך הכול.";status.classList.add("error");return;}
  if(!validChildAges()){status.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";status.classList.add("error");$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
  $("dest").value=d.city+", "+d.country;
  $("resultTitle").textContent=d.city+", "+d.country;
@@ -293,7 +297,7 @@ async function aiRecommend(){
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
   if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
   const totalTravelers=Number($("adults").value)+Number($("children").value);
-  if(totalTravelers<1||totalTravelers>6){st.textContent="בחר בין נוסע אחד לשישה נוסעים בסך הכול.";st.className="status error";$("adults").focus();return;}
+  if(Number($("adults").value)<1||totalTravelers>6){st.textContent="בחר לפחות מבוגר אחד ועד שישה נוסעים בסך הכול.";st.className="status error";$("adults").focus();return;}
   if(childMention && Number($("children").value)===0){st.textContent="ציינת ילד בחיפוש. בחר למעלה את מספר הילדים ואת גילם כדי שנעביר לספק את ההרכב הנכון.";st.className="status error";$("children").focus();return;}
   if(!validChildAges()){st.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";st.className="status error";$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
   btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent="מחפש מלונות ואטרקציות שמתאימים לבקשה…";st.className="status";out.classList.remove("show");

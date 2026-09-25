@@ -99,8 +99,8 @@ module.exports = async function handler(req, res) {
     const payload = await geminiResponse.json();
 
     if (!geminiResponse.ok) {
-      console.error("Gemini API error", geminiResponse.status, payload?.error?.status || "upstream_error");
-      return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status });
+      console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:process.env.GEMINI_MODEL || "gemini-flash-latest"});
+      return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status, reason: geminiResponse.status===401||geminiResponse.status===403?"authentication":geminiResponse.status===429?"quota":geminiResponse.status===404?"model_not_found":"upstream" });
     }
 
     const text = payload?.choices?.[0]?.message?.content;
@@ -136,7 +136,7 @@ module.exports = async function handler(req, res) {
     }))};
     return res.status(200).json(result);
   } catch (error) {
-    console.error("TAKE ME AI error", error?.name || "Error");
+    console.error("TAKE ME AI error", {name:error?.name || "Error",message:error?.message || "unknown"});
     return res.status(500).json({ error: "תקלה זמנית במנוע ה-AI" });
   }
 };

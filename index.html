@@ -249,16 +249,9 @@ function expediaHotelLink(place){
  return "https://www.expedia.com/Hotel-Search?"+params.toString();
 }
 function expediaFlightLink(d){
- const origin=originCode(), destination=(d.en||d.city||"").trim();
- const departure=$("from").value, returning=$("to").value;
- const adults=Number($("adults").value), ages=childAges();
- const infants=ages.filter(age=>age<2).length, children=ages.length-infants;
- const query="Round trip flights from "+origin+" to "+destination+
-   " departing "+departure+" returning "+returning+
-   " for "+adults+" adults, "+children+" children aged 2-17 and "+infants+" infants under 2";
- // Use the supported Google Flights search entry point. Third-party Expedia
- // deep-link passenger parameters can produce an error page on mobile.
- return "https://www.google.com/travel/flights?q="+encodeURIComponent(query);
+ // Until a verified supplier integration is available, open the provider's
+ // search form without implying that traveler details have been prefilled.
+ return "https://www.google.com/travel/flights";
 }
 function flightSearchSummary(d){
  const ages=childAges(), infants=ages.filter(age=>age<2).length;

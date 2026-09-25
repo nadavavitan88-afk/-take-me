@@ -89,7 +89,8 @@ module.exports = async function handler(req, res) {
     let lastDetail = "";
     for (const model of models) {
       for (let attempt=0; attempt<2; attempt++) {
-        const response = await fetch(
+        let response;
+        try { response = await fetch(
           "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
           {
             method:"POST",
@@ -102,6 +103,11 @@ module.exports = async function handler(req, res) {
             })
           }
         );
+        } catch (networkError) {
+          lastReason=networkError?.name==="TimeoutError"?"timeout":"network";
+          console.warn("Gemini request failed",{model,reason:lastReason,attempt:attempt+1});
+          continue;
+        }
         lastStatus=response.status;
         const raw=await response.text();
         let payload;

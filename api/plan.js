@@ -109,9 +109,11 @@ module.exports = async function handler(req, res) {
       return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status, reason: geminiResponse.status===401||geminiResponse.status===403?"authentication":geminiResponse.status===429?"quota":geminiResponse.status===404?"model_not_found":"upstream" });
     }
 
-    const text = payload?.choices?.[0]?.message?.content;
+    const content = payload?.choices?.[0]?.message?.content;
+    const text = typeof content === "string" ? content : Array.isArray(content) ? content.filter(p => p?.type === "text").map(p => p.text || "").join("") : "";
     if (!text) {
-      return res.status(502).json({ error: "לא התקבלה תשובה מה-AI", code:"EMPTY_AI_RESPONSE" });
+      console.error("Empty Gemini content", {finishReason:payload?.choices?.[0]?.finish_reason || null,model:payload?.model || null});
+      return res.status(502).json({ error: "לא התקבלה תשובה מה-AI", code:"EMPTY_AI_RESPONSE", finishReason:payload?.choices?.[0]?.finish_reason || "unknown" });
     }
 
     let result;

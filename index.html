@@ -346,8 +346,10 @@ async function aiRecommend(){
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי למקד את החיפוש.";st.className="status error";return;}
   const domesticMention=israelDestinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
   const foreignMention=destinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
-  if(domesticMention && !foreignMention && travelMode!=="israel")setTravelMode("israel");
-  if(foreignMention && !domesticMention && travelMode!=="abroad")setTravelMode("abroad");
+  const asksIsrael=/(?:בארץ|בישראל|חופשה בישראל|נופש בארץ|צימר|צימרים)/.test(raw);
+  const asksAbroad=/(?:בחו"ל|לחו"ל|בחול|לחול|טיסה ל)/.test(raw);
+  if((domesticMention&&!foreignMention || asksIsrael&&!foreignMention&&!asksAbroad) && travelMode!=="israel")setTravelMode("israel");
+  if((foreignMention&&!domesticMention || asksAbroad&&!domesticMention&&!asksIsrael) && travelMode!=="abroad")setTravelMode("abroad");
   const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
   revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);

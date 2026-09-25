@@ -41,9 +41,11 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "נא לתאר את החופשה בכמה מילים" });
   }
 
+  const domestic = body.travelMode === "israel";
   const systemPrompt = `
 אתה מנוע תכנון החופשות של TAKE ME עבור קהל ישראלי.
 ענה בעברית בלבד.
+${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעדים בישראל, country חייב להיות ישראל. אין להציע טיסות, דרכונים או eSIM; התמקד במלונות, צימרים, חוויות ונסיעה יבשתית.":"מצב חופשה בחו״ל: הצע יעדים מחוץ לישראל בלבד."}
 
 כלל חשוב מאוד:
 - אם המשתמש ציין יעד ספציפי וברור, למשל "דובאי", "רומא", "לימסול" או כל עיר/אי/אזור אחר — אל תציע יעדים חלופיים.
@@ -79,7 +81,7 @@ module.exports = async function handler(req, res) {
 `;
 
   const context = `
-בקשת המשתמש: ${userPrompt}
+סוג חופשה: ${domestic ? "ישראל" : "חו״ל"}\nבקשת המשתמש: ${userPrompt}
 יעד מפורש שאומת בטופס (אם ריק, זהה מתוך הבקשה): ${String(body.destination || "").slice(0,100)}
 כאשר נמסר יעד מפורש, השדה city חייב להיות זהה לו.
 נקודת יציאה: ${String(body.origin || "תל אביב")}

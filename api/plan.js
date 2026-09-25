@@ -99,13 +99,13 @@ module.exports = async function handler(req, res) {
     let lastReason = "upstream";
     let lastDetail = "";
     for (const model of models) {
-      for (let attempt=0; attempt<2; attempt++) {
+      for (let attempt=0; attempt<1; attempt++) {
         let response;
         try { response = await fetch(
           "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
           {
             method:"POST",
-            signal:AbortSignal.timeout(10000),
+            signal:AbortSignal.timeout(8000),
             headers:{"x-goog-api-key":apiKey,"Content-Type":"application/json"},
             body:JSON.stringify({
               systemInstruction:{parts:[{text:systemPrompt}]},

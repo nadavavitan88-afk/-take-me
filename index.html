@@ -252,7 +252,8 @@ function expediaFlightLink(d){
  if(!/^[A-Z]{3}$/.test(destination)) return "https://www.google.com/travel/flights?q="+encodeURIComponent("Round trip flights from "+origin+" to "+(d.en||d.city)+" departing "+$("from").value+" returning "+$("to").value+" for "+$("adults").value+" adults and "+$("children").value+" children");
  const departure=$("from").value, returning=$("to").value;
  const adults=Number($("adults").value), ages=childAges();
- const params=new URLSearchParams({flightType:"roundtrip",mode:"search",trip:"roundtrip",leg1:"from:"+origin+",to:"+destination+",departure:"+departure+"TANYT",leg2:"from:"+destination+",to:"+origin+",departure:"+returning+"TANYT",passengers:"adults:"+adults+",children:"+ages.length+",seniors:0,infantinlap:N"});
+ const infants=ages.filter(age=>age<2).length, childSeats=ages.length-infants;
+ const params=new URLSearchParams({flightType:"roundtrip",mode:"search",trip:"roundtrip",leg1:"from:"+origin+",to:"+destination+",departure:"+departure+"TANYT",leg2:"from:"+destination+",to:"+origin+",departure:"+returning+"TANYT",passengers:"adults:"+adults+",children:"+childSeats+",seniors:0,infantinlap:"+infants});
  return "https://www.expedia.com/Flights-Search?"+params.toString();
 }
 function updateLinks(d){

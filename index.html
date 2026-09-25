@@ -45,7 +45,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 
 @media(max-width:900px){.search{grid-template-columns:1fr 1fr}.go{grid-column:span 2}.resultgrid{grid-template-columns:1fr 1fr}.servicegrid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.ai-row{grid-template-columns:1fr}.ai-go{min-height:50px}.age-grid{grid-template-columns:1fr 1fr}.wrap{padding:0 11px 34px}header{display:block}.brand{font-size:38px}nav{margin-top:9px;overflow:auto;flex-wrap:nowrap}nav a{flex:0 0 auto}.hero{padding:22px 13px;border-radius:20px}.hero h1{font-size:30px}.search{grid-template-columns:1fr;gap:6px}.go{grid-column:auto;min-height:52px}.resultgrid{grid-template-columns:1fr 1fr}.ribbon{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.attractions,.food,.services{grid-column:1}.servicegrid{grid-template-columns:1fr}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}}
-.destination-result{background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:16px;padding:18px;margin:12px 0}.destination-result h3{color:#4c3728;font-size:23px;margin:0 0 12px}.destination-result p{line-height:1.6;margin:8px 0 16px}.recommendation-section{border:1px solid #d8c3a7;border-radius:14px;margin:12px 0;padding:12px}.recommendation-section summary{cursor:pointer;font-size:18px;font-weight:700}.recommendation-item{border-top:1px solid #d8c3a7;padding:14px 0}.recommendation-note{font-size:12px;line-height:1.6;color:#fff8ef}.travel-mode{display:flex;gap:10px;margin:18px 0}.travel-mode button{flex:1;border:1px solid #cbb49d;border-radius:16px;padding:15px;background:#fffaf4;color:#5b4335;font:inherit;font-weight:700;cursor:pointer}.travel-mode button.mode-active{background:#694c3b;color:white}.field[hidden]{display:none!important}
+.destination-result{background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:16px;padding:18px;margin:12px 0}.destination-result h3{color:#4c3728;font-size:23px;margin:0 0 12px}.destination-result p{line-height:1.6;margin:8px 0 16px}.recommendation-section{border:1px solid #d8c3a7;border-radius:14px;margin:12px 0;padding:12px}.recommendation-section summary{cursor:pointer;font-size:18px;font-weight:700}.recommendation-item{border-top:1px solid #d8c3a7;padding:14px 0}.recommendation-note{font-size:12px;line-height:1.6;color:#fff8ef}.travel-mode{display:flex;gap:10px;margin:18px 0}.travel-mode button{flex:1;border:1px solid #cbb49d;border-radius:16px;padding:15px;background:#fffaf4;color:#5b4335;font:inherit;font-weight:700;cursor:pointer}.travel-mode button.mode-active{background:#694c3b;color:white}.field[hidden],.rib[hidden],.service[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -55,8 +55,8 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 <section class="hero" id="planner">
 <div class="eyebrow">TAKE ME · הכול מתחיל כאן</div>
 <h1>כל החופשה שלך,<br>במקום אחד.</h1>
-<p>בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.</p>
-<div class="proof"><span>✓ הכול במקום אחד</span><span>✓ הצעות יעד בזמן ההקלדה</span><span>✓ טיסה + מלון</span><span>✓ בלי להתחיל מחדש</span></div>
+<p id="heroDescription">בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.</p>
+<div class="proof"><span>✓ הכול במקום אחד</span><span>✓ הצעות יעד בזמן ההקלדה</span><span id="modeProof">✓ טיסה + מלון</span><span>✓ בלי להתחיל מחדש</span></div>
 
 <div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
   <div class="field" id="originField"><label>מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
@@ -99,9 +99,9 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
   <div class="ai-answer" id="aiAnswer"></div>
 </section>
 
-<div class="ribbon"><div class="rib"><b>🎟️ אטרקציות</b><small>GetYourGuide</small></div><div class="rib"><b>🚗 רכב</b><small>DiscoverCars</small></div><div class="rib"><b>📶 eSIM</b><small>Airalo</small></div><div class="rib"><b>🍽️ אוכל</b><small>מסעדות</small></div></div>
+<div class="ribbon" id="serviceRibbon"><div class="rib"><b>🎟️ אטרקציות</b><small>GetYourGuide</small></div><div class="rib"><b>🚗 רכב</b><small>DiscoverCars</small></div><div class="rib" id="esimRibbon"><b>📶 eSIM</b><small>Airalo</small></div><div class="rib"><b>🍽️ אוכל</b><small>מסעדות</small></div></div>
 
-<div class="section" id="extras"><h2>כל מה שצריך מסביב</h2><p>אטרקציות, רכב, eSIM ומסעדות — בלי להתחיל את החיפוש מחדש.</p></div>
+<div class="section" id="extras"><h2>כל מה שצריך מסביב</h2><p id="extrasDescription">אטרקציות, רכב, eSIM ומסעדות — בלי להתחיל את החיפוש מחדש.</p></div>
 <div class="grid">
   <article class="card attractions"><h3>🎟️ אטרקציות</h3><p>סיורים וחוויות לפי היעד.</p><div class="actions"><a class="btn brown" id="gyg" href="https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="noopener">פתח GetYourGuide</a></div></article>
   <article class="card food"><h3>🍽️ אוכל</h3><p>מסעדות ומסעדות כשרות לפי היעד.</p><div class="actions"><a class="btn brown" id="food" href="https://www.google.com/maps/search/restaurants" target="_blank" rel="noopener">מסעדות</a><a class="btn" id="kosher" href="https://www.google.com/maps/search/kosher+restaurants" target="_blank" rel="noopener">כשר</a></div></article>
@@ -169,7 +169,12 @@ const destinations = [
 function setTravelMode(mode){
  travelMode=mode;
  for(const [id,active] of [["modeAbroad",mode==="abroad"],["modeIsrael",mode==="israel"]]){$(id).classList.toggle("mode-active",active);$(id).setAttribute("aria-pressed",String(active));}
- $("originField").hidden=mode==="israel";$("dest").value="";$("dest").placeholder=mode==="israel"?"אילת, הגליל, ירושלים...":"לימסול, רומא...";
+ $("originField").hidden=mode==="israel";
+ $("esimRibbon").hidden=mode==="israel";
+ $("heroDescription").textContent=mode==="israel"?"בחר יעד בארץ, תאריכים, תקציב והרכב אורחים — ונעזור לך למצוא אירוח ואטרקציות.":"בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.";
+ $("modeProof").textContent=mode==="israel"?"✓ מלונות ואטרקציות":"✓ טיסה + מלון";
+ $("extrasDescription").textContent=mode==="israel"?"אירוח, אטרקציות, מסעדות ומסלול נסיעה — במקום אחד.":"אטרקציות, רכב, eSIM ומסעדות — בלי להתחיל את החיפוש מחדש.";
+ $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("dest").value="";$("dest").placeholder=mode==="israel"?"אילת, הגליל, ירושלים...":"לימסול, רומא...";
  $("destSuggest").classList.remove("open");$("destSuggest").innerHTML="";invalidateResults();
  $("status").textContent=mode==="israel"?"בחר יעד בישראל מהרשימה.":"בחר יעד בחו״ל מהרשימה.";
 }
@@ -300,7 +305,7 @@ function flightSearchInfo(d){
 }
 function updateLinks(d){
  const q=encodeURIComponent(d.city+", "+d.country);
- $("gyg").href="https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+ $("gyg").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+d.city+" ישראל"):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
  $("food").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות "+d.city+" "+d.country);
  $("kosher").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות כשרות "+d.city+" "+d.country);
  $("car").href=travelMode==="israel"?"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(d.city+", ישראל"):"https://www.discovercars.com/"+d.car+"/?a_aid=Nadavavitan050";
@@ -342,6 +347,7 @@ async function aiRecommend(){
   const domesticMention=israelDestinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
   const foreignMention=destinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
   if(domesticMention && !foreignMention && travelMode!=="israel")setTravelMode("israel");
+  if(foreignMention && !domesticMention && travelMode!=="abroad")setTravelMode("abroad");
   const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
   revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);

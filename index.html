@@ -296,7 +296,7 @@ async function aiRecommend(){
     const body={prompt:raw,destination:explicit?explicit.city:"",childAges:childAges()};
     ["origin","from","to","budget","adults","children"].forEach(id=>body[id]=$(id).value);
     const r=await fetch("/api/plan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:AbortSignal.timeout(55000)});
-    const data=await r.json();if(revision!==searchRevision)return;if(!r.ok){const diagnostic=data.code?(" ["+data.code+(data.reason?": "+data.reason:"")+"]"):" [HTTP "+r.status+"]";throw new Error((data.error||"החיפוש נכשל")+diagnostic);}
+    const data=await r.json();if(revision!==searchRevision)return;if(!r.ok){const diagnostic=data.code?(" ["+data.code+(data.reason?": "+data.reason:"")+(data.detail?" — "+data.detail:"")+"]"):" [HTTP "+r.status+"]";throw new Error((data.error||"החיפוש נכשל")+diagnostic);}
     const recs=(explicit?data.recommendations.filter(x=>norm(x.city)===norm(explicit.city)):data.recommendations).slice(0,explicit?1:3);
     if(!recs.length)throw new Error("לא התקבלו המלצות ליעד שביקשת");
     const safe=v=>String(v||"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));

@@ -287,7 +287,7 @@ function buildTrip(){
  if(!validChildAges()){status.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";status.classList.add("error");$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
  $("dest").value=d.city+", "+d.country;
  $("resultTitle").textContent=d.city+", "+d.country;
- $("resultText").textContent=n+" לילות · "+passengerText()+" · תקציב "+money(budget)+".";
+ $("resultText").textContent=n+" לילות · "+flightSearchSummary(d)+" · תקציב "+money(budget)+".";
  $("rRoute").textContent=originCode()+" → "+d.iata;
  $("rNights").textContent=n+" לילות";
  $("rBudget").textContent=money(budget);

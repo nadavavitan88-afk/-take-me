@@ -79,56 +79,48 @@ module.exports = async function handler(req, res) {
 `;
 
   try {
-    // Retry temporary upstream overload, then use a stable Flash model.
-    const primaryModel = process.env.GEMINI_MODEL || "gemini-flash-latest";
-    const models = [primaryModel, "gemini-2.5-flash", "gemini-2.0-flash"].filter((m,i,a)=>a.indexOf(m)===i);
-    let geminiResponse;
-    let usedModel = primaryModel;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      usedModel = models[Math.min(attempt,models.length-1)];
-      geminiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-        method: "POST",
-        signal: AbortSignal.timeout(14000),
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: usedModel,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: context }
-          ],
-          response_format: { type: "json_object" }
-        })
-      });
-      if (![404,500,502,503,504].includes(geminiResponse.status) || attempt===2) break;
-      console.warn("Gemini model unavailable or upstream failure; retrying", {status:geminiResponse.status,model:usedModel,attempt:attempt+1});
-      await geminiResponse.body?.cancel();
-      await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
-    }
-
-    const rawPayload = await geminiResponse.text();
-    let payload;
-    try { payload = JSON.parse(rawPayload); }
-    catch { console.error("Gemini returned non-JSON response", {status:geminiResponse.status}); return res.status(502).json({error:"שירות ההמלצות החזיר תשובה לא תקינה",code:"GEMINI_INVALID_RESPONSE"}); }
-
-    if (!geminiResponse.ok) {
-      console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:usedModel,upstreamMessage:String(payload?.error?.message || "").slice(0,350)});
-      return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status, reason: geminiResponse.status===401||geminiResponse.status===403?"authentication":geminiResponse.status===429?"quota":geminiResponse.status===404?"model_not_found":"upstream" });
-    }
-
-    const content = payload?.choices?.[0]?.message?.content;
-    const text = typeof content === "string" ? content : Array.isArray(content) ? content.filter(p => p?.type === "text").map(p => p.text || "").join("") : "";
-    if (!text) {
-      console.error("Empty Gemini content", {finishReason:payload?.choices?.[0]?.finish_reason || null,model:payload?.model || null});
-      return res.status(502).json({ error: "לא התקבלה תשובה מה-AI", code:"EMPTY_AI_RESPONSE", finishReason:payload?.choices?.[0]?.finish_reason || "unknown" });
-    }
-
+    // Use Google's native generateContent API rather than the OpenAI compatibility route.
+    const models = [process.env.GEMINI_MODEL, "gemini-2.5-flash", "gemini-2.5-flash-lite"].filter((m,i,a)=>m && a.indexOf(m)===i);
     let result;
-    try {
-      result = JSON.parse(text);
-    } catch (error) {
-      console.error("AI JSON parse error");
-      return res.status(502).json({ error: "תשובת AI לא תקינה", code:"INVALID_AI_JSON" });
+    let lastStatus = 0;
+    let lastReason = "upstream";
+    for (const model of models) {
+      for (let attempt=0; attempt<2; attempt++) {
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
+          {
+            method:"POST",
+            signal:AbortSignal.timeout(18000),
+            headers:{"x-goog-api-key":apiKey,"Content-Type":"application/json"},
+            body:JSON.stringify({
+              systemInstruction:{parts:[{text:systemPrompt}]},
+              contents:[{role:"user",parts:[{text:context}]}],
+              generationConfig:{responseMimeType:"application/json",temperature:0.5}
+            })
+          }
+        );
+        lastStatus=response.status;
+        const raw=await response.text();
+        let payload;
+        try {payload=JSON.parse(raw);} catch {payload={};}
+        if (!response.ok) {
+          lastReason=String(payload?.error?.status || "upstream");
+          console.error("Gemini native API error",{status:response.status,reason:lastReason,model,message:String(payload?.error?.message || "").slice(0,300)});
+          if ([401,403,429].includes(response.status)) return res.status(502).json({error:"שירות ההמלצות אינו זמין כרגע",code:"GEMINI_"+response.status,reason:response.status===429?"quota":"authentication"});
+          if (response.status===404) break;
+          if ([500,502,503,504].includes(response.status) && attempt===0) {await new Promise(resolve=>setTimeout(resolve,500));continue;}
+          break;
+        }
+        const answer=(payload?.candidates?.[0]?.content?.parts || []).map(p=>p.text||"").join("").trim();
+        if (!answer) {lastReason=payload?.candidates?.[0]?.finishReason || "empty";break;}
+        try {result=JSON.parse(answer);} catch {lastReason="invalid_json";break;}
+        if (Array.isArray(result?.recommendations) && result.recommendations.length) break;
+        result=null;lastReason="no_recommendations";
+        break;
+      }
+      if (result) break;
     }
+    if (!result) return res.status(502).json({error:"שירות ההמלצות לא הצליח להשיב. נסו שוב מאוחר יותר.",code:"GEMINI_"+lastStatus,reason:lastReason});
 
     if (!Array.isArray(result.recommendations) || result.recommendations.length < 1) {
       return res.status(502).json({ error: "לא התקבלה המלצה", code:"NO_RECOMMENDATIONS" });

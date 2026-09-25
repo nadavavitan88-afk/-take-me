@@ -287,6 +287,9 @@ async function aiRecommend(){
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי למקד את החיפוש.";st.className="status error";return;}
   const explicit=destinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
+  if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
+  const totalTravelers=Number($("adults").value)+Number($("children").value);
+  if(totalTravelers<1||totalTravelers>6){st.textContent="בחר בין נוסע אחד לשישה נוסעים בסך הכול.";st.className="status error";$("adults").focus();return;}
   if(childMention && Number($("children").value)===0){st.textContent="ציינת ילד בחיפוש. בחר למעלה את מספר הילדים ואת גילם כדי שנעביר לספק את ההרכב הנכון.";st.className="status error";$("children").focus();return;}
   btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent="מחפש מלונות ואטרקציות שמתאימים לבקשה…";st.className="status";out.classList.remove("show");
   try{

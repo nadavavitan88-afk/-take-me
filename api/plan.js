@@ -2,6 +2,9 @@ module.exports = async function handler(req, res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
 
+  if (req.method === "GET") {
+    return res.status(200).json({ service: "take-me-ai", configured: Boolean((process.env.GEMINI_API_KEY || "").trim()), model: process.env.GEMINI_MODEL || "gemini-flash-latest" });
+  }
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }

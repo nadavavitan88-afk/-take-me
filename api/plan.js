@@ -111,7 +111,7 @@ module.exports = async function handler(req, res) {
 
     const text = payload?.choices?.[0]?.message?.content;
     if (!text) {
-      return res.status(502).json({ error: "לא התקבלה תשובה מה-AI" });
+      return res.status(502).json({ error: "לא התקבלה תשובה מה-AI", code:"EMPTY_AI_RESPONSE" });
     }
 
     let result;
@@ -119,11 +119,11 @@ module.exports = async function handler(req, res) {
       result = JSON.parse(text);
     } catch (error) {
       console.error("AI JSON parse error");
-      return res.status(502).json({ error: "תשובת AI לא תקינה" });
+      return res.status(502).json({ error: "תשובת AI לא תקינה", code:"INVALID_AI_JSON" });
     }
 
     if (!Array.isArray(result.recommendations) || result.recommendations.length < 1) {
-      return res.status(502).json({ error: "לא התקבלה המלצה" });
+      return res.status(502).json({ error: "לא התקבלה המלצה", code:"NO_RECOMMENDATIONS" });
     }
 
     const requested = typeof body.destination === "string" ? body.destination.trim().slice(0,100) : "";
@@ -133,9 +133,9 @@ module.exports = async function handler(req, res) {
     })).filter(x => x.name) : [];
     let recommendations = result.recommendations.filter(x => x && clean(x.city));
     if (requested) {
-      recommendations = recommendations.filter(x => clean(x.city).toLocaleLowerCase() === requested.toLocaleLowerCase()).slice(0,1);
+      recommendations = recommendations.filter(x => clean(x.city).normalize("NFKC").replace(/[\u200e\u200f\s\u05f3\u05f4]/g,"").toLocaleLowerCase() === requested.normalize("NFKC").replace(/[\u200e\u200f\s\u05f3\u05f4]/g,"").toLocaleLowerCase()).slice(0,1);
     } else recommendations = recommendations.slice(0,3);
-    if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב."});
+    if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב.",code:"DESTINATION_MISMATCH"});
     result = {recommendations: recommendations.map(x => ({
       city:clean(x.city),country:clean(x.country),why:clean(x.why),
       hotels:items(x.hotels),attractions:items(x.attractions)
@@ -143,6 +143,6 @@ module.exports = async function handler(req, res) {
     return res.status(200).json(result);
   } catch (error) {
     console.error("TAKE ME AI error", {name:error?.name || "Error",message:error?.message || "unknown"});
-    return res.status(500).json({ error: "תקלה זמנית במנוע ה-AI" });
+    return res.status(500).json({ error: "תקלה זמנית במנוע ה-AI", code: error?.name==="TimeoutError"?"AI_TIMEOUT":"AI_SERVER_ERROR" });
   }
 };

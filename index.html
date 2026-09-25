@@ -303,7 +303,9 @@ function updateLinks(d){
  $("gyg").href="https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
  $("food").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות "+d.city+" "+d.country);
  $("kosher").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות כשרות "+d.city+" "+d.country);
- $("car").href="https://www.discovercars.com/"+d.car+"/?a_aid=Nadavavitan050";
+ $("car").href=travelMode==="israel"?"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(d.city+", ישראל"):"https://www.discovercars.com/"+d.car+"/?a_aid=Nadavavitan050";
+ $("car").textContent=travelMode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";
+ $("esim").closest(".service").hidden=travelMode==="israel";
  $("esim").href=d.country==="קפריסין"?"https://www.airalo.com/he/cyprus-esim":"https://www.airalo.com/he/";
  $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+d.city+" "+d.country);
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
@@ -354,6 +356,15 @@ async function aiRecommend(){
     if(!recs.length)throw new Error("לא התקבלו המלצות ליעד שביקשת");
     const safe=v=>String(v||"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
     const link=(url,label)=>'<a class="btn" href="'+safe(url)+'" target="_blank" rel="noopener">'+safe(label)+'</a>';
+    if(travelMode==="israel"){
+      out.innerHTML=recs.map(d=>{
+        const place=d.city+", ישראל";
+        const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(hotelLocationLink(h.name,place),"מצא אירוח במפה")+'</div>').join("");
+        const acts=(d.attractions||[]).slice(0,3).map(a=>'<div class="recommendation-item"><strong>'+safe(a.name)+'</strong><p>'+safe(a.why)+'</p>'+link("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(a.name+", "+place),"מצא אטרקציה במפה")+'</div>').join("");
+        return '<article class="destination-result"><h3>'+safe(place)+'</h3><p>'+safe(d.why)+'</p><details class="recommendation-section" open><summary>מלונות ואירוח</summary>'+hotels+link(bookingHotelsLink(place),"חיפוש ב־Booking")+link(expediaHotelLink(place),"חיפוש ב־Expedia")+link(agodaHotelsLink(place),"Agoda — בדיקת פרטים באתר")+'</details><details class="recommendation-section" open><summary>אטרקציות וחוויות</summary>'+acts+'</details><details class="recommendation-section"><summary>הגעה ליעד</summary>'+link("https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(place),"מסלול נסיעה במפה")+'</details></article>';
+      }).join("")+'<p class="recommendation-note">המלצות לבדיקה בלבד. יש לאמת מחירים וזמינות באתר הספק.</p>';
+      out.classList.add("show");st.textContent="ההמלצות מוכנות";st.className="status ok";return;
+    }
     out.innerHTML=recs.map(d=>{const place=d.city+", "+d.country,q=encodeURIComponent(place);
       const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(hotelLocationLink(h.name,place),"מצא מלון במפה")+'</div>').join("");
       const acts=(d.attractions||[]).slice(0,3).map(a=>'<div class="recommendation-item"><strong>'+safe(a.name)+'</strong><p>'+safe(a.why)+'</p>'+link("https://www.getyourguide.com/s/?q="+encodeURIComponent(a.name+", "+place)+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","בדיקת אטרקציה")+'</div>').join("");
@@ -362,6 +373,11 @@ async function aiRecommend(){
     out.classList.add("show");st.textContent="ההמלצות מוכנות";st.className="status ok";
   }catch(e){
     if(revision!==searchRevision)return;
+    if(explicit && travelMode==="israel"){
+      const place=explicit.city+", ישראל";
+      out.innerHTML='<article class="destination-result"><h3>'+esc(place)+'</h3><p>ההמלצות המפורטות לא נטענו כרגע. אפשר להמשיך לחיפוש אירוח ואטרקציות.</p><details class="recommendation-section" open><summary>מלונות ואירוח</summary>'+hotelSearchInfo()+'<a class="btn" target="_blank" rel="noopener" href="'+esc(bookingHotelsLink(place))+'">חיפוש ב־Booking</a><a class="btn" target="_blank" rel="noopener" href="'+esc(expediaHotelLink(place))+'">חיפוש ב־Expedia</a><a class="btn" target="_blank" rel="noopener" href="'+esc(agodaHotelsLink(place))+'">Agoda — בדיקת פרטים באתר</a></details><details class="recommendation-section" open><summary>אטרקציות והגעה</summary><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent("אטרקציות "+place)+'">מצא אטרקציות במפה</a><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(place)+'">מסלול נסיעה</a></details></article>';
+      out.classList.add("show");st.textContent="מוצגים קישורי חיפוש חלופיים בישראל.";st.className="status";return;
+    }
     if(explicit){
       if(explicit.city==="דובאי"){
         const place=explicit.city+", "+explicit.country;

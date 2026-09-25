@@ -93,7 +93,7 @@ module.exports = async function handler(req, res) {
           "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
           {
             method:"POST",
-            signal:AbortSignal.timeout(18000),
+            signal:AbortSignal.timeout(10000),
             headers:{"x-goog-api-key":apiKey,"Content-Type":"application/json"},
             body:JSON.stringify({
               systemInstruction:{parts:[{text:systemPrompt}]},
@@ -112,7 +112,7 @@ module.exports = async function handler(req, res) {
           console.error("Gemini native API error",{status:response.status,reason:lastReason,model,message:String(payload?.error?.message || "").slice(0,300)});
           if ([401,403,429].includes(response.status)) return res.status(502).json({error:"שירות ההמלצות אינו זמין כרגע",code:"GEMINI_"+response.status,reason:response.status===429?"quota":"authentication"});
           if (response.status===404) break;
-          if ([500,502,503,504].includes(response.status) && attempt===0) {await new Promise(resolve=>setTimeout(resolve,500));continue;}
+          if ([500,502,503,504].includes(response.status) && attempt===0) {await new Promise(resolve=>setTimeout(resolve,350));continue;}
           break;
         }
         const answer=(payload?.candidates?.[0]?.content?.parts || []).map(p=>p.text||"").join("").trim();

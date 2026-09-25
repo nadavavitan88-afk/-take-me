@@ -358,12 +358,12 @@ async function aiRecommend(){
   if(Number($("adults").value)<1||totalTravelers>6){st.textContent="בחר לפחות מבוגר אחד ועד שישה נוסעים בסך הכול.";st.className="status error";$("adults").focus();return;}
   if(childMention && Number($("children").value)===0){st.textContent="ציינת ילד בחיפוש. בחר למעלה את מספר הילדים ואת גילם כדי שנעביר לספק את ההרכב הנכון.";st.className="status error";$("children").focus();return;}
   if(!validChildAges()){st.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";st.className="status error";$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
-  if(travelMode==="israel" && explicit){
-    const place=explicit.city+", ישראל";
+  if(travelMode==="israel"){
+    const place=explicit?explicit.city+", ישראל":"ישראל";
     out.innerHTML='<article class="destination-result"><h3>'+esc(place)+'</h3><p>אפשר להתחיל בחיפוש אירוח ואטרקציות כבר עכשיו, בזמן שההמלצות האישיות נטענות.</p><details class="recommendation-section" open><summary>מלונות ואירוח</summary>'+hotelSearchInfo()+'<a class="btn" target="_blank" rel="noopener" href="'+esc(bookingHotelsLink(place))+'">חיפוש ב־Booking</a><a class="btn" target="_blank" rel="noopener" href="'+esc(expediaHotelLink(place))+'">חיפוש ב־Expedia</a></details><details class="recommendation-section" open><summary>אטרקציות והגעה</summary><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent("אטרקציות "+place)+'">אטרקציות במפה</a><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(place)+'">מסלול נסיעה</a></details></article>';
     out.classList.add("show");
   }
-  btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent="מחפש מלונות ואטרקציות שמתאימים לבקשה…";st.className="status";if(!(travelMode==="israel"&&explicit))out.classList.remove("show");
+  btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent="מחפש מלונות ואטרקציות שמתאימים לבקשה…";st.className="status";if(travelMode!=="israel")out.classList.remove("show");
   try{
     const body={prompt:raw,destination:explicit?explicit.city:"",childAges:childAges(),travelMode};
     ["origin","from","to","budget","adults","children"].forEach(id=>body[id]=$(id).value);

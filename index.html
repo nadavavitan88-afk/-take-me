@@ -255,7 +255,7 @@ function bookingHotelsLink(place){
 }
 function agodaHotelsLink(place){
  const params=new URLSearchParams({textToSearch:place,checkIn:$("from").value,checkOut:$("to").value,rooms:"1",adults:$("adults").value,children:String(childAges().length)});
- childAges().forEach((age,i)=>params.set("childages",childAges().join(",")));
+ if(childAges().length)params.set("childages",childAges().join(","));
  return "https://www.agoda.com/search?"+params.toString();
 }
 function hotelLocationLink(name,place){

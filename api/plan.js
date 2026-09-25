@@ -96,6 +96,7 @@ module.exports = async function handler(req, res) {
     let result;
     let lastStatus = 0;
     let lastReason = "upstream";
+    let lastDetail = "";
     for (const model of models) {
       for (let attempt=0; attempt<2; attempt++) {
         const response = await fetch(
@@ -117,6 +118,7 @@ module.exports = async function handler(req, res) {
         try {payload=JSON.parse(raw);} catch {payload={};}
         if (!response.ok) {
           lastReason=String(payload?.error?.status || "upstream");
+          lastDetail=String(payload?.error?.message || "").replace(/AIza[\w-]+/g,"[redacted]").slice(0,260);
           console.error("Gemini native API error",{status:response.status,reason:lastReason,model,message:String(payload?.error?.message || "").slice(0,300)});
           if ([401,403,429].includes(response.status)) return res.status(502).json({error:"שירות ההמלצות אינו זמין כרגע",code:"GEMINI_"+response.status,reason:response.status===429?"quota":"authentication"});
           if (response.status===404) break;
@@ -132,7 +134,7 @@ module.exports = async function handler(req, res) {
       }
       if (result) break;
     }
-    if (!result) return res.status(502).json({error:"שירות ההמלצות לא הצליח להשיב. נסו שוב מאוחר יותר.",code:"GEMINI_"+lastStatus,reason:lastReason});
+    if (!result) return res.status(502).json({error:"שירות ההמלצות לא הצליח להשיב. נסו שוב מאוחר יותר.",code:"GEMINI_"+lastStatus,reason:lastReason,detail:lastStatus===404?lastDetail:undefined});
 
     if (!Array.isArray(result.recommendations) || result.recommendations.length < 1) {
       return res.status(502).json({ error: "לא התקבלה המלצה", code:"NO_RECOMMENDATIONS" });

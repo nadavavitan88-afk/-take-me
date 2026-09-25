@@ -99,7 +99,10 @@ module.exports = async function handler(req, res) {
       }
     );
 
-    const payload = await geminiResponse.json();
+    const rawPayload = await geminiResponse.text();
+    let payload;
+    try { payload = JSON.parse(rawPayload); }
+    catch { console.error("Gemini returned non-JSON response", {status:geminiResponse.status}); return res.status(502).json({error:"שירות ההמלצות החזיר תשובה לא תקינה",code:"GEMINI_INVALID_RESPONSE"}); }
 
     if (!geminiResponse.ok) {
       console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:process.env.GEMINI_MODEL || "gemini-flash-latest"});
@@ -130,7 +133,7 @@ module.exports = async function handler(req, res) {
     })).filter(x => x.name) : [];
     let recommendations = result.recommendations.filter(x => x && clean(x.city));
     if (requested) {
-      recommendations = recommendations.filter(x => clean(x.city).toLowerCase() === requested.toLowerCase()).slice(0,1);
+      recommendations = recommendations.filter(x => clean(x.city).toLocaleLowerCase() === requested.toLocaleLowerCase()).slice(0,1);
     } else recommendations = recommendations.slice(0,3);
     if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב."});
     result = {recommendations: recommendations.map(x => ({

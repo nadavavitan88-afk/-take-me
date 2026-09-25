@@ -79,25 +79,31 @@ module.exports = async function handler(req, res) {
 `;
 
   try {
-    const geminiResponse = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-      {
+    // Retry temporary upstream overload, then use a stable Flash model.
+    const primaryModel = process.env.GEMINI_MODEL || "gemini-flash-latest";
+    const models = [primaryModel, "gemini-2.5-flash"].filter((m,i,a)=>a.indexOf(m)===i);
+    let geminiResponse;
+    let usedModel = primaryModel;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      usedModel = models[Math.min(attempt,models.length-1)];
+      geminiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
         method: "POST",
-        signal: AbortSignal.timeout(45000),
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json"
-        },
+        signal: AbortSignal.timeout(14000),
+        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: process.env.GEMINI_MODEL || "gemini-flash-latest",
+          model: usedModel,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: context }
           ],
           response_format: { type: "json_object" }
         })
-      }
-    );
+      });
+      if (![500,502,503,504].includes(geminiResponse.status) || attempt===2) break;
+      console.warn("Gemini temporary upstream failure; retrying", {status:geminiResponse.status,model:usedModel,attempt:attempt+1});
+      await geminiResponse.body?.cancel();
+      await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
+    }
 
     const rawPayload = await geminiResponse.text();
     let payload;
@@ -105,7 +111,7 @@ module.exports = async function handler(req, res) {
     catch { console.error("Gemini returned non-JSON response", {status:geminiResponse.status}); return res.status(502).json({error:"שירות ההמלצות החזיר תשובה לא תקינה",code:"GEMINI_INVALID_RESPONSE"}); }
 
     if (!geminiResponse.ok) {
-      console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:process.env.GEMINI_MODEL || "gemini-flash-latest"});
+      console.error("Gemini API error", {status:geminiResponse.status,upstreamStatus:payload?.error?.status || "upstream_error",upstreamCode:payload?.error?.code || null,model:usedModel});
       return res.status(502).json({ error: "שירות ההמלצות לא זמין כרגע. נסו שוב מאוחר יותר.", code: "GEMINI_" + geminiResponse.status, reason: geminiResponse.status===401||geminiResponse.status===403?"authentication":geminiResponse.status===429?"quota":geminiResponse.status===404?"model_not_found":"upstream" });
     }
 

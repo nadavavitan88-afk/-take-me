@@ -202,15 +202,17 @@ function renderChildAges(){
    const wrap=document.createElement("div"); wrap.className="age-field";
    const label=document.createElement("label"); label.textContent="ילד "+(i+1);
    const sel=document.createElement("select"); sel.className="child-age";
+   const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="בחר גיל";placeholder.disabled=true;sel.appendChild(placeholder);
    for(let age=0;age<=17;age++){
      const op=document.createElement("option"); op.value=String(age); op.textContent=age===0?"פחות משנה":age+"";
      sel.appendChild(op);
    }
-   sel.value=current[i]||"5";
+   sel.value=current[i] ?? "";
    wrap.append(label,sel); grid.appendChild(wrap);
  }
 }
-function childAges(){return [...document.querySelectorAll(".child-age")].map(s=>Number(s.value));}
+function childAges(){return [...document.querySelectorAll(".child-age")].map(s=>s.value===""?null:Number(s.value));}
+function validChildAges(){const ages=childAges();return ages.length===Number($("children").value)&&ages.every(a=>Number.isInteger(a)&&a>=0&&a<=17);}
 function passengerText(){
  const a=Number($("adults").value), c=Number($("children").value);
  const adultsText=a===1?"מבוגר אחד":a+" מבוגרים";
@@ -267,6 +269,7 @@ function buildTrip(){
  if(n<=0){status.textContent="בחר תאריכי יציאה וחזרה תקינים.";status.classList.add("error");return;}
  const adults=Number($("adults").value), children=Number($("children").value), total=adults+children, budget=Number($("budget").value);
  if(total<1||total>6){status.textContent="בחיפוש חבילת טיסה + מלון יש לבחור בין נוסע אחד לשישה נוסעים.";status.classList.add("error");return;}
+ if(!validChildAges()){status.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";status.classList.add("error");$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
  $("dest").value=d.city+", "+d.country;
  $("resultTitle").textContent=d.city+", "+d.country;
  $("resultText").textContent=n+" לילות · "+passengerText()+" · תקציב "+money(budget)+".";
@@ -292,6 +295,7 @@ async function aiRecommend(){
   const totalTravelers=Number($("adults").value)+Number($("children").value);
   if(totalTravelers<1||totalTravelers>6){st.textContent="בחר בין נוסע אחד לשישה נוסעים בסך הכול.";st.className="status error";$("adults").focus();return;}
   if(childMention && Number($("children").value)===0){st.textContent="ציינת ילד בחיפוש. בחר למעלה את מספר הילדים ואת גילם כדי שנעביר לספק את ההרכב הנכון.";st.className="status error";$("children").focus();return;}
+  if(!validChildAges()){st.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";st.className="status error";$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
   btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent="מחפש מלונות ואטרקציות שמתאימים לבקשה…";st.className="status";out.classList.remove("show");
   try{
     const body={prompt:raw,destination:explicit?explicit.city:"",childAges:childAges()};

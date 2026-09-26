@@ -46,7 +46,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 @media(max-width:900px){.search{grid-template-columns:1fr 1fr}.go{grid-column:span 2}.resultgrid{grid-template-columns:1fr 1fr}.servicegrid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.ai-row{grid-template-columns:1fr}.ai-go{min-height:50px}.age-grid{grid-template-columns:1fr 1fr}.wrap{padding:0 11px 34px}header{display:block}.brand{font-size:38px}nav{margin-top:9px;overflow:auto;flex-wrap:nowrap}nav a{flex:0 0 auto}.hero{padding:22px 13px;border-radius:20px}.hero h1{font-size:30px}.search{grid-template-columns:1fr;gap:6px}.go{grid-column:auto;min-height:52px}.resultgrid{grid-template-columns:1fr 1fr}.ribbon{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.attractions,.food,.services{grid-column:1}.servicegrid{grid-template-columns:1fr}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}}
 .destination-result{background:#fff8ef;color:#4c3728;border:1px solid #d8c3a7;border-radius:16px;padding:18px;margin:12px 0}.destination-result h3{color:#4c3728;font-size:23px;margin:0 0 12px}.destination-result p{line-height:1.6;margin:8px 0 16px}.recommendation-section{border:1px solid #d8c3a7;border-radius:14px;margin:12px 0;padding:12px}.recommendation-section summary{cursor:pointer;font-size:18px;font-weight:700}.recommendation-item{border-top:1px solid #d8c3a7;padding:14px 0}.recommendation-note{font-size:12px;line-height:1.6;color:#fff8ef}.travel-mode{display:flex;gap:10px;margin:18px 0}.travel-mode button{flex:1;border:1px solid #cbb49d;border-radius:16px;padding:15px;background:#fffaf4;color:#5b4335;font:inherit;font-weight:700;cursor:pointer}.travel-mode button.mode-active{background:#694c3b;color:white}.field[hidden],.rib[hidden],.service[hidden]{display:none!important}
-.lead-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.lead-actions .btn{display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;margin:0;text-align:center}.lead #leadSummary{height:160px;min-height:160px;max-height:240px;overflow-y:auto;resize:vertical;line-height:1.5;direction:rtl}@media(max-width:650px){.lead-actions{grid-template-columns:1fr}.lead-actions .btn{width:100%}}
+.lead-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.lead-actions .btn{display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;margin:0;text-align:center}.lead #leadSummary{display:block;width:100%;height:160px;min-height:160px;max-height:240px;overflow-y:auto;resize:vertical;line-height:1.5;direction:rtl;white-space:pre-wrap;overflow-wrap:anywhere;background:#fff;color:#402f23;padding:12px;margin:12px 0;border:1px solid #d8c3a7;border-radius:12px;box-sizing:border-box;-webkit-user-select:text;user-select:text}@media(max-width:650px){.lead-actions{grid-template-columns:1fr}.lead-actions .btn{width:100%}}
 </style>
 </head>
 <body>
@@ -113,7 +113,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
   </div></article>
 </div>
 
-<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><textarea id="leadSummary" readonly aria-label="סיכום החופשה להעברה לנציג" style="display:block;width:100%;min-height:120px;margin:12px 0;padding:12px;border-radius:12px;box-sizing:border-box" placeholder="פרטי החופשה שלך יופיעו כאן לאחר חיפוש"></textarea><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener">פתח טופס</a></div><p id="leadStatus" role="status">העתק את הפרטים והדבק אותם בטופס כדי שלא תצטרך להזין הכול מחדש.</p></section>
+<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener">פתח טופס</a></div><p id="leadStatus" role="status">העתק את הפרטים והדבק אותם בטופס כדי שלא תצטרך להזין הכול מחדש.</p></section>
 <div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: 2026-09-25</span></div>
 </div>
 
@@ -327,7 +327,7 @@ function refreshLeadSummary(destination){
  const details=["בקשת חופשה דרך TAKE ME","מסלול: "+(travelMode==="israel"?"ישראל":"חו״ל"),"יעד: "+place,"תאריכים: "+$("from").value+" עד "+$("to").value,"משך: "+nights()+" לילות","נוסעים: "+passengerText(),"גילאי ילדים: "+(childAges().join(", ")||"אין"),"תקציב: "+money(Number($("budget").value))];
  if(travelMode!=="israel")details.push("מוצא: "+originCode());
  if($("aiPrompt").value.trim())details.push("בקשה אישית: "+$("aiPrompt").value.trim());
- $("leadSummary").value=details.join("\n");
+ $("leadSummary").textContent=details.join("\n");
 }
 function buildTrip(){
  const status=$("status"), d=findDestination($("dest").value), n=nights();
@@ -472,8 +472,8 @@ $("build").addEventListener("click",buildTrip);
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
  const field=$("leadSummary");
- try{await navigator.clipboard.writeText(field.value);$("leadStatus").textContent="פרטי החופשה הועתקו. פתח את הטופס והדבק אותם בשדה ההודעה.";}
- catch(e){field.focus();field.select();$("leadStatus").textContent="בחרנו את הסיכום. העתק אותו והדבק בטופס.";}
+ try{await navigator.clipboard.writeText(field.textContent);$("leadStatus").textContent="פרטי החופשה הועתקו. פתח את הטופס והדבק אותם בשדה ההודעה.";}
+ catch(e){$("leadStatus").textContent="ההעתקה נכשלה. ניתן ללחוץ לחיצה ארוכה על הסיכום כדי להעתיק אותו.";}
 });
 document.querySelectorAll(".chip").forEach(x=>x.addEventListener("click",()=>x.classList.toggle("active")));
 

@@ -33,3 +33,31 @@ test('family ages reach Gemini; invalid ages never call it', async () => {
     else process.env.GEMINI_API_KEY=originalKey;
   }
 });
+
+test('Israel-only results reject Cyprus and accept Israel country variants', async () => {
+  const originalFetch=global.fetch, originalKey=process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY='test-only';
+  const iso=d=>d.toISOString().slice(0,10);
+  const from=iso(new Date(Date.now()+7*86400000)),to=iso(new Date(Date.now()+10*86400000));
+  const response=recommendations=>({ok:true,status:200,text:async()=>JSON.stringify({candidates:[{content:{parts:[{text:JSON.stringify({recommendations})}]}}]})});
+  const run=async (destination,recommendations)=>{
+    global.fetch=async()=>response(recommendations);
+    const res={setHeader(){},status(code){this.code=code;return this;},json(body){this.body=body;return this;}};
+    await handler({method:'POST',body:{prompt:'זוג ים המלח שלושה לילות',travelMode:'israel',destination,from,to,adults:2,children:0}},res);
+    return res;
+  };
+  try {
+    let result=await run('ים המלח',[{city:'לימסול',country:'קפריסין'},{city:'ים המלח',country:'Israel',hotels:[{name:'Hotel'}]}]);
+    assert.equal(result.code,200);
+    assert.deepEqual(result.body.recommendations.map(x=>[x.city,x.country]),[['ים המלח','ישראל']]);
+    result=await run('ים המלח',[{city:'לימסול',country:'קפריסין'}]);
+    assert.equal(result.code,502);
+    assert.equal(result.body.code,'DESTINATION_MISMATCH');
+    result=await run('',[{city:'אילת',country:'מדינת ישראל'},{city:'רומא',country:'איטליה'}]);
+    assert.equal(result.code,200);
+    assert.deepEqual(result.body.recommendations.map(x=>x.city),['אילת']);
+  } finally {
+    global.fetch=originalFetch;
+    if(originalKey===undefined)delete process.env.GEMINI_API_KEY;else process.env.GEMINI_API_KEY=originalKey;
+  }
+});

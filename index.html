@@ -512,9 +512,31 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
   form.reset();form.hidden=true;$("leadFallback").hidden=true;$("newLeadRequest").hidden=false;status.hidden=false;status.dataset.state="success";status.textContent="תודה! בקשת החופשה התקבלה בהצלחה. נחזור אליכם בהקדם.";status.setAttribute("tabindex","-1");status.focus();
  }catch(error){$("leadFallback").hidden=false;status.dataset.state="error";status.textContent="לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.textContent="שלח לי הצעה";}
 });
+function tripShareUrl(){
+ const url=new URL(window.location.href);
+ url.search="";url.hash="";
+ const fields={mode:travelMode,dest:$("dest").value,from:$("from").value,to:$("to").value,adults:$("adults").value,children:$("children").value,budget:$("budget").value,origin:$("origin").value,ages:childAges().filter(x=>x!==null).join(",")};
+ for(const [key,value] of Object.entries(fields))if(value)url.searchParams.set(key,value);
+ return url.toString();
+}
+function restoreSharedTrip(){
+ const params=new URLSearchParams(window.location.search);
+ if(!params.has("dest"))return;
+ if(params.get("mode")==="israel")setTravelMode("israel");
+ const destination=String(params.get("dest")||"").slice(0,100);
+ if(!activeDestinations().some(d=>norm(d.city)===norm(destination)||norm(d.city+", "+d.country)===norm(destination)))return;
+ $("dest").value=destination;
+ for(const id of ["from","to"]){const value=params.get(id);if(value&&/^\\d{4}-\\d{2}-\\d{2}$/.test(value))$(id).value=value;}
+ for(const id of ["adults","children","budget","origin"]){const value=params.get(id);if(value&&[...$(id).options].some(option=>option.value===value))$(id).value=value;}
+ renderChildAges();
+ const ages=String(params.get("ages")||"").split(",");
+ document.querySelectorAll(".child-age").forEach((field,i)=>{if(ages[i]&&[...field.options].some(option=>option.value===ages[i]))field.value=ages[i];});
+ refreshLeadSummary();
+ $("status").textContent="פרטי החופשה ששותפו נטענו. אפשר לערוך אותם ולבנות חופשה.";
+}
 $("whatsappTrip").addEventListener("click",()=>{
  refreshLeadSummary();
- const summary=$("leadSummary").textContent+"\nhttps://take-me-v7-full.vercel.app/";
+ const summary=$("leadSummary").textContent+"\n"+tripShareUrl();
  const link="https://wa.me/?text="+encodeURIComponent(summary);
  window.location.href=link;
 });
@@ -523,8 +545,8 @@ $("shareTrip").addEventListener("click",async()=>{
  const summary=$("leadSummary").textContent;
  const status=$("leadStatus");
  try{
-  if(navigator.share){await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary+"\nhttps://take-me-v7-full.vercel.app/"});status.textContent="אפשר לשתף את פרטי החופשה.";}
-  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(summary+"\nhttps://take-me-v7-full.vercel.app/");status.textContent="פרטי החופשה והקישור הועתקו — אפשר להדביק בוואטסאפ.";}
+  if(navigator.share){await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary+"\n"+tripShareUrl()});status.textContent="אפשר לשתף את פרטי החופשה.";}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(summary+"\n"+tripShareUrl());status.textContent="פרטי החופשה והקישור הועתקו — אפשר להדביק בוואטסאפ.";}
   else{status.textContent="בחרו והעתיקו את סיכום החופשה המוצג למעלה.";}
  }catch(error){if(error.name!=="AbortError")status.textContent="השיתוף לא נפתח. אפשר להשתמש בכפתור העתק פרטי חופשה.";}
 });
@@ -542,6 +564,7 @@ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.ge
 $("from").value=iso(start); $("to").value=iso(end);
 $("from").min=$("to").min=iso(new Date());
 renderChildAges();
+restoreSharedTrip();
 refreshLeadSummary();
 $("engineStatus").textContent="מנוע האתר פעיל ✓";
 $("engineStatus").classList.add("ok");

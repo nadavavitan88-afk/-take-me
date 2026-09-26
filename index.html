@@ -114,7 +114,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
   </div></article>
 </div>
 
-<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">אפשר להעתיק את הסיכום ולהדביק אותו בטופס.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>השליחה תושלם בטופס המאובטח. פרטי החופשה מוכנים להעתקה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא *</label><input id="leadName" name="name" autocomplete="name" required maxlength="100" placeholder="איך קוראים לכם?"><label for="leadPhone">טלפון נייד *</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required pattern="0[0-9]{8,9}" title="מספר ישראלי בן 9–10 ספרות, כולל 0 בהתחלה" placeholder="05XXXXXXXX"><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email" placeholder="name@example.com"><label class="lead-consent"><input id="leadConsent" type="checkbox" required> אני מאשר/ת שיחזרו אליי בנוגע לבקשת החופשה.</label><button class="btn brown" id="sendLead" type="submit">המשך לשליחת הבקשה</button><p id="nativeLeadStatus" role="status" aria-live="polite"></p></form><div id="leadFallback" hidden><p>לא הצלחנו לשלוח את הבקשה ישירות. אפשר להמשיך דרך הטופס הקיים.</p><button class="btn" id="copyLeadFallback" type="button">העתק סיכום</button><a class="btn" href="https://formspry.com/f/cmuirtjej0001nbexzlse2upm" target="_blank" rel="noopener noreferrer">פתח טופס חלופי</a></div></div></section>
+<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">אפשר להעתיק את הסיכום ולהדביק אותו בשדה האחרון בטופס.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>מלאו את הפרטים פעם אחת בטופס הבא. אפשר להעתיק את סיכום החופשה בלחיצה ולהדביק בשדה האחרון.</p><button class="btn" type="button" id="copyLeadInForm">העתק סיכום חופשה</button><iframe title="טופס פנייה TAKE ME" loading="lazy" src="https://formspry.com/f/cmuirtjej0001nbexzlse2upm"></iframe><p>הטופס לא נטען? <a href="https://formspry.com/f/cmuirtjej0001nbexzlse2upm" target="_blank" rel="noopener noreferrer">פתחו בחלון נפרד</a>.</p></div></section>
 <div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: 2026-09-25</span></div>
 </div>
 
@@ -471,18 +471,7 @@ $("ageGrid").addEventListener("change",()=>{invalidateResults();refreshLeadSumma
 ["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",()=>{invalidateResults();refreshLeadSummary();}));
 $("build").addEventListener("click",buildTrip);
 $("openLeadForm").addEventListener("click",()=>{$("leadForm").hidden=false;});
-$("copyLeadFallback").addEventListener("click",()=>{$("copyLead").click();});
-$("nativeLeadForm").addEventListener("submit",async event=>{
- event.preventDefault();
- const form=event.currentTarget,status=$("nativeLeadStatus");
- if(!form.reportValidity())return;
- refreshLeadSummary();
- const details=["שם מלא: "+$("leadName").value.trim(),"טלפון נייד: "+$("leadPhone").value.trim(),"אימייל: "+($("leadEmail").value.trim()||"לא נמסר"),$("leadSummary").textContent].join("\n");
- try{await navigator.clipboard.writeText(details);status.textContent="הפרטים הועתקו. השלימו את השליחה בטופס המאובטח שנפתח."; }
- catch(e){status.textContent="השלימו את השליחה בטופס המאובטח. אפשר להעתיק את סיכום החופשה בלחיצה ארוכה."; }
- $("leadFallback").hidden=false;
- window.open("https://formspry.com/f/cmuirtjej0001nbexzlse2upm","_blank","noopener,noreferrer");
-});
+$("copyLeadInForm").addEventListener("click",()=>{$("copyLead").click();});
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
  const field=$("leadSummary");

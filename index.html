@@ -353,6 +353,7 @@ function buildTrip(){
 const curatedDubai={hotels:[{name:"Atlantis, The Palm",why:"ריזורט משפחתי עם פארק מים."},{name:"Jumeirah Beach Hotel",why:"מלון חוף עם בריכות ואטרקציות משפחתיות."},{name:"JA Ocean View Hotel",why:"מלון באזור JBR, בקרבת החוף והטיילת."}],attractions:[{name:"Aquaventure Waterpark",why:"פארק מים למשפחות."},{name:"Dubai Aquarium & Underwater Zoo",why:"אקווריום ואטרקציה מקורה."},{name:"Burj Khalifa At The Top",why:"תצפית על העיר."}]};
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
 async function aiRecommend(){
+  if(activeAiController){activeAiController.abort();activeAiController=null;searchRevision++;}
   let revision=searchRevision;
   const raw=$("aiPrompt").value.trim(),out=$("aiAnswer"),st=$("aiStatus"),btn=$("aiBuild");
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי למקד את החיפוש.";st.className="status error";return;}
@@ -464,8 +465,8 @@ $("dest").addEventListener("input",()=>{
 $("dest").addEventListener("focus",renderSuggestions);
 document.addEventListener("click",e=>{if(!e.target.closest("#dest")&&!e.target.closest("#destSuggest"))$("destSuggest").classList.remove("open");});
 $("children").addEventListener("change",renderChildAges);
-$("ageGrid").addEventListener("change",invalidateResults);
-["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",invalidateResults));
+$("ageGrid").addEventListener("change",()=>{invalidateResults();refreshLeadSummary();});
+["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",()=>{invalidateResults();refreshLeadSummary();}));
 $("build").addEventListener("click",buildTrip);
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
@@ -481,6 +482,7 @@ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.ge
 $("from").value=iso(start); $("to").value=iso(end);
 $("from").min=$("to").min=iso(new Date());
 renderChildAges();
+refreshLeadSummary();
 $("engineStatus").textContent="מנוע האתר פעיל ✓";
 $("engineStatus").classList.add("ok");
 })();

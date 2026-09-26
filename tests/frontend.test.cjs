@@ -42,3 +42,11 @@ test('failed lead submission keeps entered values and shows error state',()=>{
  assert.match(html,/הפרטים שמילאת נשמרו בטופס/);
  assert.match(html,/\.lead-form #nativeLeadStatus\[data-state="error"\]/);
 });
+
+test('new lead request resets confirmation and restores form',()=>{
+ for(const id of ['newLeadRequest','leadFallback'])assert.match(html,new RegExp('id="'+id+'"'));
+ assert.match(html,/\$\("newLeadRequest"\)\.addEventListener\("click"/);
+ assert.match(html,/\$\("nativeLeadForm"\)\.hidden=false/);
+ assert.match(html,/\$\("leadFallback"\)\.hidden=true/);
+ assert.match(html,/\$\("newLeadRequest"\)\.hidden=false/);
+});

@@ -7,17 +7,19 @@ test('changing travelers removes old booking results and ignores an in-flight AI
  const get=id=>{
   if(!elements.has(id)){
    const classes=new Set();
-   elements.set(id,{value:'',textContent:'',innerHTML:'',listeners:{},classList:{add:c=>classes.add(c),remove:c=>classes.delete(c),contains:c=>classes.has(c)},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},querySelectorAll:()=>[],focus(){}});
+   elements.set(id,{value:'',textContent:'',innerHTML:'',listeners:{},classList:{add:c=>classes.add(c),remove:c=>classes.delete(c),contains:c=>classes.has(c)},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},querySelectorAll:()=>[],querySelector:()=>get('mock-child'),closest:()=>get('mock-parent'),focus(){}});
   }
   return elements.get(id);
  };
  let resolveFetch;
  const document={getElementById:get,querySelectorAll:()=>[],addEventListener(){}};
  const script=fs.readFileSync('index.html','utf8').match(/<script>\s*(\(function\(\)\{[\s\S]*?\}\)\(\);)\s*<\/script>/)[1];
- vm.runInNewContext(script,{document,URLSearchParams,AbortSignal,Intl,Date,console,fetch:()=>new Promise(r=>resolveFetch=r)});
+ vm.runInNewContext(script,{document,URLSearchParams,AbortSignal,AbortController,Intl,Date,console,fetch:()=>new Promise(r=>resolveFetch=r)});
  get('adults').value='2';get('children').value='0';get('aiPrompt').value='חופשה ברומא';
  get('result').classList.add('show');
  const pending=get('aiBuild').listeners.click[0]();
+ for(let i=0;i<20 && !resolveFetch;i++)await new Promise(r=>setImmediate(r));
+ assert.equal(typeof resolveFetch,'function','AI request should reach fetch');
  get('adults').value='3';
  get('adults').listeners.input[0]();
  assert.equal(get('result').classList.contains('show'),false);

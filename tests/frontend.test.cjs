@@ -15,3 +15,10 @@ test('travel planner retains required end-to-end controls',()=>{
  assert.ok(html.includes('bookingHotelsLink(h.name+", "+place)'));
  assert.match(html,/activeAiController\.abort\(\)/);
 });
+
+test('native lead form collects details once and sends summary to server',()=>{
+ for(const id of ['nativeLeadForm','leadName','leadPhone','leadEmail','leadConsent','leadSubmit','nativeLeadStatus'])assert.match(html,new RegExp('id="'+id+'"'));
+ assert.match(html,/fetch\("\/api\/lead",\{method:"POST"/);
+ assert.match(html,/summary:\$\("leadSummary"\)\.textContent/);
+ assert.doesNotMatch(html,/<iframe[^>]*formspry/i);
+});

@@ -12,6 +12,6 @@ test('every inline browser script parses',()=>{
 test('travel planner retains required end-to-end controls',()=>{
  for(const id of ['modeIsrael','modeAbroad','dest','from','to','adults','children','aiPrompt','aiBuild','aiAnswer','leadSummary','copyLead','packageLive'])
    assert.match(html,new RegExp('id="'+id+'"'));
- assert.match(html,/bookingHotelsLink\(h\.name\+"\\, "\+place\)/);
+ assert.ok(html.includes('bookingHotelsLink(h.name+", "+place)'));
  assert.match(html,/activeAiController\.abort\(\)/);
 });

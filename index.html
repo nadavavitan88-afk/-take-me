@@ -526,7 +526,7 @@ function restoreSharedTrip(){
  const destination=String(params.get("dest")||"").slice(0,100);
  if(!activeDestinations().some(d=>norm(d.city)===norm(destination)||norm(d.city+", "+d.country)===norm(destination)))return;
  $("dest").value=destination;
- for(const id of ["from","to"]){const value=params.get(id);if(value&&/^\\d{4}-\\d{2}-\\d{2}$/.test(value))$(id).value=value;}
+ for(const id of ["from","to"]){const value=params.get(id);if(value&&/^\d{4}-\d{2}-\d{2}$/.test(value))$(id).value=value;}
  for(const id of ["adults","children","budget","origin"]){const value=params.get(id);if(value&&[...$(id).options].some(option=>option.value===value))$(id).value=value;}
  renderChildAges();
  const ages=String(params.get("ages")||"").split(",");

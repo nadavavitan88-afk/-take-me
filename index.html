@@ -350,15 +350,19 @@ async function aiRecommend(){
   const asksAbroad=/(?:בחו"ל|לחו"ל|בחול|לחול|טיסה ל)/.test(raw);
   if((domesticMention&&!foreignMention || asksIsrael&&!foreignMention&&!asksAbroad) && travelMode!=="israel")setTravelMode("israel");
   if((foreignMention&&!domesticMention || asksAbroad&&!domesticMention&&!asksIsrael) && travelMode!=="abroad")setTravelMode("abroad");
+  let datesAdjusted=false;
   const nightsMatch=raw.match(/(?:^|\s)([1-9]|1[0-4])\s*(?:לילות|לילה)(?=\s|$|[,.!?])/);
   if(nightsMatch && validTravelDates() && nights()!==Number(nightsMatch[1])){
     const departure=new Date($("from").value+"T12:00:00");
     departure.setDate(departure.getDate()+Number(nightsMatch[1]));
     const end=[departure.getFullYear(),String(departure.getMonth()+1).padStart(2,"0"),String(departure.getDate()).padStart(2,"0")].join("-");
     $("to").value=end;
+    $("to").min=$("from").value;
+    datesAdjusted=true;
     invalidateResults();
   }
   const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
+  if(explicit && norm($("dest").value)!==norm(explicit.city+", "+explicit.country)){$("dest").value=explicit.city+", "+explicit.country;invalidateResults();}
   revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
   if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
@@ -371,7 +375,7 @@ async function aiRecommend(){
     out.innerHTML='<article class="destination-result"><h3>'+esc(place)+'</h3><p>אפשר להתחיל בחיפוש אירוח ואטרקציות כבר עכשיו, בזמן שההמלצות האישיות נטענות.</p><details class="recommendation-section" open><summary>מלונות ואירוח</summary>'+hotelSearchInfo()+'<a class="btn" target="_blank" rel="noopener" href="'+esc(bookingHotelsLink(place))+'">חיפוש ב־Booking</a><a class="btn" target="_blank" rel="noopener" href="'+esc(expediaHotelLink(place))+'">חיפוש ב־Expedia</a></details><details class="recommendation-section" open><summary>אטרקציות והגעה</summary><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent("אטרקציות "+place)+'">אטרקציות במפה</a>'+(explicit?'<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(place)+'">מסלול נסיעה</a>':'<p>בחר יעד מסוים כדי לקבל מסלול נסיעה מדויק.</p>')+'</details></article>';
     out.classList.add("show");
   }
-  btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent="מחפש המלצות מותאמות… אפשר להשתמש בקישורי החיפוש שכבר מוצגים.";st.className="status";if(travelMode!=="israel")out.classList.remove("show");
+  btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent=(datesAdjusted?"עדכנתי את תאריך החזרה ל־"+$("to").value+" לפי מספר הלילות שביקשת. ":"")+"מחפש המלצות מותאמות…";st.className="status";if(travelMode!=="israel")out.classList.remove("show");
   try{
     const body={prompt:raw,destination:explicit?explicit.city:"",childAges:childAges(),travelMode};
     ["origin","from","to","budget","adults","children"].forEach(id=>body[id]=$(id).value);

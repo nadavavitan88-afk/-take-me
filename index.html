@@ -363,6 +363,7 @@ async function aiRecommend(){
   }
   const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
   if(explicit && norm($("dest").value)!==norm(explicit.city+", "+explicit.country)){$("dest").value=explicit.city+", "+explicit.country;invalidateResults();}
+  if(explicit)updateLinks(explicit);
   revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
   if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
@@ -388,14 +389,14 @@ async function aiRecommend(){
     if(travelMode==="israel"){
       out.innerHTML=recs.map(d=>{
         const place=d.city+", ישראל";
-        const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(hotelLocationLink(h.name,place),"מצא אירוח במפה")+'</div>').join("");
+        const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(bookingHotelsLink(h.name+", "+place),"בדוק חדרים ב־Booking")+link(hotelLocationLink(h.name,place),"מיקום במפה")+'</div>').join("");
         const acts=(d.attractions||[]).slice(0,3).map(a=>'<div class="recommendation-item"><strong>'+safe(a.name)+'</strong><p>'+safe(a.why)+'</p>'+link("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(a.name+", "+place),"מצא אטרקציה במפה")+'</div>').join("");
         return '<article class="destination-result"><h3>'+safe(place)+'</h3><p>'+safe(d.why)+'</p><details class="recommendation-section" open><summary>מלונות ואירוח</summary>'+hotels+link(bookingHotelsLink(place),"חיפוש ב־Booking")+link(expediaHotelLink(place),"חיפוש ב־Expedia")+link(agodaHotelsLink(place),"Agoda — בדיקת פרטים באתר")+'</details><details class="recommendation-section" open><summary>אטרקציות וחוויות</summary>'+acts+'</details><details class="recommendation-section"><summary>הגעה ליעד</summary>'+link("https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(place),"מסלול נסיעה במפה")+'</details></article>';
       }).join("")+'<p class="recommendation-note">המלצות לבדיקה בלבד. יש לאמת מחירים וזמינות באתר הספק.</p>';
       out.classList.add("show");st.textContent="ההמלצות מוכנות";st.className="status ok";return;
     }
     out.innerHTML=recs.map(d=>{const place=d.city+", "+d.country,q=encodeURIComponent(place);
-      const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(hotelLocationLink(h.name,place),"מצא מלון במפה")+'</div>').join("");
+      const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(bookingHotelsLink(h.name+", "+place),"בדוק חדרים ב־Booking")+link(hotelLocationLink(h.name,place),"מיקום במפה")+'</div>').join("");
       const acts=(d.attractions||[]).slice(0,3).map(a=>'<div class="recommendation-item"><strong>'+safe(a.name)+'</strong><p>'+safe(a.why)+'</p>'+link("https://www.getyourguide.com/s/?q="+encodeURIComponent(a.name+", "+place)+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","בדיקת אטרקציה")+'</div>').join("");
       return '<article class="destination-result"><h3>'+safe(place)+'</h3><p>'+safe(d.why)+'</p><details class="recommendation-section" open><summary>טיסות ליעד</summary><div class="recommendation-item"><strong>פרטי החיפוש שלך</strong>'+flightSearchInfo(explicit||destinations.find(x=>norm(x.city)===norm(d.city))||{city:d.city})+'<a class="btn" href="'+expediaFlightLink(explicit||destinations.find(x=>norm(x.city)===norm(d.city))||{iata:d.city,en:d.city})+'" target="_blank" rel="noopener">פתח Google Flights והזן פרטים</a></div></details><details class="recommendation-section"><summary>מלונות מומלצים</summary><p>לחיצה על מלון פותחת את מיקומו במפה, ולא מאשרת זמינות. להזמנה, פתחו את חיפוש כל המלונות ביעד.</p>'+hotels+link(expediaHotelLink(place),"חיפוש ב־Expedia")+link(bookingHotelsLink(place),"חיפוש ב־Booking")+link(agodaHotelsLink(place),"Agoda — בדיקת פרטים באתר")+'</details><details class="recommendation-section"><summary>אטרקציות</summary>'+acts+link("https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","כל האטרקציות ביעד")+'</details></article>';
     }).join("")+'<p class="recommendation-note">המלצות לבדיקה בלבד. מחירים וזמינות יש לוודא באתר הספק.</p>';

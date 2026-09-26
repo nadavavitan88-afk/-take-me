@@ -500,24 +500,25 @@ $("newLeadRequest").addEventListener("click",()=>{
 $("nativeLeadForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const form=e.currentTarget,button=$("leadSubmit"),status=$("nativeLeadStatus");
+ if(button.disabled)return;
  const phoneField=$("leadPhone");phoneField.value=phoneField.value.replace(/[\s-]/g,"").replace(/^\+9720?/,"0").replace(/^9720?/,"0");
  if(!form.reportValidity())return;
  refreshLeadSummary();
- button.disabled=true;$("leadFallback").hidden=true;status.dataset.state="sending";status.textContent="שולחים את הבקשה…";
+ button.disabled=true;button.textContent="שולחים…";$("leadFallback").hidden=true;status.dataset.state="sending";status.textContent="שולחים את הבקשה…";
  try{
   const response=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("leadName").value.trim(),phone:$("leadPhone").value.trim(),email:$("leadEmail").value.trim(),summary:$("leadSummary").textContent,consent:$("leadConsent").checked})});
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw new Error(result.error||"לא התקבל אישור קליטה");
   form.reset();form.hidden=true;$("leadFallback").hidden=true;$("newLeadRequest").hidden=false;status.hidden=false;status.dataset.state="success";status.textContent="תודה! בקשת החופשה התקבלה בהצלחה. נחזור אליכם בהקדם.";status.setAttribute("tabindex","-1");status.focus();
- }catch(error){$("leadFallback").hidden=false;status.dataset.state="error";status.textContent="לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;}
+ }catch(error){$("leadFallback").hidden=false;status.dataset.state="error";status.textContent="לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.textContent="שלח לי הצעה";}
 });
 $("shareTrip").addEventListener("click",async()=>{
  refreshLeadSummary();
  const summary=$("leadSummary").textContent;
  const status=$("leadStatus");
  try{
-  if(navigator.share){await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary+"\\nhttps://take-me-v7-full.vercel.app/"});status.textContent="אפשר לשתף את פרטי החופשה.";}
-  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(summary+"\\nhttps://take-me-v7-full.vercel.app/");status.textContent="פרטי החופשה והקישור הועתקו — אפשר להדביק בוואטסאפ.";}
+  if(navigator.share){await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary+"\nhttps://take-me-v7-full.vercel.app/"});status.textContent="אפשר לשתף את פרטי החופשה.";}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(summary+"\nhttps://take-me-v7-full.vercel.app/");status.textContent="פרטי החופשה והקישור הועתקו — אפשר להדביק בוואטסאפ.";}
   else{status.textContent="בחרו והעתיקו את סיכום החופשה המוצג למעלה.";}
  }catch(error){if(error.name!=="AbortError")status.textContent="השיתוף לא נפתח. אפשר להשתמש בכפתור העתק פרטי חופשה.";}
 });

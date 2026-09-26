@@ -78,3 +78,9 @@ test('WhatsApp sharing encodes itinerary and uses direct handoff',()=>{
  assert.match(html,/window\.location\.href=link/);
  assert.doesNotMatch(html,/window\.open\(link,"_blank","noopener,noreferrer"\)/);
 });
+
+test('lead submit is guarded against duplicate requests',()=>{
+ assert.match(html,/if\(button\.disabled\)return/);
+ assert.match(html,/button\.disabled=true;button\.textContent="שולחים…"/);
+ assert.match(html,/finally\{button\.disabled=false;button\.textContent="שלח לי הצעה"/);
+});

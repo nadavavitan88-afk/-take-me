@@ -520,6 +520,7 @@ function tripShareUrl(){
  return url.toString();
 }
 function restoreSharedTrip(){
+ if(typeof window==="undefined"||!window.location)return;
  const params=new URLSearchParams(window.location.search);
  if(!params.has("dest"))return;
  if(params.get("mode")==="israel")setTravelMode("israel");

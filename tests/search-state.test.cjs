@@ -7,7 +7,7 @@ test('changing travelers removes old booking results and ignores an in-flight AI
  const get=id=>{
   if(!elements.has(id)){
    const classes=new Set();
-   elements.set(id,{value:'',textContent:'',innerHTML:'',listeners:{},classList:{add:c=>classes.add(c),remove:c=>classes.delete(c),contains:c=>classes.has(c)},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},querySelectorAll:()=>[],closest:()=>null,focus(){}});
+   elements.set(id,{value:'',textContent:'',innerHTML:'',listeners:{},classList:{add:c=>classes.add(c),remove:c=>classes.delete(c),contains:c=>classes.has(c)},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},querySelectorAll:()=>[],querySelector:()=>get('mock-child'),closest:()=>null,focus(){}});
   }
   return elements.get(id);
  };

@@ -62,3 +62,11 @@ test('site includes canonical and social preview metadata',()=>{
  for(const key of ['og:title','og:description','og:image','og:url'])assert.ok(html.includes('property="'+key+'"'));
  assert.match(html,/<link rel="icon" type="image\/svg\+xml" href="\/favicon\.svg">/);
 });
+
+test('trip sharing uses the current summary and supports clipboard fallback',()=>{
+ assert.match(html,/id="shareTrip"/);
+ assert.match(html,/\$\("shareTrip"\)\.addEventListener\("click"/);
+ assert.match(html,/const summary=\$\("leadSummary"\)\.textContent/);
+ assert.match(html,/navigator\.share\(\{title:"תכנון החופשה שלי/);
+ assert.match(html,/navigator\.clipboard\.writeText\(summary/);
+});

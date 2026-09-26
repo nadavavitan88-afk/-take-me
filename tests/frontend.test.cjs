@@ -71,12 +71,11 @@ test('trip sharing uses the current summary and supports clipboard fallback',()=
  assert.match(html,/navigator\.clipboard\.writeText\(summary/);
 });
 
-test('WhatsApp sharing encodes itinerary and uses direct handoff',()=>{
- assert.match(html,/id="whatsappTrip"/);
- assert.match(html,/https:\/\/wa\.me\/\?text=/);
- assert.match(html,/encodeURIComponent\(summary\)/);
- assert.match(html,/window\.location\.href=link/);
- assert.doesNotMatch(html,/window\.open\(link,"_blank","noopener,noreferrer"\)/);
+test('single trip share button provides restorable link',()=>{
+ assert.match(html,/id="shareTrip">שתף את החופשה/);
+ assert.doesNotMatch(html,/id="whatsappTrip"/);
+ assert.match(html,/navigator\.share\(\{title:"תכנון החופשה שלי/);
+ assert.match(html,/tripShareUrl\(\)/);
 });
 
 test('lead submit is guarded against duplicate requests',()=>{

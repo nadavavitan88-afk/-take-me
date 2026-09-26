@@ -174,7 +174,7 @@ function setTravelMode(mode){
  $("heroDescription").textContent=mode==="israel"?"בחר יעד בארץ, תאריכים, תקציב והרכב אורחים — ונעזור לך למצוא אירוח ואטרקציות.":"בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.";
  $("modeProof").textContent=mode==="israel"?"✓ מלונות ואטרקציות":"✓ טיסה + מלון";
  $("extrasDescription").textContent=mode==="israel"?"אירוח, אטרקציות, מסעדות ומסלול נסיעה — במקום אחד.":"אטרקציות, רכב, eSIM ומסעדות — בלי להתחיל את החיפוש מחדש.";
- $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("dest").value="";$("dest").placeholder=mode==="israel"?"אילת, הגליל, ירושלים...":"לימסול, רומא...";
+ $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("gyg").href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";$("esim").closest(".service").hidden=mode==="israel";$("car").textContent=mode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";$("dest").value="";$("dest").placeholder=mode==="israel"?"אילת, הגליל, ירושלים...":"לימסול, רומא...";
  $("destSuggest").classList.remove("open");$("destSuggest").innerHTML="";invalidateResults();
  $("status").textContent=mode==="israel"?"בחר יעד בישראל מהרשימה.":"בחר יעד בחו״ל מהרשימה.";
 }
@@ -198,14 +198,13 @@ function money(n){return new Intl.NumberFormat("he-IL").format(Math.round(n))+" 
 function findDestination(q){
  const n=norm(q);
  if(!n) return null;
- return activeDestinations().find(d=>norm(d.city+", "+d.country)===n)
-     || activeDestinations().find(d=>norm(d.city).startsWith(n))
-     || activeDestinations().find(d=>norm(d.city+", "+d.country).includes(n));
+ return activeDestinations().find(d=>[d.city,d.en,d.city+", "+d.country].some(v=>norm(v)===n))
+     || (n.length>=2 ? activeDestinations().find(d=>[d.city,d.en].some(v=>norm(v).startsWith(n))) : null);
 }
 function renderSuggestions(){
  const q=norm($("dest").value), box=$("destSuggest");
  if(q.length<2){box.classList.remove("open"); box.innerHTML=""; return;}
- const found=activeDestinations().filter(d=>norm(d.city).includes(q)||norm(d.country).includes(q)||norm(d.city+" "+d.country).includes(q)).slice(0,6);
+ const found=activeDestinations().filter(d=>norm(d.city).includes(q)||norm(d.en).includes(q)||norm(d.country).includes(q)||norm(d.city+" "+d.country).includes(q)).slice(0,6);
  if(!found.length){box.classList.remove("open"); box.innerHTML=""; return;}
  box.innerHTML=found.map((d,i)=>'<button type="button" class="sopt" data-i="'+i+'"><span><b>'+d.city+'</b><small>'+d.country+'</small></span><span class="code">'+d.iata+'</span></button>').join("");
  box.classList.add("open");
@@ -438,7 +437,7 @@ async function aiRecommend(){
       st.textContent=e.name==="TimeoutError"?"החיפוש התארך מעבר ל־10 שניות. נסה שוב או ציין יעד מפורש לקבלת קישורים חלופיים.": "שירות ההמלצות זמנית לא זמין. נסה שוב או כתוב יעד מפורש.";st.className="status error";
     }
   }
-  finally{btn.disabled=false;btn.textContent="מצא לי חופשה";}
+  finally{if(revision===searchRevision){btn.disabled=false;btn.textContent="מצא לי חופשה";}}
 }
 $("modeAbroad").addEventListener("click",()=>setTravelMode("abroad"));
 $("modeIsrael").addEventListener("click",()=>setTravelMode("israel"));

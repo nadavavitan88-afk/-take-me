@@ -538,12 +538,24 @@ function restoreSharedTrip(){
 $("shareTrip").addEventListener("click",async()=>{
  refreshLeadSummary();
  const summary=$("leadSummary").textContent;
+ const url=tripShareUrl();
  const status=$("leadStatus");
+ const message=summary+"\\n"+url;
  try{
-  if(navigator.share){await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary+"\n"+tripShareUrl()});status.textContent="אפשר לשתף את פרטי החופשה.";}
-  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(summary+"\n"+tripShareUrl());status.textContent="פרטי החופשה והקישור הועתקו — אפשר להדביק בוואטסאפ.";}
-  else{status.textContent="בחרו והעתיקו את סיכום החופשה המוצג למעלה.";}
- }catch(error){if(error.name!=="AbortError")status.textContent="השיתוף לא נפתח. אפשר להשתמש בכפתור העתק פרטי חופשה.";}
+  if(navigator.share){
+   await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary,url});
+   status.textContent="אפשר לשתף את פרטי החופשה.";
+   return;
+  }
+ }catch(error){if(error.name==="AbortError")return;}
+ try{
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+   await navigator.clipboard.writeText(message);
+   status.textContent="פרטי החופשה והקישור הועתקו — אפשר להדביק בוואטסאפ.";
+  }else{
+   status.textContent="לא ניתן לפתוח שיתוף אוטומטי. אפשר להעתיק את פרטי החופשה מהסיכום."; 
+  }
+ }catch(error){status.textContent="השיתוף לא נפתח. אפשר להשתמש בכפתור העתק פרטי חופשה.";}
 });
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();

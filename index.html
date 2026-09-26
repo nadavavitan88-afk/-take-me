@@ -350,6 +350,14 @@ async function aiRecommend(){
   const asksAbroad=/(?:בחו"ל|לחו"ל|בחול|לחול|טיסה ל)/.test(raw);
   if((domesticMention&&!foreignMention || asksIsrael&&!foreignMention&&!asksAbroad) && travelMode!=="israel")setTravelMode("israel");
   if((foreignMention&&!domesticMention || asksAbroad&&!domesticMention&&!asksIsrael) && travelMode!=="abroad")setTravelMode("abroad");
+  const nightsMatch=raw.match(/(?:^|\\s)([1-9]|1[0-4])\\s*(?:לילות|לילה)(?=\\s|$|[,.!?])/);
+  if(nightsMatch && validTravelDates() && nights()!==Number(nightsMatch[1])){
+    const departure=new Date($("from").value+"T12:00:00");
+    departure.setDate(departure.getDate()+Number(nightsMatch[1]));
+    const end=[departure.getFullYear(),String(departure.getMonth()+1).padStart(2,"0"),String(departure.getDate()).padStart(2,"0")].join("-");
+    $("to").value=end;
+    invalidateResults();
+  }
   const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
   revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);

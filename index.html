@@ -114,7 +114,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
   </div></article>
 </div>
 
-<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">אפשר להעתיק את הסיכום ולהדביק אותו בשדה האחרון בטופס.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>מלאו את הפרטים פעם אחת בטופס הבא. אפשר להעתיק את סיכום החופשה בלחיצה ולהדביק בשדה האחרון.</p><button class="btn" type="button" id="copyLeadInForm">העתק סיכום חופשה</button><iframe title="טופס פנייה TAKE ME" loading="lazy" src="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b"></iframe><p>הטופס לא נטען? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו בחלון נפרד</a>.</p></div></section>
+<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">אפשר להעתיק את הסיכום ולהדביק אותו בשדה האחרון בטופס.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="0[0-9]{8,9}" title="יש להזין מספר ישראלי בן 9–10 ספרות, המתחיל ב־0" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button><p id="nativeLeadStatus" role="status" aria-live="polite"></p></form><p>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו את הטופס החלופי</a>.</p></div></section>
 <div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: 2026-09-25</span></div>
 </div>
 
@@ -471,7 +471,19 @@ $("ageGrid").addEventListener("change",()=>{invalidateResults();refreshLeadSumma
 ["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",()=>{invalidateResults();refreshLeadSummary();}));
 $("build").addEventListener("click",buildTrip);
 $("openLeadForm").addEventListener("click",()=>{$("leadForm").hidden=false;});
-$("copyLeadInForm").addEventListener("click",()=>{$("copyLead").click();});
+$("nativeLeadForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const form=e.currentTarget,button=$("leadSubmit"),status=$("nativeLeadStatus");
+ if(!form.reportValidity())return;
+ refreshLeadSummary();
+ button.disabled=true;status.textContent="שולחים את הבקשה…";
+ try{
+  const response=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("leadName").value.trim(),phone:$("leadPhone").value.trim(),email:$("leadEmail").value.trim(),summary:$("leadSummary").textContent,consent:$("leadConsent").checked})});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.ok)throw new Error(result.error||"לא התקבל אישור קליטה");
+  status.textContent="הבקשה התקבלה בהצלחה! נחזור אליכם בהקדם.";form.reset();
+ }catch(error){status.textContent="לא התקבל אישור קליטה. לא נשלחה פנייה נוספת אוטומטית. ניתן להשתמש בטופס החלופי.";}finally{button.disabled=false;}
+});
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
  const field=$("leadSummary");

@@ -84,3 +84,12 @@ test('lead submit is guarded against duplicate requests',()=>{
  assert.match(html,/button\.disabled=true;button\.textContent="שולחים…"/);
  assert.match(html,/finally\{button\.disabled=false;button\.textContent="שלח לי הצעה"/);
 });
+
+test('shared itinerary links restore travel details',()=>{
+ assert.match(html,/function tripShareUrl\(\)/);
+ assert.match(html,/function restoreSharedTrip\(\)/);
+ assert.match(html,/url\.searchParams\.set\(key,value\)/);
+ assert.match(html,/restoreSharedTrip\(\);/);
+ assert.match(html,/tripShareUrl\(\)/);
+ assert.match(html,/new URLSearchParams\(window\.location\.search\)/);
+});

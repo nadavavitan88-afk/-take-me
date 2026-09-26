@@ -22,3 +22,10 @@ test('native lead form collects details once and sends summary to server',()=>{
  assert.match(html,/summary:\$\("leadSummary"\)\.textContent/);
  assert.doesNotMatch(html,/<iframe[^>]*formspry/i);
 });
+
+test('successful lead submission hides form and shows accessible thank-you',()=>{
+ assert.match(html,/\.lead-form form\[hidden\]\{display:none!important\}/);
+ assert.match(html,/form\.reset\(\);form\.hidden=true;/);
+ assert.match(html,/status\.setAttribute\("tabindex","-1"\);status\.focus\(\)/);
+ assert.match(html,/תודה! בקשת החופשה התקבלה בהצלחה/);
+});

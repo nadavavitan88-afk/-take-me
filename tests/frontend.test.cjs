@@ -50,3 +50,9 @@ test('new lead request resets confirmation and restores form',()=>{
  assert.match(html,/\$\("leadFallback"\)\.hidden=true/);
  assert.match(html,/\$\("newLeadRequest"\)\.hidden=false/);
 });
+
+test('lead phone input normalizes local and international mobile formats',()=>{
+ assert.match(html,/pattern="05\[0-9\]\{8\}"/);
+ assert.match(html,/phoneField\.value=phoneField\.value\.replace/);
+ assert.match(html,/replace\(\/\^\\\+9720\?\//);
+});

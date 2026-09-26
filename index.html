@@ -114,7 +114,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
   </div></article>
 </div>
 
-<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">אפשר להעתיק את הסיכום ולהדביק אותו בטופס.</p><div id="leadForm" class="lead-form" hidden><h4>בקשת הצעה לחופשה</h4><p>מלאו את הפרטים בטופס המאובטח של Formspry.</p><iframe title="טופס בקשת חופשה TAKE ME" loading="lazy" src="https://formspry.com/f/cmu07a01400013o6y1pujeic8"></iframe><p>אם הטופס אינו מוצג, <a href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener noreferrer"><u>פתחו אותו בחלון נפרד</u></a>.</p></div></section>
+<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">אפשר להעתיק את הסיכום ולהדביק אותו בטופס.</p><div id="leadForm" class="lead-form" hidden><h4>בקשת הצעה לחופשה</h4><p>פרטי החופשה שבחרתם מופיעים בסיכום למעלה. העתיקו אותם בלחיצה אחת והדביקו בשדה ״מה חשוב לכם בחופשה?״ בטופס.</p><button class="btn" type="button" id="copyLeadInForm">העתק סיכום חופשה</button><iframe title="טופס בקשת חופשה TAKE ME" loading="lazy" src="https://formspry.com/f/cmu07a01400013o6y1pujeic8"></iframe><p>אם הטופס אינו מוצג, <a href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener noreferrer"><u>פתחו אותו בחלון נפרד</u></a>.</p></div></section>
 <div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: 2026-09-25</span></div>
 </div>
 
@@ -471,6 +471,7 @@ $("ageGrid").addEventListener("change",()=>{invalidateResults();refreshLeadSumma
 ["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",()=>{invalidateResults();refreshLeadSummary();}));
 $("build").addEventListener("click",buildTrip);
 $("openLeadForm").addEventListener("click",()=>{$("leadForm").hidden=false;});
+$("copyLeadInForm").addEventListener("click",()=>{$("copyLead").click();});
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
  const field=$("leadSummary");

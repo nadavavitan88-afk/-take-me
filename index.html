@@ -112,7 +112,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
   </div></article>
 </div>
 
-<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><a class="btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener">פתח טופס</a></section>
+<section class="lead" id="lead"><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><textarea id="leadSummary" readonly aria-label="סיכום החופשה להעברה לנציג" style="display:block;width:100%;min-height:120px;margin:12px 0;padding:12px;border-radius:12px;box-sizing:border-box" placeholder="פרטי החופשה שלך יופיעו כאן לאחר חיפוש"></textarea><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button> <a class="btn" href="https://formspry.com/f/cmu07a01400013o6y1pujeic8" target="_blank" rel="noopener">פתח טופס</a><p id="leadStatus" role="status">העתק את הפרטים והדבק אותם בטופס כדי שלא תצטרך להזין הכול מחדש.</p></section>
 <div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. <span class="version">גרסה: 2026-09-25</span></div>
 </div>
 
@@ -317,6 +317,14 @@ function updateLinks(d){
  $("packageLive").href=travelMode==="israel"?bookingHotelsLink(d.city+", ישראל"):expediaPackageLink(d);
  $("packageLive").textContent=travelMode==="israel"?"בדוק מלונות ואירוח בישראל":"בדוק חבילת טיסה + מלון";
 }
+function refreshLeadSummary(destination){
+ const d=destination||findDestination($("dest").value);
+ const place=d?d.city+", "+d.country:$("dest").value.trim()||"טרם נבחר יעד";
+ const details=["בקשת חופשה דרך TAKE ME","מסלול: "+(travelMode==="israel"?"ישראל":"חו״ל"),"יעד: "+place,"תאריכים: "+$("from").value+" עד "+$("to").value,"משך: "+nights()+" לילות","נוסעים: "+passengerText(),"גילאי ילדים: "+(childAges().join(", ")||"אין"),"תקציב: "+money(Number($("budget").value))];
+ if(travelMode!=="israel")details.push("מוצא: "+originCode());
+ if($("aiPrompt").value.trim())details.push("בקשה אישית: "+$("aiPrompt").value.trim());
+ $("leadSummary").value=details.join("\n");
+}
 function buildTrip(){
  const status=$("status"), d=findDestination($("dest").value), n=nights();
  status.className="status";
@@ -333,6 +341,7 @@ function buildTrip(){
  $("rBudget").textContent=money(budget);
  $("rTrav").textContent=passengerText();
  updateLinks(d);
+ refreshLeadSummary(d);
  $("result").classList.add("show");
  status.textContent="החיפוש מוכן ✓";status.classList.add("ok");
 }
@@ -364,6 +373,7 @@ async function aiRecommend(){
   const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
   if(explicit && norm($("dest").value)!==norm(explicit.city+", "+explicit.country)){$("dest").value=explicit.city+", "+explicit.country;invalidateResults();}
   if(explicit)updateLinks(explicit);
+  refreshLeadSummary(explicit);
   revision=searchRevision;
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
   if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
@@ -452,6 +462,12 @@ $("children").addEventListener("change",renderChildAges);
 $("ageGrid").addEventListener("change",invalidateResults);
 ["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",invalidateResults));
 $("build").addEventListener("click",buildTrip);
+$("copyLead").addEventListener("click",async()=>{
+ refreshLeadSummary();
+ const field=$("leadSummary");
+ try{await navigator.clipboard.writeText(field.value);$("leadStatus").textContent="פרטי החופשה הועתקו. פתח את הטופס והדבק אותם בשדה ההודעה.";}
+ catch(e){field.focus();field.select();$("leadStatus").textContent="בחרנו את הסיכום. העתק אותו והדבק בטופס.";}
+});
 document.querySelectorAll(".chip").forEach(x=>x.addEventListener("click",()=>x.classList.toggle("active")));
 
 const start=new Date(); start.setDate(start.getDate()+30);

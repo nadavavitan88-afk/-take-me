@@ -68,7 +68,7 @@ test('trip sharing uses the current summary and supports clipboard fallback',()=
  assert.match(html,/\$\("shareTrip"\)\.addEventListener\("click"/);
  assert.match(html,/const summary=\$\("leadSummary"\)\.textContent/);
  assert.match(html,/navigator\.share\(\{title:"תכנון החופשה שלי/);
- assert.match(html,/navigator\.clipboard\.writeText\(summary/);
+ assert.match(html,/navigator\.clipboard\.writeText\(message/);
 });
 
 test('single trip share button provides restorable link',()=>{
@@ -76,6 +76,7 @@ test('single trip share button provides restorable link',()=>{
  assert.doesNotMatch(html,/id="whatsappTrip"/);
  assert.match(html,/navigator\.share\(\{title:"תכנון החופשה שלי/);
  assert.match(html,/tripShareUrl\(\)/);
+ assert.match(html,/text:summary,url/);
 });
 
 test('lead submit is guarded against duplicate requests',()=>{

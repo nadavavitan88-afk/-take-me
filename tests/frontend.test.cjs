@@ -29,3 +29,16 @@ test('successful lead submission hides form and shows accessible thank-you',()=>
  assert.match(html,/status\.setAttribute\("tabindex","-1"\);status\.focus\(\)/);
  assert.match(html,/תודה! בקשת החופשה התקבלה בהצלחה/);
 });
+
+test('share button offers native sharing and clipboard fallback',()=>{
+ assert.match(html,/id="shareSite"/);
+ assert.match(html,/navigator\.share/);
+ assert.match(html,/navigator\.clipboard\.writeText\(url\)/);
+ assert.match(html,/error\.name!=="AbortError"/);
+});
+
+test('failed lead submission keeps entered values and shows error state',()=>{
+ assert.match(html,/status\.dataset\.state="error"/);
+ assert.match(html,/הפרטים שמילאת נשמרו בטופס/);
+ assert.match(html,/\.lead-form #nativeLeadStatus\[data-state="error"\]/);
+});

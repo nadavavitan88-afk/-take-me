@@ -516,8 +516,7 @@ $("whatsappTrip").addEventListener("click",()=>{
  refreshLeadSummary();
  const summary=$("leadSummary").textContent+"\nhttps://take-me-v7-full.vercel.app/";
  const link="https://wa.me/?text="+encodeURIComponent(summary);
- const opened=window.open(link,"_blank","noopener,noreferrer");
- if(!opened)$("leadStatus").textContent="הדפדפן חסם את פתיחת וואטסאפ. אפשר להשתמש בכפתור שיתוף החופשה."; 
+ window.location.href=link;
 });
 $("shareTrip").addEventListener("click",async()=>{
  refreshLeadSummary();

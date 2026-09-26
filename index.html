@@ -574,18 +574,5 @@ document.getElementById('build')?.addEventListener('click', function() {
   }
 });
 </script>
-  <script>
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('a, button');
-  if (!btn) return;
 
-  if (btn.textContent.trim().includes('פתח טופס')) {
-    e.preventDefault();
-    window.open(
-      'https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b',
-      '_blank'
-    );
-  }
-});
-</script>
 </body></html>

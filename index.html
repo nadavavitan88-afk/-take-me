@@ -148,7 +148,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 "use strict";
 const $ = id => document.getElementById(id);
 function analyticsAttribution(){
- const p=new URLSearchParams(window.location.search);
+ const p=new URLSearchParams(typeof window!=="undefined"&&window.location?window.location.search:"");
  let source=(p.get("utm_source")||"").trim();
  let medium=(p.get("utm_medium")||"").trim();
  const campaign=(p.get("utm_campaign")||"").trim();
@@ -166,7 +166,7 @@ function analyticsAttribution(){
  return {traffic_source:source||"direct",traffic_medium:medium||"none",traffic_campaign:campaign||"none"};
 }
 function trackEvent(name,params={}){
- if(typeof window.gtag==="function")window.gtag("event",name,{...analyticsAttribution(),...params});
+ if(typeof window!=="undefined"&&typeof window.gtag==="function")window.gtag("event",name,{...analyticsAttribution(),...params});
 }
 let searchRevision=0;
 let activeAiController=null;
@@ -431,7 +431,7 @@ function updateLinks(d){
  $("packageLive").textContent=travelMode==="israel"?"בדוק מלונות ואירוח בישראל":"בדוק חבילת טיסה + מלון";
 }
 function leadTrackingText(){
- const params=new URLSearchParams(window.location.search);
+ const params=new URLSearchParams(typeof window!=="undefined"&&window.location?window.location.search:"");
  let source=(params.get("utm_source")||"").trim();
  let medium=(params.get("utm_medium")||"").trim();
  const campaign=(params.get("utm_campaign")||"").trim();
@@ -630,7 +630,7 @@ $("mobileLeadCta").addEventListener("click",()=>{
  $("leadForm").scrollIntoView({behavior:"smooth",block:"start"});
  setTimeout(()=>$("leadName").focus(),450);
 });
-if("IntersectionObserver" in window){
+if(typeof window!=="undefined"&&"IntersectionObserver" in window){
  const cta=$("mobileLeadCta");
  const observer=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{cta.hidden=entry.isIntersecting;});

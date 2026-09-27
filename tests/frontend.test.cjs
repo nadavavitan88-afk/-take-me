@@ -93,3 +93,9 @@ test('shared itinerary links restore travel details',()=>{
  assert.match(html,/tripShareUrl\(\)/);
  assert.match(html,/new URLSearchParams\(window\.location\.search\)/);
 });
+
+test('valid shared itinerary immediately builds result and invalid dates require correction',()=>{
+ assert.match(html,/if\(validTravelDates\(\)&&validChildAges\(\)&&Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)<=6\)/);
+ assert.match(html,/buildTrip\(\);\s*\$\("status"\)\.textContent="החופשה ששותפה נטענה/);
+ assert.match(html,/יש לעדכן תאריכים או גילאי ילדים/);
+});

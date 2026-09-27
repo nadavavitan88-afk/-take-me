@@ -99,3 +99,10 @@ test('valid shared itinerary immediately builds result and invalid dates require
  assert.match(html,/buildTrip\(\);\s*\$\("status"\)\.textContent="החופשה ששותפה נטענה/);
  assert.match(html,/יש לעדכן תאריכים או גילאי ילדים/);
 });
+
+test('sharing refuses missing destination, invalid dates and incomplete child ages',()=>{
+ assert.match(html,/if\(!findDestination\(\$\("dest"\)\.value\)\)/);
+ assert.match(html,/if\(!validTravelDates\(\)\)/);
+ assert.match(html,/if\(!validChildAges\(\)\|\|Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)>6\)/);
+ assert.match(html,/כדי לשתף חופשה, יש לבחור יעד מהרשימה/);
+});

@@ -384,10 +384,9 @@ function bookingHotelsLink(place){
  return "https://www.booking.com/searchresults.html?"+params.toString();
 }
 function agodaHotelsLink(place){
- // Agoda ignores free-text destination parameters in some mobile sessions.
- // Use its actual Dubai city landing page rather than an empty search form.
- if(/דובאי|dubai/i.test(place))return "https://www.agoda.com/city/dubai-ae.html";
- return "https://www.agoda.com/";
+ // Agoda affiliate CID is not active yet, so keep this as a regular search
+ // link until the Partner Center verification/CID is completed.
+ return "https://www.agoda.com/search?textToSearch="+encodeURIComponent(place);
 }
 function hotelLocationLink(name,place){
  return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(name+", "+place);

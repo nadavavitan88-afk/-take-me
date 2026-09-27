@@ -49,7 +49,7 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
 
 כלל חשוב מאוד:
 - אם המשתמש ציין יעד ספציפי וברור, למשל "דובאי", "רומא", "לימסול" או כל עיר/אי/אזור אחר — אל תציע יעדים חלופיים.
-- במקרה כזה החזר המלצה אחת בלבד לאותו יעד בדיוק, מותאמת לבקשה שלו.
+- במקרה כזה החזר המלצה אחת בלבד לאותו יעד, מותאמת לבקשה שלו. אם המשתמש כתב גם מדינה/אזור, אפשר להחזיר בשדה city את שם העיר/האי/האזור בלבד וב-country את המדינה.
 - אם המשתמש לא ציין יעד ספציפי — הצע בדיוק 3 יעדים שונים שמתאימים לבקשה.
 
 אל תטען שיש לך מחירי טיסות, מלונות או זמינות בזמן אמת.
@@ -83,7 +83,7 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
   const context = `
 סוג חופשה: ${domestic ? "ישראל" : "חו״ל"}\nבקשת המשתמש: ${userPrompt}
 יעד מפורש שאומת בטופס (אם ריק, זהה מתוך הבקשה): ${String(body.destination || "").slice(0,100)}
-כאשר נמסר יעד מפורש, השדה city חייב להיות זהה לו.
+כאשר נמסר יעד מפורש, ההמלצה חייבת להתייחס לאותו מקום. אין להחליף אותו ביעד אחר.
 נקודת יציאה: ${String(body.origin || "תל אביב")}
 תאריך יציאה: ${String(body.from || "לא צוין")}
 תאריך חזרה: ${String(body.to || "לא צוין")}
@@ -156,7 +156,12 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
     })).filter(x => x.name) : [];
     let recommendations = result.recommendations.filter(x => x && clean(x.city) && (domestic ? /^(ישראל|מדינת ישראל|Israel)$/i.test(clean(x.country)) : !/^(ישראל|מדינת ישראל|Israel)$/i.test(clean(x.country))));
     if (requested) {
-      recommendations = recommendations.filter(x => clean(x.city).normalize("NFKC").replace(/[\u200e\u200f\s\u05f3\u05f4]/g,"").toLocaleLowerCase() === requested.normalize("NFKC").replace(/[\u200e\u200f\s\u05f3\u05f4]/g,"").toLocaleLowerCase()).slice(0,1);
+      const key=value=>clean(value).normalize("NFKC").replace(/[\u200e\u200f\s,\-\u05f3\u05f4]/g,"").toLocaleLowerCase();
+      const wanted=key(requested);
+      recommendations = recommendations.filter(x => {
+        const city=key(x.city), country=key(x.country), full=city+country;
+        return city===wanted || full===wanted || wanted.includes(city) || city.includes(wanted);
+      }).slice(0,1);
     } else recommendations = recommendations.slice(0,3);
     if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב.",code:"DESTINATION_MISMATCH"});
     result = {recommendations: recommendations.map(x => ({

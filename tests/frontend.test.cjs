@@ -95,7 +95,7 @@ test('shared itinerary links restore travel details',()=>{
 });
 
 test('valid shared itinerary immediately builds result and invalid dates require correction',()=>{
- assert.match(html,/if\(validTravelDates\(\)&&validChildAges\(\)&&Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)<=6\)/);
+ assert.match(html,/if\(validTravelDates\(\)&&validChildAges\(\)&&Number\(\$\("adults"\)\.value\)>=1&&Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)<=6\)/);
  assert.match(html,/buildTrip\(\);\s*\$\("status"\)\.textContent="החופשה ששותפה נטענה/);
  assert.match(html,/יש לעדכן תאריכים או גילאי ילדים/);
 });
@@ -103,6 +103,12 @@ test('valid shared itinerary immediately builds result and invalid dates require
 test('sharing refuses missing destination, invalid dates and incomplete child ages',()=>{
  assert.match(html,/if\(!findDestination\(\$\("dest"\)\.value\)\)/);
  assert.match(html,/if\(!validTravelDates\(\)\)/);
- assert.match(html,/if\(!validChildAges\(\)\|\|Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)>6\)/);
+ assert.match(html,/if\(!validChildAges\(\)\|\|Number\(\$\("adults"\)\.value\)<1\|\|Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)>6\)/);
  assert.match(html,/כדי לשתף חופשה, יש לבחור יעד מהרשימה/);
+});
+
+test('shared trips restore explicit mode and reject zero adults',()=>{
+ assert.match(html,/setTravelMode\(params\.get\("mode"\)\)/);
+ assert.match(html,/Number\(\$\("adults"\)\.value\)>=1/);
+ assert.match(html,/Number\(\$\("adults"\)\.value\)<1/);
 });

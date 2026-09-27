@@ -509,6 +509,7 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
   const response=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("leadName").value.trim(),phone:$("leadPhone").value.trim(),email:$("leadEmail").value.trim(),summary:$("leadSummary").textContent,consent:$("leadConsent").checked})});
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw new Error(result.error||"לא התקבל אישור קליטה");
+  if(typeof gtag==="function")gtag("event","generate_lead",{lead_source:"native_form",currency:"ILS"});
   form.reset();form.hidden=true;$("leadFallback").hidden=true;$("newLeadRequest").hidden=false;status.hidden=false;status.dataset.state="success";status.textContent="תודה! בקשת החופשה התקבלה בהצלחה. נחזור אליכם בהקדם.";status.setAttribute("tabindex","-1");status.focus();
  }catch(error){$("leadFallback").hidden=false;status.dataset.state="error";status.textContent="לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.textContent="שלח לי הצעה";}
 });

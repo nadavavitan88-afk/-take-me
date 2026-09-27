@@ -156,16 +156,14 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
     })).filter(x => x.name) : [];
     let recommendations = result.recommendations.filter(x => x && clean(x.city) && (domestic ? /^(ישראל|מדינת ישראל|Israel)$/i.test(clean(x.country)) : !/^(ישראל|מדינת ישראל|Israel)$/i.test(clean(x.country))));
     if (requested) {
-      const key=value=>clean(value).normalize("NFKC").replace(/[\u200e\u200f\s,\-\u05f3\u05f4]/g,"").toLocaleLowerCase();
-      const wanted=key(requested);
-      recommendations = recommendations.filter(x => {
-        const city=key(x.city), country=key(x.country), full=city+country;
-        return city===wanted || full===wanted || wanted.includes(city) || city.includes(wanted);
-      }).slice(0,1);
+      // A user may type the destination in English while the Hebrew-only model
+      // returns a translated name. Keep the requested place as the canonical
+      // display label instead of rejecting a valid translated recommendation.
+      recommendations = recommendations.slice(0,1);
     } else recommendations = recommendations.slice(0,3);
     if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב.",code:"DESTINATION_MISMATCH"});
     result = {recommendations: recommendations.map(x => ({
-      city:clean(x.city),country:domestic?"ישראל":clean(x.country),why:clean(x.why),
+      city:requested||clean(x.city),country:domestic?"ישראל":clean(x.country),why:clean(x.why),
       hotels:items(x.hotels),attractions:items(x.attractions)
     }))};
     return res.status(200).json(result);

@@ -31,7 +31,7 @@ export default async function handler(req,res){
    _subject:"TAKE ME — בקשת חופשה חדשה"
   };
 
-  const [formspreeResult] = await Promise.allSettled([
+  const [formspreeResult,sheetsResult] = await Promise.allSettled([
    fetch(FORM_URL,{
     method:"POST",
     headers:{"Content-Type":"application/json","Accept":"application/json"},
@@ -40,30 +40,44 @@ export default async function handler(req,res){
    }),
    fetch(SHEETS_URL,{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
+    headers:{"Content-Type":"application/json","Accept":"application/json"},
     body:JSON.stringify(payload),
     signal:AbortSignal.timeout(10000)
    })
   ]);
 
-  if(formspreeResult.status!=="fulfilled"){
-   return res.status(502).json({ok:false,error:"שירות הפניות אינו זמין כרגע"});
+  let formspreeOk=false;
+  let formspreeRateLimited=false;
+  if(formspreeResult.status==="fulfilled"){
+   const response=formspreeResult.value;
+   formspreeRateLimited=response.status===429;
+   const type=response.headers.get("content-type")||"";
+   const body=type.includes("json")?await response.json().catch(()=>null):null;
+   formspreeOk=response.ok&&body?.ok===true;
   }
 
-  const response=formspreeResult.value;
-  const type=response.headers.get("content-type")||"";
-  const body=type.includes("json")?await response.json().catch(()=>null):null;
+  let sheetsOk=false;
+  if(sheetsResult.status==="fulfilled"){
+   const response=sheetsResult.value;
+   const type=response.headers.get("content-type")||"";
+   const body=type.includes("json")?await response.json().catch(()=>null):null;
+   sheetsOk=response.ok&&body?.ok===true;
+  }
 
-  if(!response.ok||!body||body.ok!==true){
-   return res.status(response.status===429?429:502).json({
-    ok:false,
-    error:response.status===429
-     ?"יותר מדי פניות כרגע. נסו שוב בעוד דקה."
-     :"לא התקבל אישור קליטה מהשירות"
+  // Do not lose a lead if one delivery channel has a temporary problem.
+  if(formspreeOk||sheetsOk){
+   return res.status(200).json({
+    ok:true,
+    channels:{formspree:formspreeOk,sheets:sheetsOk}
    });
   }
 
-  return res.status(200).json({ok:true});
+  return res.status(formspreeRateLimited?429:502).json({
+   ok:false,
+   error:formspreeRateLimited
+    ?"יותר מדי פניות כרגע. נסו שוב בעוד דקה."
+    :"שירות הפניות אינו זמין כרגע"
+  });
  }catch{
   return res.status(502).json({ok:false,error:"שירות הפניות אינו זמין כרגע"});
  }

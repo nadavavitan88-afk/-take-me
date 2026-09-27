@@ -133,3 +133,12 @@ test('marketing attribution is attached to shared links',()=>{
  assert.match(html,/utm_source=share/);
  assert.match(html,/url\.searchParams\.set\("utm_campaign","trip_share"\)/);
 });
+
+
+test('affiliate integrations keep verified tracking identifiers',()=>{
+ assert.match(html,/data-camref="1101l6tkXW"/);
+ assert.match(html,/data-network="pz"/);
+ assert.match(html,/partner_id=GJ3WGHV/);
+ assert.match(html,/a_aid=Nadavavitan050/);
+ assert.match(html,/Allianceid=10594354&SID=331399748&trip_sub1=take_me_site/);
+});

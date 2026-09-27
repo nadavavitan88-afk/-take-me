@@ -5,8 +5,10 @@ const vm=require('node:vm');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
 
 test('every inline browser script parses',()=>{
- const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(x=>x.trim());
- assert.ok(scripts.length>=3);
+ const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+   .filter(m=>!/application\/ld\+json/i.test(m[1]))
+   .map(m=>m[2]).filter(x=>x.trim());
+ assert.ok(scripts.length>=2);
  scripts.forEach((script,i)=>assert.doesNotThrow(()=>new vm.Script(script,{filename:'index-inline-'+i+'.js'})));
 });
 test('travel planner retains required end-to-end controls',()=>{
@@ -100,11 +102,13 @@ test('valid shared itinerary immediately builds result and invalid dates require
  assert.match(html,/יש לעדכן תאריכים או גילאי ילדים/);
 });
 
-test('sharing refuses missing destination, invalid dates and incomplete child ages',()=>{
- assert.match(html,/if\(!findDestination\(\$\("dest"\)\.value\)\)/);
+test('sharing accepts free-text destinations but rejects missing destination, invalid dates and incomplete child ages',()=>{
+ assert.match(html,/if\(!resolveDestination\(\$\("dest"\)\.value\)\)/);
  assert.match(html,/if\(!validTravelDates\(\)\)/);
  assert.match(html,/if\(!validChildAges\(\)\|\|Number\(\$\("adults"\)\.value\)<1\|\|Number\(\$\("adults"\)\.value\)\+Number\(\$\("children"\)\.value\)>6\)/);
- assert.match(html,/כדי לשתף חופשה, יש לבחור יעד מהרשימה/);
+ assert.match(html,/כדי לשתף חופשה, יש לכתוב יעד/);
+ assert.match(html,/function resolveDestination\(q\)/);
+ assert.match(html,/בכל העולם — גם אם היעד לא ברשימה/);
 });
 
 test('shared trips restore explicit mode and reject zero adults',()=>{
@@ -116,4 +120,16 @@ test('shared trips restore explicit mode and reject zero adults',()=>{
 test('shared trip reveals results and highlights details needing correction',()=>{
  assert.match(html,/\$\("result"\)\.scrollIntoView\(\{behavior:"smooth",block:"start"\}\)/);
  assert.match(html,/\$\("status"\)\.classList\.add\("error"\)/);
+});
+
+
+test('lead form includes privacy consent and anti-spam honeypot',()=>{
+ assert.match(html,/href="\/privacy\.html"/);
+ assert.match(html,/id="leadFax"/);
+ assert.match(html,/fax:\$\("leadFax"\)\.value\.trim\(\)/);
+});
+
+test('marketing attribution is attached to shared links',()=>{
+ assert.match(html,/utm_source=share/);
+ assert.match(html,/url\.searchParams\.set\("utm_campaign","trip_share"\)/);
 });

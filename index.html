@@ -134,6 +134,24 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 (function(){
 "use strict";
 const $ = id => document.getElementById(id);
+function analyticsAttribution(){
+ const p=new URLSearchParams(window.location.search);
+ let source=(p.get("utm_source")||"").trim();
+ const medium=(p.get("utm_medium")||"").trim();
+ const campaign=(p.get("utm_campaign")||"").trim();
+ if(!source){
+  try{
+   if(document.referrer){
+    const u=new URL(document.referrer);
+    if(u.hostname!==window.location.hostname)source=u.hostname;
+   }
+  }catch{}
+ }
+ return {traffic_source:source||"direct",traffic_medium:medium||"none",traffic_campaign:campaign||"none"};
+}
+function trackEvent(name,params={}){
+ if(typeof window.gtag==="function")window.gtag("event",name,{...analyticsAttribution(),...params});
+}
 let searchRevision=0;
 let activeAiController=null;
 function invalidateResults(){
@@ -484,7 +502,7 @@ async function aiRecommend(){
 }
 $("modeAbroad").addEventListener("click",()=>setTravelMode("abroad"));
 $("modeIsrael").addEventListener("click",()=>setTravelMode("israel"));
-$("aiBuild").addEventListener("click",aiRecommend);
+$("aiBuild").addEventListener("click",()=>{trackEvent("ai_trip_search",{destination:$("dest").value||"unknown"});aiRecommend();});
 $("aiPrompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")aiRecommend();});
 
 $("dest").addEventListener("input",()=>{
@@ -503,17 +521,17 @@ document.addEventListener("click",e=>{if(!e.target.closest("#dest")&&!e.target.c
 $("children").addEventListener("change",renderChildAges);
 $("ageGrid").addEventListener("change",()=>{invalidateResults();refreshLeadSummary();});
 ["origin","dest","from","to","budget","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",()=>{invalidateResults();refreshLeadSummary();}));
-$("build").addEventListener("click",buildTrip);
+$("build").addEventListener("click",()=>{trackEvent("vacation_search",{destination:$("dest").value||"unknown",budget:Number($("budget").value)||0,travel_mode:travelMode});buildTrip();});
 $("shareSite").addEventListener("click",async()=>{
  const url="https://take-me-v7-full.vercel.app/";
  const status=$("shareSiteStatus");
  try{
-  if(navigator.share){await navigator.share({title:"TAKE ME — תבחר יעד ואנחנו נבנה את הדרך",text:"בואו לבנות חופשה ב־TAKE ME",url});status.textContent="השיתוף נפתח.";}
+  if(navigator.share){await navigator.share({title:"TAKE ME — תבחר יעד ואנחנו נבנה את הדרך",text:"בואו לבנות חופשה ב־TAKE ME",url});trackEvent("share_site",{method:"native_share"});status.textContent="השיתוף נפתח.";}
   else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(url);status.textContent="קישור האתר הועתק — אפשר להדביק אותו בוואטסאפ או בפייסבוק.";}
   else{status.textContent="קישור לשיתוף: "+url;}
  }catch(error){if(error.name!=="AbortError")status.textContent="לא הצלחנו לפתוח שיתוף. קישור האתר: "+url;}
 });
-$("openLeadForm").addEventListener("click",()=>{$("leadForm").hidden=false;});
+$("openLeadForm").addEventListener("click",()=>{trackEvent("begin_lead_form",{destination:$("dest").value||"unknown"});$("leadForm").hidden=false;});
 $("newLeadRequest").addEventListener("click",()=>{
  $("nativeLeadForm").hidden=false;$("newLeadRequest").hidden=true;$("leadFallback").hidden=true;
  const status=$("nativeLeadStatus");status.textContent="";delete status.dataset.state;
@@ -540,7 +558,7 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
   const response=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("leadName").value.trim(),phone:$("leadPhone").value.trim(),email:$("leadEmail").value.trim(),summary:$("leadSummary").textContent,consent:$("leadConsent").checked})});
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw new Error(result.error||"לא התקבל אישור קליטה");
-  if(typeof gtag==="function")gtag("event","generate_lead",{lead_source:"native_form",currency:"ILS"});
+  trackEvent("generate_lead",{lead_source:"native_form",currency:"ILS",value:Number($("budget").value)||0,destination:$("dest").value||"unknown",travel_mode:travelMode});
   form.reset();form.hidden=true;$("leadFallback").hidden=true;$("newLeadRequest").hidden=false;status.hidden=false;status.dataset.state="success";status.textContent="תודה! בקשת החופשה התקבלה בהצלחה. נחזור אליכם בהקדם.";status.setAttribute("tabindex","-1");status.focus();
  }catch(error){$("leadFallback").hidden=false;status.dataset.state="error";status.textContent="לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.textContent="שלח לי הצעה";}
 });
@@ -592,6 +610,7 @@ $("shareTrip").addEventListener("click",async()=>{
  try{
   if(navigator.share){
    await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary,url});
+   trackEvent("share_trip",{method:"native_share",destination:$("dest").value||"unknown"});
    status.textContent="אפשר לשתף את פרטי החופשה.";
    return;
   }
@@ -608,10 +627,19 @@ $("shareTrip").addEventListener("click",async()=>{
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
  const field=$("leadSummary");
- try{await navigator.clipboard.writeText(field.textContent);$("leadStatus").textContent="פרטי החופשה הועתקו. בטופס שבאתר הם מצורפים אוטומטית — אין צורך להדביק.";}
+ try{await navigator.clipboard.writeText(field.textContent);trackEvent("copy_trip",{destination:$("dest").value||"unknown"});$("leadStatus").textContent="פרטי החופשה הועתקו. בטופס שבאתר הם מצורפים אוטומטית — אין צורך להדביק.";}
  catch(e){$("leadStatus").textContent="ההעתקה נכשלה. ניתן ללחוץ לחיצה ארוכה על הסיכום כדי להעתיק אותו.";}
 });
 document.querySelectorAll(".chip").forEach(x=>x.addEventListener("click",()=>x.classList.toggle("active")));
+["packageLive","gyg","car","esim","food","kosher","weather","map"].forEach(id=>{
+ const el=$(id);
+ if(!el)return;
+ el.addEventListener("click",()=>trackEvent("outbound_click",{
+  service:id,
+  destination:$("dest").value||"unknown",
+  link_url:el.href
+ }));
+});
 
 const start=new Date(); start.setDate(start.getDate()+30);
 const end=new Date(start); end.setDate(end.getDate()+4);
@@ -624,15 +652,6 @@ refreshLeadSummary();
 $("engineStatus").textContent="מנוע האתר פעיל ✓";
 $("engineStatus").classList.add("ok");
 })();
-</script>
-<script>
-document.getElementById('build')?.addEventListener('click', function() {
-  if (typeof gtag === 'function') {
-    gtag('event', 'vacation_search', {
-      destination: document.getElementById('dest')?.value || 'unknown'
-    });
-  }
-});
 </script>
 
 </body></html>

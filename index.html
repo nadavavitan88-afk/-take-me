@@ -334,13 +334,34 @@ function updateLinks(d){
  $("packageLive").href=travelMode==="israel"?bookingHotelsLink(d.city+", ישראל"):expediaPackageLink(d);
  $("packageLive").textContent=travelMode==="israel"?"בדוק מלונות ואירוח בישראל":"בדוק חבילת טיסה + מלון";
 }
+function leadTrackingText(){
+ const params=new URLSearchParams(window.location.search);
+ const source=(params.get("utm_source")||"").trim();
+ const medium=(params.get("utm_medium")||"").trim();
+ const campaign=(params.get("utm_campaign")||"").trim();
+ let referrer="";
+ try{
+  if(document.referrer){
+   const refUrl=new URL(document.referrer);
+   if(refUrl.hostname!==window.location.hostname)referrer=refUrl.hostname;
+  }
+ }catch{}
+ const parts=[];
+ if(source)parts.push("מקור: "+source);
+ if(medium)parts.push("מדיה: "+medium);
+ if(campaign)parts.push("קמפיין: "+campaign);
+ if(!source&&referrer)parts.push("מקור: "+referrer);
+ if(!parts.length)parts.push("מקור: ישיר");
+ return parts.join(" | ");
+}
 function refreshLeadSummary(destination){
  const d=destination||findDestination($("dest").value);
  const place=d?d.city+", "+d.country:$("dest").value.trim()||"טרם נבחר יעד";
  const specialRequest=$("aiPrompt").value.trim();
  const childDetails=childAges().join(", ")||"אין";
  const details=["בקשת חופשה דרך TAKE ME","מסלול: "+(travelMode==="israel"?"ישראל":"חו״ל"),"יעד: "+place,"תאריכים: "+$("from").value+" עד "+$("to").value,"משך: "+nights()+" לילות","נוסעים: "+passengerText(),"גילאי ילדים: "+childDetails+(specialRequest?" | בקשה אישית: "+specialRequest:""),"תקציב: "+money(Number($("budget").value))];
- if(travelMode!=="israel")details.push("מוצא: "+originCode());
+ const tripOrigin=travelMode==="israel"?"ישראל":originCode();
+ details.push("מוצא: "+tripOrigin+" | "+leadTrackingText());
  $("leadSummary").textContent=details.join("\n");
 }
 function buildTrip(){

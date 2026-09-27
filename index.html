@@ -536,8 +536,10 @@ function restoreSharedTrip(){
  if(validTravelDates()&&validChildAges()&&Number($("adults").value)>=1&&Number($("adults").value)+Number($("children").value)<=6){
   buildTrip();
   $("status").textContent="החופשה ששותפה נטענה. אפשר לערוך את הפרטים ולבדוק אפשרויות הזמנה.";
+  if(typeof $("result").scrollIntoView==="function")$("result").scrollIntoView({behavior:"smooth",block:"start"});
  }else{
   $("status").textContent="פרטי החופשה ששותפו נטענו. יש לעדכן תאריכים או גילאי ילדים לפני בניית החופשה.";
+  $("status").classList.add("error");
  }
 }
 $("shareTrip").addEventListener("click",async()=>{

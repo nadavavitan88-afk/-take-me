@@ -8,10 +8,10 @@ export default async function handler(req,res){
  }
 
  try{
-  const {name,phone,email="",website="",summary,consent}=req.body||{};
+  const {name,phone,email="",fax="",summary,consent}=req.body||{};
 
   // Honeypot: bots often fill every field. Return success without forwarding.
-  if(typeof website==="string"&&website.trim()){
+  if(typeof fax==="string"&&fax.trim()){
    return res.status(200).json({ok:true});
   }
 

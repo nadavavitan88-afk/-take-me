@@ -299,11 +299,27 @@ function findDestination(q){
  return activeDestinations().find(d=>[d.city,d.en,d.city+", "+d.country].some(v=>norm(v)===n))
      || (n.length>=2 ? activeDestinations().find(d=>[d.city,d.en].some(v=>norm(v).startsWith(n))) : null);
 }
+function resolveDestination(q){
+ const known=findDestination(q);
+ if(known)return known;
+ const raw=String(q||"").trim().replace(/\s+/g," ");
+ if(raw.length<2)return null;
+ return {city:raw,en:raw,country:travelMode==="israel"?"ישראל":"",iata:"",car:""};
+}
+function destinationLabel(d){
+ return d?[d.city,d.country].filter(Boolean).join(", "):"";
+}
 function renderSuggestions(){
  const q=norm($("dest").value), box=$("destSuggest");
  if(q.length<2){box.classList.remove("open"); box.innerHTML=""; return;}
  const found=activeDestinations().filter(d=>norm(d.city).includes(q)||norm(d.en).includes(q)||norm(d.country).includes(q)||norm(d.city+" "+d.country).includes(q)).slice(0,6);
- if(!found.length){box.classList.remove("open"); box.innerHTML=""; return;}
+ if(!found.length){
+   const raw=$("dest").value.trim();
+   box.innerHTML='<button type="button" class="sopt free-dest"><span><b>חפש את “'+esc(raw)+'”</b><small>'+(travelMode==="israel"?"גם אם היעד לא ברשימה":"בכל העולם — גם אם היעד לא ברשימה")+'</small></span></button>';
+   box.classList.add("open");
+   box.querySelector(".free-dest").addEventListener("click",()=>{box.classList.remove("open");$("status").textContent="היעד ייחפש גם אם הוא לא ברשימה ✓";refreshLeadSummary(resolveDestination(raw));});
+   return;
+ }
  box.innerHTML=found.map((d,i)=>'<button type="button" class="sopt" data-i="'+i+'"><span><b>'+d.city+'</b><small>'+d.country+'</small></span>'+(d.iata?'<span class="code">'+d.iata+'</span>':"")+'</button>').join("");
  box.classList.add("open");
  box.querySelectorAll(".sopt").forEach((btn,i)=>btn.addEventListener("click",()=>{
@@ -401,17 +417,17 @@ function flightSearchInfo(d){
  '<p>Google Flights אינו מקבל כרגע את פרטי הטופס אוטומטית. השתמשו בסיכום שלמעלה להזנת החיפוש באתר הספק.</p>';
 }
 function updateLinks(d){
- const q=encodeURIComponent(d.city+", "+d.country);
- $("gyg").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+d.city+" ישראל"):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
- $("food").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות "+d.city+" "+d.country);
- $("kosher").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות כשרות "+d.city+" "+d.country);
- $("car").href=travelMode==="israel"?"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(d.city+", ישראל"):"https://www.discovercars.com/"+d.car+"/?a_aid=Nadavavitan050";
+ const label=destinationLabel(d),q=encodeURIComponent(label);
+ $("gyg").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+ $("food").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות "+label);
+ $("kosher").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות כשרות "+label);
+ $("car").href=travelMode==="israel"?"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(label):(d.car?"https://www.discovercars.com/"+d.car+"/?a_aid=Nadavavitan050":"https://www.discovercars.com/?a_aid=Nadavavitan050");
  $("car").textContent=travelMode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";
  $("esim").closest(".service").hidden=travelMode==="israel";
  $("esim").href=d.country==="קפריסין"?"https://www.airalo.com/he/cyprus-esim":"https://www.airalo.com/he/";
- $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+d.city+" "+d.country);
+ $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label);
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
- $("packageLive").href=travelMode==="israel"?bookingHotelsLink(d.city+", ישראל"):expediaPackageLink(d);
+ $("packageLive").href=travelMode==="israel"?bookingHotelsLink(label):expediaPackageLink(d);
  $("packageLive").textContent=travelMode==="israel"?"בדוק מלונות ואירוח בישראל":"בדוק חבילת טיסה + מלון";
 }
 function leadTrackingText(){
@@ -438,8 +454,8 @@ function leadTrackingText(){
  return parts.join(" | ");
 }
 function refreshLeadSummary(destination){
- const d=destination||findDestination($("dest").value);
- const place=d?d.city+", "+d.country:$("dest").value.trim()||"טרם נבחר יעד";
+ const d=destination||resolveDestination($("dest").value);
+ const place=d?destinationLabel(d):$("dest").value.trim()||"טרם נבחר יעד";
  const specialRequest=$("aiPrompt").value.trim();
  const childDetails=childAges().join(", ")||"אין";
  const details=["בקשת חופשה דרך TAKE ME","מסלול: "+(travelMode==="israel"?"ישראל":"חו״ל"),"יעד: "+place,"תאריכים: "+$("from").value+" עד "+$("to").value,"משך: "+nights()+" לילות","נוסעים: "+passengerText(),"גילאי ילדים: "+childDetails+(specialRequest?" | בקשה אישית: "+specialRequest:""),"תקציב: "+money(Number($("budget").value))];
@@ -448,17 +464,17 @@ function refreshLeadSummary(destination){
  $("leadSummary").textContent=details.join("\n");
 }
 function buildTrip(){
- const status=$("status"), d=findDestination($("dest").value), n=nights();
+ const status=$("status"), d=resolveDestination($("dest").value), n=nights();
  status.className="status";
- if(!d){status.textContent="בחר יעד מהרשימה.";status.classList.add("error");$("dest").focus();return;}
+ if(!d){status.textContent="כתוב יעד לחיפוש.";status.classList.add("error");$("dest").focus();return;}
  if(n<=0){status.textContent="בחר תאריכי יציאה וחזרה תקינים.";status.classList.add("error");return;}
  const adults=Number($("adults").value), children=Number($("children").value), total=adults+children, budget=Number($("budget").value);
  if(adults<1||total>6){status.textContent="יש לבחור לפחות מבוגר אחד ועד שישה נוסעים בסך הכול.";status.classList.add("error");return;}
  if(!validChildAges()){status.textContent="יש לבחור גיל לכל ילד לפני החיפוש.";status.classList.add("error");$("childAges").scrollIntoView({behavior:"smooth",block:"center"});return;}
- $("dest").value=d.city+", "+d.country;
- $("resultTitle").textContent=d.city+", "+d.country;
+ $("dest").value=destinationLabel(d);
+ $("resultTitle").textContent=destinationLabel(d);
  $("resultText").textContent=n+" לילות · "+(travelMode==="israel"?("יעד: "+d.city+" · כניסה: "+$("from").value+" · יציאה: "+$("to").value+" · "+passengerText()):flightSearchSummary(d))+" · תקציב "+money(budget)+".";
- $("rRoute").textContent=travelMode==="israel"?"חופשה בישראל · "+d.city:originCode()+" → "+d.iata;
+ $("rRoute").textContent=travelMode==="israel"?"חופשה בישראל · "+d.city:originCode()+" → "+(d.iata||d.city);
  $("rNights").textContent=n+" לילות";
  $("rBudget").textContent=money(budget);
  $("rTrav").textContent=passengerText();
@@ -493,8 +509,8 @@ async function aiRecommend(){
     datesAdjusted=true;
     invalidateResults();
   }
-  const explicit=(travelMode==="israel"?domesticMention:foreignMention)||findDestination($("dest").value);
-  if(explicit && norm($("dest").value)!==norm(explicit.city+", "+explicit.country)){$("dest").value=explicit.city+", "+explicit.country;invalidateResults();}
+  const explicit=(travelMode==="israel"?domesticMention:foreignMention)||resolveDestination($("dest").value);
+  if(explicit && norm($("dest").value)!==norm(destinationLabel(explicit))){$("dest").value=destinationLabel(explicit);invalidateResults();}
   if(explicit)updateLinks(explicit);
   refreshLeadSummary(explicit);
   revision=searchRevision;
@@ -632,7 +648,7 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
  if(button.disabled)return;
  const phoneField=$("leadPhone");phoneField.value=phoneField.value.replace(/[\s-]/g,"").replace(/^\+9720?/,"0").replace(/^9720?/,"0");
  if(!form.reportValidity())return;
- const selectedDestination=findDestination($("dest").value);
+ const selectedDestination=resolveDestination($("dest").value);
  refreshLeadSummary(selectedDestination);
  button.disabled=true;button.textContent="שולחים…";$("leadFallback").hidden=true;status.dataset.state="sending";status.textContent="שולחים את הבקשה…";
  try{
@@ -658,8 +674,8 @@ function restoreSharedTrip(){
  const params=new URLSearchParams(window.location.search);
  if(!params.has("dest"))return;
  if(params.get("mode")==="israel"||params.get("mode")==="abroad")setTravelMode(params.get("mode"));
- const destination=String(params.get("dest")||"").slice(0,100);
- if(!activeDestinations().some(d=>norm(d.city)===norm(destination)||norm(d.city+", "+d.country)===norm(destination)))return;
+ const destination=String(params.get("dest")||"").slice(0,100).trim();
+ if(destination.length<2)return;
  $("dest").value=destination;
  for(const id of ["from","to"]){const value=params.get(id);if(value&&/^\d{4}-\d{2}-\d{2}$/.test(value))$(id).value=value;}
  for(const id of ["adults","children","budget","origin"]){const value=params.get(id);if(value&&[...$(id).options].some(option=>option.value===value))$(id).value=value;}
@@ -678,8 +694,8 @@ function restoreSharedTrip(){
 }
 $("shareTrip").addEventListener("click",async()=>{
  const status=$("leadStatus");
- if(!findDestination($("dest").value)){
-  status.textContent="כדי לשתף חופשה, יש לבחור יעד מהרשימה."; $("dest").focus(); return;
+ if(!resolveDestination($("dest").value)){
+  status.textContent="כדי לשתף חופשה, יש לכתוב יעד."; $("dest").focus(); return;
  }
  if(!validTravelDates()){
   status.textContent="כדי לשתף חופשה, יש לבחור תאריכי יציאה וחזרה תקינים."; $("from").focus(); return;

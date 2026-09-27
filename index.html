@@ -149,8 +149,11 @@ const $ = id => document.getElementById(id);
 function analyticsAttribution(){
  const p=new URLSearchParams(window.location.search);
  let source=(p.get("utm_source")||"").trim();
- const medium=(p.get("utm_medium")||"").trim();
+ let medium=(p.get("utm_medium")||"").trim();
  const campaign=(p.get("utm_campaign")||"").trim();
+ if(!source&&p.get("gclid")){source="google";medium=medium||"cpc";}
+ if(!source&&p.get("fbclid")){source="facebook";medium=medium||"paid_social";}
+ if(!source&&p.get("ttclid")){source="tiktok";medium=medium||"paid_social";}
  if(!source){
   try{
    if(document.referrer){
@@ -366,9 +369,12 @@ function updateLinks(d){
 }
 function leadTrackingText(){
  const params=new URLSearchParams(window.location.search);
- const source=(params.get("utm_source")||"").trim();
- const medium=(params.get("utm_medium")||"").trim();
+ let source=(params.get("utm_source")||"").trim();
+ let medium=(params.get("utm_medium")||"").trim();
  const campaign=(params.get("utm_campaign")||"").trim();
+ if(!source&&params.get("gclid")){source="google";medium=medium||"cpc";}
+ if(!source&&params.get("fbclid")){source="facebook";medium=medium||"paid_social";}
+ if(!source&&params.get("ttclid")){source="tiktok";medium=medium||"paid_social";}
  let referrer="";
  try{
   if(document.referrer){

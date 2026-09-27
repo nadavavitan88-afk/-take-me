@@ -112,3 +112,8 @@ test('shared trips restore explicit mode and reject zero adults',()=>{
  assert.match(html,/Number\(\$\("adults"\)\.value\)>=1/);
  assert.match(html,/Number\(\$\("adults"\)\.value\)<1/);
 });
+
+test('shared trip reveals results and highlights details needing correction',()=>{
+ assert.match(html,/\$\("result"\)\.scrollIntoView\(\{behavior:"smooth",block:"start"\}\)/);
+ assert.match(html,/\$\("status"\)\.classList\.add\("error"\)/);
+});

@@ -503,7 +503,16 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
  if(button.disabled)return;
  const phoneField=$("leadPhone");phoneField.value=phoneField.value.replace(/[\s-]/g,"").replace(/^\+9720?/,"0").replace(/^9720?/,"0");
  if(!form.reportValidity())return;
- refreshLeadSummary();
+ const selectedDestination=findDestination($("dest").value);
+ if(!selectedDestination){
+  status.hidden=false;
+  status.dataset.state="error";
+  status.textContent="לפני שליחת הבקשה צריך לבחור יעד בחלק העליון של העמוד.";
+  $("dest").focus();
+  $("planner").scrollIntoView({behavior:"smooth",block:"start"});
+  return;
+ }
+ refreshLeadSummary(selectedDestination);
  button.disabled=true;button.textContent="שולחים…";$("leadFallback").hidden=true;status.dataset.state="sending";status.textContent="שולחים את הבקשה…";
  try{
   const response=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("leadName").value.trim(),phone:$("leadPhone").value.trim(),email:$("leadEmail").value.trim(),summary:$("leadSummary").textContent,consent:$("leadConsent").checked})});

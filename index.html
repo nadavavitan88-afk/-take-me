@@ -541,10 +541,19 @@ function restoreSharedTrip(){
  }
 }
 $("shareTrip").addEventListener("click",async()=>{
+ const status=$("leadStatus");
+ if(!findDestination($("dest").value)){
+  status.textContent="כדי לשתף חופשה, יש לבחור יעד מהרשימה."; $("dest").focus(); return;
+ }
+ if(!validTravelDates()){
+  status.textContent="כדי לשתף חופשה, יש לבחור תאריכי יציאה וחזרה תקינים."; $("from").focus(); return;
+ }
+ if(!validChildAges()||Number($("adults").value)+Number($("children").value)>6){
+  status.textContent="כדי לשתף חופשה, יש להשלים את גילאי הילדים ולבחור עד שישה נוסעים."; $("children").focus(); return;
+ }
  refreshLeadSummary();
  const summary=$("leadSummary").textContent;
  const url=tripShareUrl();
- const status=$("leadStatus");
  const message=summary+"\n"+url;
  try{
   if(navigator.share){

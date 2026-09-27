@@ -86,7 +86,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 
 <div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
   <div class="field" id="originField"><label>מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
-  <div class="field"><label>לאן נוסעים?</label><input id="dest" placeholder="התחל לכתוב: לימ..." autocomplete="off"><div class="suggest" id="destSuggest"></div></div>
+  <div class="field"><label>לאן נוסעים? · כל יעד</label><input id="dest" placeholder="עיר, אי או אזור בכל העולם" autocomplete="off"><div class="suggest" id="destSuggest"></div></div>
   <div class="field"><label>יציאה</label><input id="from" type="date"></div>
   <div class="field"><label>חזרה</label><input id="to" type="date"></div>
   <div class="field"><label>תקציב</label><select id="budget"><option value="6000">₪6,000</option><option value="8000">₪8,000</option><option value="10000" selected>₪10,000</option><option value="15000">₪15,000</option><option value="20000">₪20,000</option><option value="30000">₪30,000</option></select></div>
@@ -272,7 +272,7 @@ function setTravelMode(mode){
  $("heroDescription").textContent=mode==="israel"?"בחר יעד בארץ, תאריכים, תקציב והרכב אורחים — ונעזור לך למצוא אירוח ואטרקציות.":"בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.";
  $("modeProof").textContent=mode==="israel"?"✓ מלונות ואטרקציות":"✓ טיסה + מלון";
  $("extrasDescription").textContent=mode==="israel"?"אירוח, אטרקציות, מסעדות ומסלול נסיעה — במקום אחד.":"אטרקציות, רכב, eSIM ומסעדות — בלי להתחיל את החיפוש מחדש.";
- $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("gyg").href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";$("esim").closest(".service").hidden=mode==="israel";$("car").textContent=mode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";$("dest").value="";$("dest").placeholder=mode==="israel"?"אילת, הגליל, ירושלים...":"לימסול, רומא...";
+ $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("gyg").href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";$("esim").closest(".service").hidden=mode==="israel";$("car").textContent=mode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";$("dest").value="";$("dest").placeholder=mode==="israel"?"כל עיר, אזור או נופש בישראל":"עיר, אי או אזור בכל העולם";
  $("destSuggest").classList.remove("open");$("destSuggest").innerHTML="";invalidateResults();
  $("status").textContent=mode==="israel"?"בחר יעד בישראל מהרשימה.":"בחר יעד בחו״ל מהרשימה.";
 }

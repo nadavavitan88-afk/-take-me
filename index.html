@@ -540,7 +540,7 @@ $("shareTrip").addEventListener("click",async()=>{
  const summary=$("leadSummary").textContent;
  const url=tripShareUrl();
  const status=$("leadStatus");
- const message=summary+"\\n"+url;
+ const message=summary+"\n"+url;
  try{
   if(navigator.share){
    await navigator.share({title:"תכנון החופשה שלי — TAKE ME",text:summary,url});

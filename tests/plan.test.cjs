@@ -61,3 +61,25 @@ test('Israel-only results reject Cyprus and accept Israel country variants', asy
     if(originalKey===undefined)delete process.env.GEMINI_API_KEY;else process.env.GEMINI_API_KEY=originalKey;
   }
 });
+
+
+test('free-text destination survives Hebrew translation from Gemini', async () => {
+  const originalFetch=global.fetch, originalKey=process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY='test-only';
+  const iso=d=>d.toISOString().slice(0,10);
+  const from=iso(new Date(Date.now()+14*86400000)),to=iso(new Date(Date.now()+19*86400000));
+  global.fetch=async()=>({ok:true,status:200,text:async()=>JSON.stringify({candidates:[{content:{parts:[{text:JSON.stringify({recommendations:[{
+    city:'קו סמוי',country:'תאילנד',why:'אי טרופי',hotels:[{name:'Hotel A'}],attractions:[{name:'Beach A'}]
+  }]})}]}}]})});
+  const res={setHeader(){},status(code){this.code=code;return this;},json(body){this.body=body;return this;}};
+  try {
+    await handler({method:'POST',body:{prompt:'five nights in Koh Samui',destination:'Koh Samui',travelMode:'abroad',from,to,adults:2,children:0}},res);
+    assert.equal(res.code,200);
+    assert.equal(res.body.recommendations.length,1);
+    assert.equal(res.body.recommendations[0].city,'Koh Samui');
+    assert.equal(res.body.recommendations[0].country,'תאילנד');
+  } finally {
+    global.fetch=originalFetch;
+    if(originalKey===undefined)delete process.env.GEMINI_API_KEY;else process.env.GEMINI_API_KEY=originalKey;
+  }
+});

@@ -337,9 +337,10 @@ function updateLinks(d){
 function refreshLeadSummary(destination){
  const d=destination||findDestination($("dest").value);
  const place=d?d.city+", "+d.country:$("dest").value.trim()||"טרם נבחר יעד";
- const details=["בקשת חופשה דרך TAKE ME","מסלול: "+(travelMode==="israel"?"ישראל":"חו״ל"),"יעד: "+place,"תאריכים: "+$("from").value+" עד "+$("to").value,"משך: "+nights()+" לילות","נוסעים: "+passengerText(),"גילאי ילדים: "+(childAges().join(", ")||"אין"),"תקציב: "+money(Number($("budget").value))];
+ const specialRequest=$("aiPrompt").value.trim();
+ const childDetails=childAges().join(", ")||"אין";
+ const details=["בקשת חופשה דרך TAKE ME","מסלול: "+(travelMode==="israel"?"ישראל":"חו״ל"),"יעד: "+place,"תאריכים: "+$("from").value+" עד "+$("to").value,"משך: "+nights()+" לילות","נוסעים: "+passengerText(),"גילאי ילדים: "+childDetails+(specialRequest?" | בקשה אישית: "+specialRequest:""),"תקציב: "+money(Number($("budget").value))];
  if(travelMode!=="israel")details.push("מוצא: "+originCode());
- if($("aiPrompt").value.trim())details.push("בקשה אישית: "+$("aiPrompt").value.trim());
  $("leadSummary").textContent=details.join("\n");
 }
 function buildTrip(){

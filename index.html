@@ -108,7 +108,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
     <div class="stat"><small>תקציב</small><b id="rBudget">—</b></div>
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
-  <a class="live-cta" id="packageLive" href="https://www.expedia.com/Vacation-Packages" target="_blank" rel="noopener">בדוק חבילת טיסה + מלון</a>
+  <a class="live-cta" id="packageLive" href="https://prf.hn/click/camref:1101l6tkXW/pubref:take_me_package/destination:https%3A%2F%2Fwww.expedia.com%2FVacation-Packages" target="_blank" rel="noopener">בדוק חבילת טיסה + מלון</a>
   <div class="live-note">המחירים והזמינות מוצגים באתר הספק בזמן אמת.</div>
 </div>
 </section>
@@ -359,6 +359,10 @@ function passengerText(){
  return adultsText+" + "+childrenText;
 }
 
+function expediaAffiliateLink(destination,pubref="take_me_site"){
+ return "https://prf.hn/click/camref:1101l6tkXW/pubref:"+encodeURIComponent(pubref)+"/destination:"+encodeURIComponent(destination);
+}
+
 function expediaPackageLink(d){
  const from=$("from").value, to=$("to").value;
  const adults=Number($("adults").value), kids=childAges();
@@ -371,15 +375,17 @@ function expediaPackageLink(d){
    params.set("NumChild", String(kids.length));
    kids.forEach((age,i)=>params.set("Room1-Child"+(i+1)+"Age", String(age)));
  }
- return "https://www.expedia.com/go/package/search/FlightHotel/"
+ const destination="https://www.expedia.com/go/package/search/FlightHotel/"
    + encodeURIComponent(from) + "/" + encodeURIComponent(to) + "?" + params.toString();
+ return expediaAffiliateLink(destination,"take_me_package");
 }
 
 function expediaHotelLink(place){
  const params=new URLSearchParams({destination:place,startDate:$("from").value,endDate:$("to").value,rooms:"1",adults:$("adults").value});
  const ages=childAges();
  if(ages.length){params.set("children",String(ages.length));params.set("childrenAges",ages.join(","));params.set("NumChild-Room1",String(ages.length));ages.forEach((age,i)=>params.set("Room1-Child"+(i+1)+"Age",String(age)));}
- return "https://www.expedia.com/Hotel-Search?"+params.toString();
+ const destination="https://www.expedia.com/Hotel-Search?"+params.toString();
+ return expediaAffiliateLink(destination,"take_me_hotels");
 }
 function bookingHotelsLink(place){
  const params=new URLSearchParams({ss:place,checkin:$("from").value,checkout:$("to").value,group_adults:$("adults").value,no_rooms:"1",group_children:String(childAges().length)});

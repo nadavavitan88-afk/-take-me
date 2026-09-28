@@ -108,7 +108,7 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
     <div class="stat"><small>תקציב</small><b id="rBudget">—</b></div>
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
-  <a class="live-cta" id="packageLive" href="https://prf.hn/click/camref:1101l6tkXW/pubref:take_me_package/destination:https%3A%2F%2Fwww.expedia.com%2FVacation-Packages" target="_blank" rel="noopener">בדוק חבילת טיסה + מלון</a>
+  <a class="live-cta" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="noopener">בדוק חבילת טיסה + מלון</a>
   <div class="live-note">המחירים והזמינות מוצגים באתר הספק בזמן אמת.</div>
 </div>
 </section>
@@ -360,7 +360,15 @@ function passengerText(){
 }
 
 function expediaAffiliateLink(destination,pubref="take_me_site"){
- return "https://prf.hn/click/camref:1101l6tkXW/pubref:"+encodeURIComponent(pubref)+"/destination:"+encodeURIComponent(destination);
+ // Expedia Creator affiliate parameters generated from the account Link Builder.
+ const params=new URLSearchParams({
+  siteid:"1",
+  landingPage:destination,
+  camref:"1110lQPq2",
+  creativeref:"1100l68075",
+  adref:"PZTkjr__Gt"
+ });
+ return "https://expedia.com/affiliate?"+params.toString();
 }
 
 function expediaPackageLink(d){

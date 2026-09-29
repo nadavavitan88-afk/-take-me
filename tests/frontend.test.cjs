@@ -130,8 +130,9 @@ test('lead form includes privacy consent and anti-spam honeypot',()=>{
 });
 
 test('marketing attribution is attached to shared links',()=>{
- assert.match(html,/utm_source=share/);
+ assert.match(html,/url\.searchParams\.set\("utm_source","share"\)/);
  assert.match(html,/url\.searchParams\.set\("utm_campaign","trip_share"\)/);
+ assert.match(html,/new URL\("\/",window\.location\.origin\)/);
 });
 
 

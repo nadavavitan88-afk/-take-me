@@ -1487,7 +1487,7 @@ $("from").addEventListener("input",()=>{
 });
 $("build").addEventListener("click",()=>{trackEvent("vacation_search",{destination:$("dest").value||"unknown",budget:Number($("budget").value)||0,travel_mode:travelMode});buildTrip();});
 $("shareSite").addEventListener("click",async()=>{
- const url="https://take-me-v7-full.vercel.app/?utm_source=share&utm_medium=referral&utm_campaign=site_share";
+ const url=new URL("/",window.location.origin);url.searchParams.set("utm_source","share");url.searchParams.set("utm_medium","referral");url.searchParams.set("utm_campaign","site_share");
  const status=$("shareSiteStatus");
  try{
   if(navigator.share){await navigator.share({title:"TAKE ME — תבחר יעד ואנחנו נבנה את הדרך",text:"בואו לבנות חופשה ב־TAKE ME",url});trackEvent("share_site",{method:"native_share"});status.textContent="השיתוף נפתח.";}

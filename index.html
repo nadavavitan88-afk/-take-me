@@ -406,6 +406,46 @@ nav a:hover,.share-site:hover{
  .lead-kicker{font-size:9px}
 }
 
+
+/* TAKE ME refinement pass 3 — faster mobile search + AI quick picks */
+.ai-quick{
+ display:flex;
+ flex-wrap:wrap;
+ gap:7px;
+ margin-top:10px;
+}
+.ai-chip{
+ border:1px solid rgba(214,173,99,.22);
+ background:rgba(255,255,255,.045);
+ color:#e9d9be;
+ border-radius:999px;
+ padding:8px 11px;
+ font:inherit;
+ font-size:11px;
+ font-weight:800;
+ cursor:pointer;
+ transition:.18s ease;
+}
+.ai-chip:hover,.ai-chip:active{
+ background:rgba(214,173,99,.12);
+ border-color:rgba(214,173,99,.34);
+ color:#f7e7ca;
+}
+@media(max-width:650px){
+ .search{grid-template-columns:1fr 1fr}
+ #originField,
+ .search>.field:nth-child(2),
+ .search>.field:nth-child(5),
+ .search>.go{grid-column:1 / -1}
+ .search>.field:nth-child(3),
+ .search>.field:nth-child(4),
+ .search>.field:nth-child(6),
+ .search>.field:nth-child(7){grid-column:auto}
+ .go{grid-column:1 / -1!important}
+ .ai-quick{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+ .ai-chip{width:100%;min-height:40px;padding:7px 8px}
+}
+
 </style>
 </head>
 <body>
@@ -455,6 +495,13 @@ nav a:hover,.share-site:hover{
     <textarea class="ai-input" id="aiPrompt" placeholder="מה אתם מחפשים? תקציב, תאריכים, סגנון חופשה, ילדים, חופים, חיי לילה, כשר..."></textarea>
     <button class="ai-go" type="button" id="aiBuild">מצא לי חופשה</button>
   </div>
+  <div class="ai-quick" aria-label="הצעות מהירות">
+    <button type="button" class="ai-chip" data-text="זוג, חופשה רומנטית">זוג 💛</button>
+    <button type="button" class="ai-chip" data-text="משפחה עם ילדים">משפחה 👨‍👩‍👧‍👦</button>
+    <button type="button" class="ai-chip" data-text="חופים ובטן גב">חופים 🏖️</button>
+    <button type="button" class="ai-chip" data-text="חיי לילה ומסעדות">חיי לילה ✨</button>
+    <button type="button" class="ai-chip" data-text="מלונות ברמה גבוהה">יוקרה ✦</button>
+  </div>
   <div class="status" id="aiStatus">כתוב בכמה מילים מה החופשה שאתה רוצה.</div>
   <div class="ai-answer" id="aiAnswer"></div>
 </section>
@@ -475,7 +522,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29e</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29f</span></div>
 </div>
 
 <script>
@@ -934,6 +981,13 @@ async function aiRecommend(){
 }
 $("modeAbroad").addEventListener("click",()=>setTravelMode("abroad"));
 $("modeIsrael").addEventListener("click",()=>setTravelMode("israel"));
+document.querySelectorAll(".ai-chip").forEach(chip=>chip.addEventListener("click",()=>{
+ const text=chip.dataset.text||"";
+ const current=$("aiPrompt").value.trim();
+ $("aiPrompt").value=current?(current+" · "+text):text;
+ $("aiPrompt").focus();
+ trackEvent("ai_quick_pick",{choice:text});
+}));
 $("aiBuild").addEventListener("click",()=>{trackEvent("ai_trip_search",{destination:$("dest").value||"unknown"});aiRecommend();});
 $("aiPrompt").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")aiRecommend();});
 

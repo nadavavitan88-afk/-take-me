@@ -909,8 +909,8 @@ nav a:hover,.share-site:hover{
   <button class="go" type="button" id="build">בנה לי חופשה</button>
 </div>
 <div class="child-ages" id="childAges"><div class="child-ages-title">גילאי הילדים</div><div class="age-grid" id="ageGrid"></div></div>
-<div class="status" id="engineStatus">טוען מנוע האתר…</div>
-<div class="status" id="status">כתוב יעד — ותופיע רשימה לבחירה.</div>
+<div class="status" id="engineStatus" role="status" aria-live="polite">טוען מנוע האתר…</div>
+<div class="status" id="status" role="status" aria-live="polite">כתוב יעד — ותופיע רשימה לבחירה.</div>
 
 <div class="result" id="result">
   <small>סיכום החופשה שלך</small>
@@ -956,7 +956,7 @@ nav a:hover,.share-site:hover{
     <button type="button" class="ai-chip" data-text="חיי לילה ומסעדות">חיי לילה ✨</button>
     <button type="button" class="ai-chip" data-text="מלונות ברמה גבוהה">יוקרה ✦</button>
   </div>
-  <div class="status" id="aiStatus">כתוב בכמה מילים מה החופשה שאתה רוצה.</div>
+  <div class="status" id="aiStatus" role="status" aria-live="polite">כתוב בכמה מילים מה החופשה שאתה רוצה.</div>
   <div class="ai-answer" id="aiAnswer"></div>
 </section>
 
@@ -976,7 +976,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-29k</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30a</span></div>
 </div>
 
 <script>
@@ -1105,9 +1105,9 @@ function setTravelMode(mode){
  for(const [id,active] of [["modeAbroad",mode==="abroad"],["modeIsrael",mode==="israel"]]){$(id).classList.toggle("mode-active",active);$(id).setAttribute("aria-pressed",String(active));}
  $("originField").hidden=mode==="israel";
  $("esimRibbon").hidden=mode==="israel";
- $("heroDescription").textContent=mode==="israel"?"בחר יעד בארץ, תאריכים, תקציב והרכב אורחים — ונעזור לך למצוא אירוח ואטרקציות.":"בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.";
+ $("heroDescription").textContent=mode==="israel"?"יעד בארץ, תאריכים ותקציב — ואנחנו מרכזים לך אירוח, אטרקציות וכל מה שצריך מסביב.":"יעד, תאריכים ותקציב — ואנחנו מרכזים לך במקום אחד טיסות, מלונות, אטרקציות וכל מה שצריך מסביב.";
  $("modeProof").textContent=mode==="israel"?"✓ מלונות ואטרקציות":"✓ טיסה + מלון";
- $("extrasDescription").textContent=mode==="israel"?"אירוח, אטרקציות, מסעדות ומסלול נסיעה — במקום אחד.":"אטרקציות, רכב, eSIM ומסעדות — בלי להתחיל את החיפוש מחדש.";
+ $("extrasDescription").textContent=mode==="israel"?"אירוח, אטרקציות, מסעדות ומסלול נסיעה — במקום אחד.":"אטרקציות, רכב, eSIM, מסעדות ומזג אוויר — בלי לפתוח עשר לשוניות.";
  $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("gyg").href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";$("esim").closest(".service").hidden=mode==="israel";$("car").textContent=mode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";$("dest").value="";$("dest").placeholder=mode==="israel"?"כל עיר, אזור או נופש בישראל":"עיר, אי או אזור בכל העולם";
  $("destSuggest").classList.remove("open");$("destSuggest").innerHTML="";invalidateResults();
  $("status").textContent=mode==="israel"?"בחר יעד בישראל מהרשימה.":"בחר יעד בחו״ל מהרשימה.";
@@ -1446,8 +1446,8 @@ async function aiRecommend(){
   }
   finally{if(activeAiController===controller)activeAiController=null;if(revision===searchRevision){btn.disabled=false;btn.textContent="מצא לי חופשה";}}
 }
-$("modeAbroad").addEventListener("click",()=>setTravelMode("abroad"));
-$("modeIsrael").addEventListener("click",()=>setTravelMode("israel"));
+$("modeAbroad").addEventListener("click",()=>{trackEvent("travel_mode_change",{travel_mode:"abroad"});setTravelMode("abroad");});
+$("modeIsrael").addEventListener("click",()=>{trackEvent("travel_mode_change",{travel_mode:"israel"});setTravelMode("israel");});
 document.querySelectorAll(".ai-chip").forEach(chip=>chip.addEventListener("click",()=>{
  const text=chip.dataset.text||"";
  const current=$("aiPrompt").value.trim();
@@ -1622,6 +1622,4 @@ $("engineStatus").classList.add("ok");
 })();
 </script>
 
-
-<script class="eg-widgets-script" src="https://creator.expediagroup.com/products/widgets/assets/eg-widgets.js" async></script>
 </body></html>

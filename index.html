@@ -851,6 +851,37 @@ nav a:hover,.share-site:hover{
  .provider-link{flex:1;min-width:92px}
 }
 
+
+/* TAKE ME refinement pass 7 — compact booking choices */
+.result-choice-title{
+ margin-top:14px;
+ margin-bottom:7px;
+ color:#d9c3a0;
+ font-size:11px;
+ font-weight:900;
+ letter-spacing:.02em;
+}
+.result-providers{
+ grid-template-columns:repeat(3,1fr);
+}
+.package-group .provider-link.wide{width:100%}
+.live-note{
+ margin-top:8px;
+ color:#8f7c63;
+ font-size:9px;
+ line-height:1.45;
+}
+.affiliate-disclosure.inline{
+ display:inline;
+ margin:0;
+ color:inherit;
+ font-size:inherit;
+}
+@media(max-width:760px){
+ .result-providers{grid-template-columns:1fr}
+ .result-choice-title{margin-top:12px}
+}
+
 </style>
 </head>
 <body>
@@ -887,20 +918,22 @@ nav a:hover,.share-site:hover{
     <div class="stat"><small>תקציב</small><b id="rBudget">—</b></div>
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
+  <div class="result-choice-title">בחר איפה להמשיך</div>
   <div class="result-providers" id="resultProviders">
     <div class="provider-group" id="flightProviders">
       <span>✈️ טיסות</span>
       <div><a class="provider-link featured" id="resExpediaFlights" target="_blank" rel="sponsored noopener">Expedia</a><a class="provider-link" id="resGoogleFlights" target="_blank" rel="noopener">Google Flights</a></div>
-      <small class="affiliate-disclosure">שותפות מסחרית עם Expedia · ללא תוספת מחיר</small>
     </div>
     <div class="provider-group">
       <span>🏨 מלונות</span>
       <div><a class="provider-link featured" id="resExpediaHotels" target="_blank" rel="sponsored noopener">Expedia</a><a class="provider-link" id="resBookingHotels" target="_blank" rel="noopener">Booking</a><a class="provider-link" id="resAgodaHotels" target="_blank" rel="noopener">Agoda</a></div>
-      <small class="affiliate-disclosure">שותפות מסחרית עם Expedia · ללא תוספת מחיר</small>
+    </div>
+    <div class="provider-group package-group" id="packageProviders">
+      <span>✈️ + 🏨 חבילה</span>
+      <div><a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">טיסה + מלון ב־Expedia</a></div>
     </div>
   </div>
-  <a class="live-cta" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="noopener">בדוק חבילת טיסה + מלון</a>
-  <div class="live-note">המחירים והזמינות מוצגים באתר הספק בזמן אמת. <span class="affiliate-disclosure">שותפות מסחרית עם Expedia · ללא תוספת מחיר.</span></div>
+  <div class="live-note">מחירים וזמינות מוצגים אצל הספק. <span class="affiliate-disclosure inline">חלק מהקישורים במסגרת שותפות מסחרית · ללא תוספת מחיר.</span></div>
 </div>
 </section>
 
@@ -939,7 +972,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-29j</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-29k</span></div>
 </div>
 
 <script>
@@ -1248,8 +1281,9 @@ function updateLinks(d){
  $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label);
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
  $("packageLive").href=travelMode==="israel"?bookingHotelsLink(label):expediaPackageLink(d);
- $("packageLive").textContent=travelMode==="israel"?"בדוק מלונות ואירוח בישראל":"בדוק חבילת טיסה + מלון";
+ $("packageLive").textContent=travelMode==="israel"?"מלונות ואירוח בישראל":"טיסה + מלון ב־Expedia";
  $("flightProviders").hidden=travelMode==="israel";
+ $("packageProviders").hidden=travelMode==="israel";
  $("resExpediaFlights").href=expediaFlightLink(d);
  $("resGoogleFlights").href=googleFlightLink();
  $("resExpediaHotels").href=expediaHotelLink(label);

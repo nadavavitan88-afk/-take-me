@@ -446,16 +446,122 @@ nav a:hover,.share-site:hover{
  .ai-chip{width:100%;min-height:40px;padding:7px 8px}
 }
 
+
+/* TAKE ME refinement pass 4 — premium brand/header/hero */
+.brand-lockup{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ min-width:0;
+}
+.brand-mark{
+ width:42px;
+ height:42px;
+ display:grid;
+ place-items:center;
+ border-radius:14px;
+ border:1px solid rgba(214,173,99,.32);
+ background:
+  radial-gradient(circle at 30% 20%,rgba(255,255,255,.12),transparent 34%),
+  linear-gradient(145deg,#2b2118,#17120e);
+ color:#e2bd73;
+ font-size:11px;
+ font-weight:950;
+ letter-spacing:.08em;
+ box-shadow:0 10px 26px rgba(0,0,0,.22),inset 0 0 20px rgba(214,173,99,.045);
+}
+.brand{
+ line-height:.95;
+}
+.tag{
+ margin-top:5px;
+ white-space:nowrap;
+}
+nav{
+ gap:6px;
+ justify-content:flex-end;
+}
+nav a,.share-site{
+ background:rgba(255,255,255,.02);
+ border-color:rgba(214,173,99,.08);
+}
+nav a:hover,.share-site:hover{
+ background:rgba(214,173,99,.07);
+ color:#f4dfba;
+}
+.eyebrow{
+ display:flex;
+ align-items:center;
+ gap:7px;
+}
+.eyebrow-dot{
+ width:7px;
+ height:7px;
+ border-radius:999px;
+ background:#d6ad63;
+ box-shadow:0 0 0 4px rgba(214,173,99,.1);
+}
+.hero h1{
+ text-wrap:balance;
+}
+.hero::after{
+ content:"";
+ position:absolute;
+ inset:0;
+ border-radius:inherit;
+ pointer-events:none;
+ background:linear-gradient(115deg,rgba(255,255,255,.025),transparent 28%);
+}
+.hero>.search,.hero>.travel-mode,.hero>.proof,.hero>p,.hero>h1,.hero>.eyebrow,.hero>.status,.hero>.child-ages,.hero>.result{
+ position:relative;
+ z-index:1;
+}
+@media(max-width:650px){
+ header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+ }
+ .brand-lockup{gap:9px}
+ .brand-mark{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  font-size:10px;
+ }
+ .brand{font-size:32px}
+ .tag{
+  font-size:10px;
+  margin-top:4px;
+  white-space:normal;
+ }
+ nav{
+  width:100%;
+  margin-top:2px;
+  gap:6px;
+ }
+ nav a,.share-site{
+  min-height:34px;
+  padding:6px 9px;
+  font-size:10px;
+ }
+ .hero .eyebrow{font-size:10px}
+ .hero h1{font-size:32px;margin-top:9px}
+ .hero p{line-height:1.6}
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-<header><div><div class="brand">TAKE <span>ME</span></div><div class="tag">תבחר יעד ואנחנו נבנה את הדרך.</div></div><nav><a href="#planner">חיפוש</a><a href="#extras">כל מה שצריך</a><a href="#lead">עזרה אישית</a><button type="button" id="shareSite" class="share-site">שתפו את TAKE ME ↗</button></nav></header><p id="shareSiteStatus" role="status" aria-live="polite" class="share-site-status"></p>
+<header><div class="brand-lockup"><div class="brand-mark" aria-hidden="true">TM</div><div><div class="brand">TAKE <span>ME</span></div><div class="tag">תבחר יעד ואנחנו נבנה את הדרך</div></div></div><nav><a href="#planner">חיפוש</a><a href="#aiPlanner">AI</a><a href="#extras">שירותים</a><a href="#lead">עזרה אישית</a><button type="button" id="shareSite" class="share-site">שיתוף ↗</button></nav></header><p id="shareSiteStatus" role="status" aria-live="polite" class="share-site-status"></p>
 
 <section class="hero" id="planner">
-<div class="eyebrow">TAKE ME · הכול מתחיל כאן</div>
+<div class="eyebrow"><span class="eyebrow-dot"></span> TAKE ME · SMART TRAVEL</div>
 <h1>כל החופשה שלך,<br>במקום אחד.</h1>
-<p id="heroDescription">בחר מאיפה יוצאים, לאן טסים, תאריכים ותקציב — ואנחנו נכין לך חיפוש מסודר לחבילת טיסה + מלון, עם כל מה שצריך מסביב.</p>
+<p id="heroDescription">יעד, תאריכים ותקציב — ואנחנו מרכזים לך במקום אחד את החיפוש, המלונות, האטרקציות וכל מה שצריך מסביב.</p>
 <div class="proof"><span>✓ הכול במקום אחד</span><span>✓ הצעות יעד בזמן ההקלדה</span><span id="modeProof">✓ טיסה + מלון</span><span>✓ בלי להתחיל מחדש</span></div>
 
 <div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
@@ -522,7 +628,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29f</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29g</span></div>
 </div>
 
 <script>

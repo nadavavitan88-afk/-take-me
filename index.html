@@ -552,6 +552,184 @@ nav a:hover,.share-site:hover{
  .hero p{line-height:1.6}
 }
 
+
+/* TAKE ME refinement pass 5 — premium AI results and hotel cards */
+.ai-answer{
+ padding:0;
+ background:transparent;
+ border:0;
+}
+.destination-result{
+ position:relative;
+ overflow:hidden;
+ margin:14px 0;
+ padding:22px;
+ border-radius:20px;
+ background:
+  radial-gradient(circle at 100% 0%,rgba(214,173,99,.10),transparent 34%),
+  linear-gradient(145deg,#231c16,#17120e);
+ border:1px solid rgba(214,173,99,.22);
+ box-shadow:0 18px 40px rgba(0,0,0,.22);
+ color:#f3e6d1;
+}
+.destination-result::before{
+ content:"";
+ position:absolute;
+ top:0;
+ right:0;
+ left:0;
+ height:1px;
+ background:linear-gradient(90deg,transparent,rgba(214,173,99,.55),transparent);
+}
+.destination-result h3{
+ margin:0 0 10px;
+ color:#fff0d7;
+ font-size:27px;
+ line-height:1.15;
+}
+.destination-result h3::before{
+ content:"TAKE ME PICK";
+ display:inline-flex;
+ margin-left:9px;
+ vertical-align:middle;
+ padding:5px 7px;
+ border-radius:999px;
+ border:1px solid rgba(214,173,99,.25);
+ background:rgba(214,173,99,.07);
+ color:#d9b66e;
+ font-size:9px;
+ font-weight:950;
+ letter-spacing:.08em;
+}
+.destination-result>p{
+ margin:8px 0 14px;
+ color:#c7b294;
+ line-height:1.65;
+}
+.recommendation-section{
+ margin:10px 0;
+ padding:0;
+ border:1px solid rgba(214,173,99,.16);
+ border-radius:16px;
+ background:rgba(255,255,255,.025);
+ overflow:hidden;
+}
+.recommendation-section[open]{
+ background:rgba(255,255,255,.035);
+ border-color:rgba(214,173,99,.24);
+}
+.recommendation-section summary{
+ position:relative;
+ list-style:none;
+ padding:15px 44px 15px 15px;
+ cursor:pointer;
+ color:#f2e1c4;
+ font-size:16px;
+ font-weight:900;
+ user-select:none;
+}
+.recommendation-section summary::-webkit-details-marker{display:none}
+.recommendation-section summary::after{
+ content:"＋";
+ position:absolute;
+ right:14px;
+ top:50%;
+ transform:translateY(-50%);
+ width:24px;
+ height:24px;
+ display:grid;
+ place-items:center;
+ border-radius:999px;
+ border:1px solid rgba(214,173,99,.2);
+ color:#d8b46b;
+ font-size:14px;
+}
+.recommendation-section[open] summary::after{content:"−"}
+.recommendation-section[open] summary{
+ border-bottom:1px solid rgba(214,173,99,.12);
+}
+.recommendation-item{
+ margin:0 12px;
+ padding:15px 0;
+ border-top:1px solid rgba(214,173,99,.11);
+}
+.recommendation-item:first-of-type{border-top:0}
+.recommendation-item strong{
+ display:block;
+ margin-bottom:5px;
+ color:#f8e8ca;
+ font-size:17px;
+ line-height:1.35;
+}
+.recommendation-item p{
+ margin:4px 0 11px;
+ color:#bda98d;
+ font-size:13px;
+ line-height:1.55;
+}
+.recommendation-item .btn,
+.recommendation-section>.btn{
+ margin:5px 4px 5px 0;
+ min-height:42px;
+ padding:0 12px;
+ border-radius:12px;
+ font-size:12px;
+}
+.recommendation-section>.btn{
+ margin-right:12px;
+ margin-bottom:12px;
+}
+.flight-search-summary{
+ padding:10px 11px;
+ border-radius:11px;
+ border:1px solid rgba(214,173,99,.14);
+ background:rgba(214,173,99,.055);
+ color:#d6c3a6!important;
+ font-size:12px!important;
+}
+.recommendation-note{
+ margin:10px 4px 0;
+ color:#9f8c72;
+ font-size:11px;
+}
+@media(max-width:650px){
+ .destination-result{
+  padding:16px 13px;
+  border-radius:17px;
+ }
+ .destination-result h3{
+  font-size:22px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+ }
+ .destination-result h3::before{
+  order:2;
+  margin-left:0;
+  font-size:8px;
+ }
+ .recommendation-section{border-radius:14px}
+ .recommendation-section summary{
+  padding:14px 43px 14px 12px;
+  font-size:15px;
+ }
+ .recommendation-item{
+  margin:0 10px;
+  padding:13px 0;
+ }
+ .recommendation-item strong{font-size:16px}
+ .recommendation-item .btn,
+ .recommendation-section>.btn{
+  width:100%;
+  margin:5px 0;
+ }
+ .recommendation-section>.btn{
+  width:calc(100% - 20px);
+  margin:5px 10px 10px;
+ }
+}
+
 </style>
 </head>
 <body>
@@ -628,7 +806,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29g</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29h</span></div>
 </div>
 
 <script>

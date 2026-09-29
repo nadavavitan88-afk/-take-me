@@ -786,6 +786,20 @@ nav a:hover,.share-site:hover{
  .services-card h3{font-size:20px}
 }
 
+
+/* Expedia now appears only contextually inside search results */
+.affiliate-disclosure{
+ display:block;
+ margin:6px 2px 3px;
+ color:#8f7c63;
+ font-size:9px;
+ line-height:1.4;
+ font-weight:600;
+}
+@media(max-width:650px){
+ .affiliate-disclosure{font-size:8px;margin:5px 2px 2px}
+}
+
 </style>
 </head>
 <body>
@@ -823,7 +837,7 @@ nav a:hover,.share-site:hover{
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
   <a class="live-cta" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="noopener">בדוק חבילת טיסה + מלון</a>
-  <div class="live-note">המחירים והזמינות מוצגים באתר הספק בזמן אמת. קישור שותפים: TAKE ME עשויה לקבל עמלה מהזמנה, ללא עלות נוספת למשתמש.</div>
+  <div class="live-note">המחירים והזמינות מוצגים באתר הספק בזמן אמת. <span class="affiliate-disclosure">שותפות מסחרית עם Expedia · ללא תוספת מחיר.</span></div>
 </div>
 </section>
 
@@ -857,12 +871,12 @@ nav a:hover,.share-site:hover{
     <div class="service"><b>📶 eSIM</b><small>Airalo</small><a class="btn brown" id="esim" href="https://www.airalo.com/he/" target="_blank" rel="noopener">פתח Airalo</a></div>
     <div class="service"><b>☀️ מזג אוויר ומפה</b><small>לפי היעד</small><div class="actions"><a class="btn brown" id="weather" href="https://www.google.com/search?q=%D7%9E%D7%96%D7%92+%D7%90%D7%95%D7%95%D7%99%D7%A8" target="_blank" rel="noopener">מזג אוויר</a><a class="btn brown" id="map" href="https://www.google.com/maps" target="_blank" rel="noopener">מפה</a></div></div>
   </div></article>
-  <article class="card trip-card compact-partner" id="expedia-affiliate"><div class="partner-head"><div><span class="partner-kicker">שותף הזמנות</span><h3>✈️ Expedia</h3></div></div><p>רוצה לעבור ישר להזמנה? פתח חיפוש ב־Expedia עם קישור המעקב של TAKE ME.</p><div class="partner-actions"><a class="btn brown" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">חבילת טיסה + מלון</a><a class="btn" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FHotel-Search&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">מלונות ב־Expedia</a></div><small class="partner-note">ייתכן שנקבל עמלה על הזמנה דרך הקישורים, ללא עלות נוספת עבורך.</small></article>
+  
 
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. חלק מהקישורים הם קישורי שותפים, ו־TAKE ME עשויה לקבל עמלה מהזמנה ללא עלות נוספת למשתמש. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש</a> · <span class="version">גרסה: 2026-09-29-final</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-29i</span></div>
 </div>
 
 <script>
@@ -1136,10 +1150,15 @@ function hotelSearchInfo(){
  (ages.length?' (גילים: '+esc(ages.join(", "))+')':'')+'</p>'+
  '<p>המחיר, הזמינות והרכב האורחים הסופי מחייבים בדיקה באתר ההזמנה.</p>';
 }
-function expediaFlightLink(d){
- // Until a verified supplier integration is available, open the provider's
- // search form without implying that traveler details have been prefilled.
+function googleFlightLink(){
  return "https://www.google.com/travel/flights";
+}
+function expediaFlightLink(d){
+ // Open Expedia's flights page through the Creator affiliate wrapper.
+ return expediaAffiliateLink("https://www.expedia.com/Flights","take_me_flights");
+}
+function expediaDisclosure(){
+ return '<small class="affiliate-disclosure">שותפות מסחרית עם Expedia · ללא תוספת מחיר</small>';
 }
 function flightSearchSummary(d){
  const ages=childAges(), infants=ages.filter(age=>age<2).length;
@@ -1152,7 +1171,7 @@ function flightSearchSummary(d){
 }
 function flightSearchInfo(d){
  return '<p class="flight-search-summary">'+esc(flightSearchSummary(d))+'</p>'+
- '<p>Google Flights אינו מקבל כרגע את פרטי הטופס אוטומטית. השתמשו בסיכום שלמעלה להזנת החיפוש באתר הספק.</p>';
+ '<p>אפשר להמשיך ל־Expedia או ל־Google Flights ולהשתמש בפרטי החיפוש שלמעלה.</p>';
 }
 function updateLinks(d){
  const label=destinationLabel(d),q=encodeURIComponent(label);
@@ -1287,7 +1306,7 @@ async function aiRecommend(){
     out.innerHTML=recs.map(d=>{const place=d.city+", "+d.country,q=encodeURIComponent(place);
       const hotels=(d.hotels||[]).slice(0,3).map(h=>'<div class="recommendation-item"><strong>'+safe(h.name)+'</strong><p>'+safe(h.why)+'</p>'+hotelSearchInfo()+link(bookingHotelsLink(h.name+", "+place),"בדוק חדרים ב־Booking")+link(hotelLocationLink(h.name,place),"מיקום במפה")+'</div>').join("");
       const acts=(d.attractions||[]).slice(0,3).map(a=>'<div class="recommendation-item"><strong>'+safe(a.name)+'</strong><p>'+safe(a.why)+'</p>'+link("https://www.getyourguide.com/s/?q="+encodeURIComponent(a.name+", "+place)+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","בדיקת אטרקציה")+'</div>').join("");
-      return '<article class="destination-result"><h3>'+safe(place)+'</h3><p>'+safe(d.why)+'</p><details class="recommendation-section" open><summary>טיסות ליעד</summary><div class="recommendation-item"><strong>פרטי החיפוש שלך</strong>'+flightSearchInfo(explicit||destinations.find(x=>norm(x.city)===norm(d.city))||{city:d.city})+'<a class="btn" href="'+expediaFlightLink(explicit||destinations.find(x=>norm(x.city)===norm(d.city))||{iata:d.city,en:d.city})+'" target="_blank" rel="noopener">פתח Google Flights והזן פרטים</a></div></details><details class="recommendation-section"><summary>מלונות מומלצים</summary><p>לחיצה על מלון פותחת את מיקומו במפה, ולא מאשרת זמינות. להזמנה, פתחו את חיפוש כל המלונות ביעד.</p>'+hotels+link(expediaHotelLink(place),"חיפוש ב־Expedia")+link(bookingHotelsLink(place),"חיפוש ב־Booking")+link(agodaHotelsLink(place),"Agoda — בדיקת פרטים באתר")+'</details><details class="recommendation-section"><summary>אטרקציות</summary>'+acts+link("https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","כל האטרקציות ביעד")+'</details></article>';
+      return '<article class="destination-result"><h3>'+safe(place)+'</h3><p>'+safe(d.why)+'</p><details class="recommendation-section" open><summary>טיסות ליעד</summary><div class="recommendation-item"><strong>פרטי החיפוש שלך</strong>'+flightSearchInfo(explicit||destinations.find(x=>norm(x.city)===norm(d.city))||{city:d.city})+'<a class="btn brown" href="'+expediaFlightLink(explicit||destinations.find(x=>norm(x.city)===norm(d.city))||{iata:d.city,en:d.city})+'" target="_blank" rel="sponsored noopener">טיסות ב־Expedia</a>'+expediaDisclosure()+'<a class="btn" href="'+googleFlightLink()+'" target="_blank" rel="noopener">Google Flights</a></div></details><details class="recommendation-section"><summary>מלונות מומלצים</summary><p>לחיצה על מלון פותחת את מיקומו במפה, ולא מאשרת זמינות. להזמנה, פתחו את חיפוש כל המלונות ביעד.</p>'+hotels+link(expediaHotelLink(place),"חיפוש ב־Expedia")+expediaDisclosure()+link(bookingHotelsLink(place),"חיפוש ב־Booking")+link(agodaHotelsLink(place),"Agoda — בדיקת פרטים באתר")+'</details><details class="recommendation-section"><summary>אטרקציות</summary>'+acts+link("https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site","כל האטרקציות ביעד")+'</details></article>';
     }).join("")+'<p class="recommendation-note">המלצות לבדיקה בלבד. מחירים וזמינות יש לוודא באתר הספק.</p>';
     out.classList.add("show");st.textContent="ההמלצות מוכנות";st.className="status ok";
   }catch(e){
@@ -1302,12 +1321,12 @@ async function aiRecommend(){
         const place=explicit.city+", "+explicit.country;
         const hotelCards=curatedDubai.hotels.map(h=>'<div class="recommendation-item"><strong>'+esc(h.name)+'</strong><p>'+esc(h.why)+'</p>'+hotelSearchInfo()+'<a class="btn" target="_blank" rel="noopener" href="'+esc(hotelLocationLink(h.name,place))+'">מצא מלון במפה</a></div>').join("");
         const attractionCards=curatedDubai.attractions.map(a=>'<div class="recommendation-item"><strong>'+esc(a.name)+'</strong><p>'+esc(a.why)+'</p><a class="btn" target="_blank" rel="noopener" href="https://www.getyourguide.com/s/?q='+encodeURIComponent(a.name+", "+place)+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site">בדיקת אטרקציה</a></div>').join("");
-        out.innerHTML='<article class="destination-result"><h3>'+esc(place)+'</h3><p>מנוע ההמלצות אינו זמין כרגע. אלו הצעות מוכרות לבדיקה, ולא התאמה אישית או בדיקת זמינות בזמן אמת.</p><details class="recommendation-section" open><summary>טיסות ליעד</summary>'+flightSearchInfo(explicit)+'<a class="btn" target="_blank" rel="noopener" href="'+esc(expediaFlightLink(explicit))+'">פתח Google Flights והזן פרטים</a></details><details class="recommendation-section" open><summary>3 מלונות ביעד</summary>'+hotelCards+'<p>חיפוש מלונות אצל ספקים נוספים. יש לאמת יעד, תאריכים והרכב נוסעים בכל אתר.</p><a class="btn" target="_blank" rel="noopener" href="'+esc(expediaHotelLink(place))+'">חיפוש ב־Expedia</a><a class="btn" target="_blank" rel="noopener" href="'+esc(bookingHotelsLink(place))+'">חיפוש ב־Booking</a><a class="btn" target="_blank" rel="noopener" href="'+esc(agodaHotelsLink(place))+'">Agoda — בדיקת פרטים באתר</a></details><details class="recommendation-section" open><summary>3 אטרקציות ביעד</summary>'+attractionCards+'</details></article><p class="recommendation-note">יש לאמת מחיר, התאמה להרכב הנוסעים וזמינות באתר הספק.</p>';
+        out.innerHTML='<article class="destination-result"><h3>'+esc(place)+'</h3><p>מנוע ההמלצות אינו זמין כרגע. אלו הצעות מוכרות לבדיקה, ולא התאמה אישית או בדיקת זמינות בזמן אמת.</p><details class="recommendation-section" open><summary>טיסות ליעד</summary>'+flightSearchInfo(explicit)+'<a class="btn brown" target="_blank" rel="sponsored noopener" href="'+esc(expediaFlightLink(explicit))+'">טיסות ב־Expedia</a>'+expediaDisclosure()+'<a class="btn" target="_blank" rel="noopener" href="'+googleFlightLink()+'">Google Flights</a></details><details class="recommendation-section" open><summary>3 מלונות ביעד</summary>'+hotelCards+'<p>חיפוש מלונות אצל ספקים נוספים. יש לאמת יעד, תאריכים והרכב נוסעים בכל אתר.</p><a class="btn brown" target="_blank" rel="sponsored noopener" href="'+esc(expediaHotelLink(place))+'">חיפוש ב־Expedia</a>'+expediaDisclosure()+'<a class="btn" target="_blank" rel="noopener" href="'+esc(bookingHotelsLink(place))+'">חיפוש ב־Booking</a><a class="btn" target="_blank" rel="noopener" href="'+esc(agodaHotelsLink(place))+'">Agoda — בדיקת פרטים באתר</a></details><details class="recommendation-section" open><summary>3 אטרקציות ביעד</summary>'+attractionCards+'</details></article><p class="recommendation-note">יש לאמת מחיר, התאמה להרכב הנוסעים וזמינות באתר הספק.</p>';
         out.classList.add("show");st.textContent="הוצגו הצעות חלופיות. ניתן להמשיך לחיפוש מלונות ואטרקציות.";st.className="status";return;
       }
       const place=explicit.city+", "+explicit.country,q=encodeURIComponent(place);
       const safe=v=>String(v||"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
-      out.innerHTML='<article class="destination-result"><h3>'+safe(place)+'</h3><p>מצאנו את היעד שביקשת. אפשר לפתוח מכאן טיסות, מלונות ואטרקציות ולבחור לפי תאריכים ותקציב.</p><details class="recommendation-section" open><summary>טיסות ליעד</summary><div class="recommendation-item"><strong>פרטי החיפוש שלך</strong>'+flightSearchInfo(explicit)+'<a class="btn" href="'+expediaFlightLink(explicit)+'" target="_blank" rel="noopener">פתח Google Flights והזן פרטים</a></div></details><details class="recommendation-section" open><summary>מלונות ביעד</summary><div class="recommendation-item"><strong>פרטי חיפוש המלונות</strong>'+hotelSearchInfo()+'<a class="btn" href="'+expediaHotelLink(place)+'" target="_blank" rel="noopener">פתח חיפוש ב־Expedia</a><a class="btn" href="'+bookingHotelsLink(place)+'" target="_blank" rel="noopener">חיפוש ב־Booking</a><a class="btn" href="'+agodaHotelsLink(place)+'" target="_blank" rel="noopener">Agoda — בדיקת פרטים באתר</a></div></details><details class="recommendation-section" open><summary>אטרקציות ביעד</summary><div class="recommendation-item"><strong>סיורים וחוויות ביעד</strong><p>אפשר לבחור אטרקציות, סיורים וכרטיסים לפי התאריך.</p><a class="btn" href="https://www.getyourguide.com/s/?q='+q+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="noopener">פתח חיפוש אטרקציות</a></div></details></article><p class="recommendation-note">המלצות מפורטות זמנית לא נטענו; הקישורים עובדים ישירות מול ספקי ההזמנה.</p>';
+      out.innerHTML='<article class="destination-result"><h3>'+safe(place)+'</h3><p>מצאנו את היעד שביקשת. אפשר לפתוח מכאן טיסות, מלונות ואטרקציות ולבחור לפי תאריכים ותקציב.</p><details class="recommendation-section" open><summary>טיסות ליעד</summary><div class="recommendation-item"><strong>פרטי החיפוש שלך</strong>'+flightSearchInfo(explicit)+'<a class="btn brown" href="'+expediaFlightLink(explicit)+'" target="_blank" rel="sponsored noopener">טיסות ב־Expedia</a>'+expediaDisclosure()+'<a class="btn" href="'+googleFlightLink()+'" target="_blank" rel="noopener">Google Flights</a></div></details><details class="recommendation-section" open><summary>מלונות ביעד</summary><div class="recommendation-item"><strong>פרטי חיפוש המלונות</strong>'+hotelSearchInfo()+'<a class="btn brown" href="'+expediaHotelLink(place)+'" target="_blank" rel="sponsored noopener">חיפוש ב־Expedia</a>'+expediaDisclosure()+'<a class="btn" href="'+bookingHotelsLink(place)+'" target="_blank" rel="noopener">חיפוש ב־Booking</a><a class="btn" href="'+agodaHotelsLink(place)+'" target="_blank" rel="noopener">Agoda — בדיקת פרטים באתר</a></div></details><details class="recommendation-section" open><summary>אטרקציות ביעד</summary><div class="recommendation-item"><strong>סיורים וחוויות ביעד</strong><p>אפשר לבחור אטרקציות, סיורים וכרטיסים לפי התאריך.</p><a class="btn" href="https://www.getyourguide.com/s/?q='+q+'&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="noopener">פתח חיפוש אטרקציות</a></div></details></article><p class="recommendation-note">המלצות מפורטות זמנית לא נטענו; הקישורים עובדים ישירות מול ספקי ההזמנה.</p>';
       out.classList.add("show");st.textContent="ההמלצות לא נטענו כרגע. אפשר לנסות שוב או לפתוח חיפוש אצל הספקים.";st.className="status";
     }else if(travelMode==="israel"){
       const place="ישראל";

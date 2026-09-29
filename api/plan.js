@@ -101,7 +101,7 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
     let lastReason = "upstream";
     let lastDetail = "";
     for (const model of models) {
-      for (let attempt=0; attempt<1; attempt++) {
+      for (let attempt=0; attempt<2; attempt++) {
         let response;
         try { response = await fetch(
           "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",

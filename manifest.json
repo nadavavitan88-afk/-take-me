@@ -1,0 +1,20 @@
+{
+  "name": "TAKE ME",
+  "short_name": "TAKE ME",
+  "description": "תכנון חופשה בעברית — יעדים, מלונות, טיסות, אטרקציות ושירותים משלימים.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#17130f",
+  "theme_color": "#17130f",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

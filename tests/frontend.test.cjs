@@ -136,9 +136,10 @@ test('marketing attribution is attached to shared links',()=>{
 
 
 test('affiliate integrations keep verified tracking identifiers',()=>{
- assert.match(html,/data-camref="1101l6tkXW"/);
- assert.match(html,/data-network="pz"/);
+ assert.match(html,/camref:"1110lQPq2"/);
+ assert.match(html,/creativeref:"1100l68075"/);
+ assert.match(html,/adref:"PZTkjr__Gt"/);
  assert.match(html,/partner_id=GJ3WGHV/);
  assert.match(html,/a_aid=Nadavavitan050/);
- assert.match(html,/Allianceid=10594354&SID=331399748&trip_sub1=take_me_site/);
+ assert.match(html,/rel="sponsored noopener"/);
 });

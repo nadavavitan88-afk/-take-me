@@ -936,6 +936,45 @@ nav a:hover,.share-site:hover{
 
 
 .suggest-meta{padding:8px 10px 7px;color:#a98f6d;font-size:10px;font-weight:900;border-bottom:1px solid rgba(214,173,99,.12);margin-bottom:3px}
+
+/* Popular destination shortcuts */
+.popular-destinations{
+ display:flex;
+ align-items:center;
+ gap:7px;
+ margin:9px 0 10px;
+ overflow-x:auto;
+ scrollbar-width:none;
+ padding-bottom:1px;
+}
+.popular-destinations::-webkit-scrollbar{display:none}
+.popular-destinations>span{
+ flex:0 0 auto;
+ color:#8d6b50;
+ font-size:10px;
+ font-weight:900;
+}
+.popular-destinations button{
+ flex:0 0 auto;
+ border:1px solid rgba(151,111,70,.2);
+ background:rgba(255,250,244,.72);
+ color:#604733;
+ border-radius:999px;
+ padding:8px 11px;
+ font:inherit;
+ font-size:11px;
+ font-weight:850;
+ cursor:pointer;
+}
+.popular-destinations button:hover,.popular-destinations button:active{
+ border-color:#b98d57;
+ background:#f1e1ce;
+}
+@media(max-width:650px){
+ .popular-destinations{margin:8px -2px 9px;padding:0 2px 2px}
+ .popular-destinations button{padding:8px 10px}
+}
+
 </style>
 </head>
 <body>
@@ -948,7 +987,7 @@ nav a:hover,.share-site:hover{
 <p id="heroDescription">יעד, תאריכים ותקציב — ואנחנו מרכזים לך במקום אחד את החיפוש, המלונות, האטרקציות וכל מה שצריך מסביב.</p>
 <div class="proof"><span>✓ הכול במקום אחד</span><span>✓ הצעות יעד בזמן ההקלדה</span><span id="modeProof">✓ טיסה + מלון</span><span>✓ בלי להתחיל מחדש</span></div>
 
-<div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
+<div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="popular-destinations" id="popularDestinations" aria-label="יעדים פופולריים"><span>פופולרי:</span><button type="button" data-dest="קפריסין">קפריסין</button><button type="button" data-dest="יוון">יוון</button><button type="button" data-dest="תאילנד">תאילנד</button><button type="button" data-dest="דובאי">דובאי</button><button type="button" data-dest="איטליה">איטליה</button><button type="button" data-dest="ספרד">ספרד</button></div><div class="search">
   <div class="field" id="originField"><label>מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
   <div class="field"><label>לאן נוסעים? · כל יעד</label><input id="dest" placeholder="עיר, אי או אזור בכל העולם" autocomplete="off"><div class="suggest" id="destSuggest"></div></div>
   <div class="field"><label>יציאה</label><input id="from" type="date"></div>
@@ -1034,7 +1073,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><a class="btn brown lead-primary" href="#leadForm" id="openLeadForm">קבל הצעה אישית</a><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><button class="btn" type="button" id="copyLead">העתק פרטים</button></div><p id="leadStatus" role="status">בלחיצה על ״קבל הצעה אישית״ פרטי החופשה יצורפו אוטומטית.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30j</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30k</span></div>
 </div>
 
 <script>
@@ -1659,6 +1698,17 @@ async function aiRecommend(){
 }
 $("modeAbroad").addEventListener("click",()=>{trackEvent("travel_mode_change",{travel_mode:"abroad"});setTravelMode("abroad");});
 $("modeIsrael").addEventListener("click",()=>{trackEvent("travel_mode_change",{travel_mode:"israel"});setTravelMode("israel");});
+document.querySelectorAll("#popularDestinations button").forEach(btn=>btn.addEventListener("click",()=>{
+ const value=btn.dataset.dest||"";
+ if(!value)return;
+ if(travelMode!=="abroad")setTravelMode("abroad");
+ $("dest").value=value;
+ invalidateResults();
+ renderSuggestions();
+ refreshLeadSummary(resolveDestination(value));
+ trackEvent("popular_destination_click",{destination:value});
+ $("dest").focus();
+}));
 document.querySelectorAll(".ai-chip").forEach(chip=>chip.addEventListener("click",()=>{
  const text=chip.dataset.text||"";
  const current=$("aiPrompt").value.trim();

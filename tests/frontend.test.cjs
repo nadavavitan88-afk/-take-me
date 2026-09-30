@@ -211,3 +211,15 @@ test('destination hub is linked and indexed in sitemap',()=>{
  const sitemapApi=fs.readFileSync(path.join(root,'api','sitemap.js'),'utf8');
  assert.ok(sitemapApi.includes('/destinations.html'));
 });
+
+
+test('conversion funnel distinguishes attempts, successful results and CTA sources',()=>{
+ assert.match(html,/trackEvent\("search_attempt"/);
+ assert.match(html,/trackEvent\("vacation_search"/);
+ assert.match(html,/trackEvent\("trip_result_view"/);
+ assert.match(html,/trackEvent\("lead_cta_click"/);
+ assert.match(html,/trackEvent\("lead_submit_attempt"/);
+ assert.match(html,/let lastLeadSource="unknown"/);
+ assert.match(html,/lead_cta_source:lastLeadSource/);
+ assert.match(html,/id="resultLeadCta">קבל הצעה אישית</);
+});

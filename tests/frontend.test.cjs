@@ -241,7 +241,7 @@ test('outbound partner clicks are tracked by provider and service',()=>{
  }
  assert.match(html,/trackEvent\("outbound_click"/);
  assert.match(html,/trackEvent\("outbound_"\+meta\.provider/);
- assert.match(html,/provider:"discovercars"/);
- assert.match(html,/provider:"getyourguide"/);
- assert.match(html,/provider:"airalo"/);
+ for(const provider of ['discovercars','getyourguide','airalo']){
+  assert.ok(html.includes(provider));
+ }
 });

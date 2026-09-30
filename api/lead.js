@@ -8,7 +8,7 @@ export default async function handler(req,res){
  }
 
  try{
-  const {name,phone,email="",fax="",summary,consent}=req.body||{};
+  const {name,phone,email="",fax="",summary,consent,attribution={}}=req.body||{};
 
   // Honeypot: bots often fill every field. Return success without forwarding.
   if(typeof fax==="string"&&fax.trim()){
@@ -26,6 +26,13 @@ export default async function handler(req,res){
    return res.status(400).json({ok:false,error:"פרטי הפנייה אינם תקינים"});
   }
 
+  const safeAttribution={
+   traffic_source:typeof attribution?.traffic_source==="string"?attribution.traffic_source.slice(0,120):"direct",
+   traffic_medium:typeof attribution?.traffic_medium==="string"?attribution.traffic_medium.slice(0,120):"none",
+   traffic_campaign:typeof attribution?.traffic_campaign==="string"?attribution.traffic_campaign.slice(0,160):"none",
+   click_id:typeof attribution?.click_id==="string"?attribution.click_id.slice(0,240):""
+  };
+
   const payload={
    name:name.trim(),
    phone,
@@ -33,6 +40,7 @@ export default async function handler(req,res){
    message:summary,
    summary,
    consent:"Yes",
+   ...safeAttribution,
    _subject:"TAKE ME — בקשת חופשה חדשה"
   };
 

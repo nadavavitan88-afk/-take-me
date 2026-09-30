@@ -61,10 +61,9 @@ test('lead phone input normalizes local and international mobile formats',()=>{
  assert.match(html,/replace\(\/\^\\\+9720\?\//);
 });
 
-test('site includes domain-portable canonical and social preview metadata',()=>{
- assert.match(html,/<link rel="canonical" href="\/"/);
- for(const key of ['og:title','og:description','og:image'])assert.ok(html.includes('property="'+key+'"'));
- assert.doesNotMatch(html,/take-me-v7-full\.vercel\.app/);
+test('site includes absolute canonical and social preview metadata',()=>{
+ assert.match(html,/<link rel="canonical" href="https:\/\/take-me-v7-full\.vercel\.app\/"/);
+ for(const key of ['og:title','og:description','og:image','og:url'])assert.ok(html.includes('property="'+key+'"'));
  assert.match(html,/<link rel="icon" type="image\/svg\+xml" href="\/favicon\.svg">/);
 });
 

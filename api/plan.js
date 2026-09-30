@@ -2,6 +2,14 @@ module.exports = async function handler(req, res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
 
+  const origin=String(req.headers?.origin||"");
+  const host=String(req.headers?.host||"");
+  if(origin){
+   try{
+    if(new URL(origin).host!==host)return res.status(403).json({ok:false,error:"Origin not allowed"});
+   }catch{return res.status(403).json({ok:false,error:"Origin not allowed"});}
+  }
+
   if (req.method === "GET") return res.status(405).json({error:"Method not allowed"});
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });

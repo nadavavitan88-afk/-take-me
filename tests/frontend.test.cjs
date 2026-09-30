@@ -223,3 +223,12 @@ test('conversion funnel distinguishes attempts, successful results and CTA sourc
  assert.match(html,/lead_cta_source:lastLeadSource/);
  assert.match(html,/id="resultLeadCta">קבל הצעה אישית</);
 });
+
+
+test('homepage explains the flow and exposes matching FAQ content',()=>{
+ assert.match(html,/id="howItWorks"/);
+ assert.match(html,/איך TAKE ME עובד/);
+ assert.match(html,/"@type":"FAQPage"/);
+ assert.match(html,/האם ההזמנה מתבצעת בתוך TAKE ME/);
+ assert.match(html,/אפשר לחפש כל יעד בעולם/);
+});

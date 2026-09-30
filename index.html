@@ -886,6 +886,41 @@ nav a:hover,.share-site:hover{
  .result-choice-title{margin-top:12px}
 }
 
+
+/* TAKE ME conversion pass — contextual, non-sticky lead CTAs */
+.result-help{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:14px;
+ margin-top:14px;
+ padding:13px;
+ border:1px solid rgba(214,173,99,.18);
+ border-radius:14px;
+ background:rgba(214,173,99,.055);
+}
+.result-help b{display:block;color:#f4e3c6;font-size:14px}
+.result-help small{display:block;margin-top:3px;color:#aa9679;font-size:10px;line-height:1.5}
+.result-help .btn{flex:0 0 auto;min-height:42px;border-radius:12px}
+.ai-conversion{
+ display:none;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin-top:10px;
+ padding:11px 12px;
+ border:1px solid rgba(214,173,99,.17);
+ border-radius:14px;
+ background:rgba(255,255,255,.03);
+}
+.ai-answer.show + .ai-conversion{display:flex}
+.ai-conversion span{color:#d4c1a3;font-size:12px;font-weight:800}
+.ai-conversion .btn{flex:0 0 auto;border-radius:12px;min-height:42px}
+@media(max-width:650px){
+ .result-help,.ai-conversion{align-items:stretch;flex-direction:column}
+ .result-help .btn,.ai-conversion .btn{width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -938,6 +973,10 @@ nav a:hover,.share-site:hover{
     </div>
   </div>
   <div class="live-note">מחירים וזמינות מוצגים אצל הספק. <span class="affiliate-disclosure inline">חלק מהקישורים במסגרת שותפות מסחרית · ללא תוספת מחיר.</span></div>
+  <div class="result-help">
+    <div><b>רוצה שנעשה סדר בין האפשרויות?</b><small>פרטי החופשה כבר שמורים — נשאר רק להשאיר דרך חזרה.</small></div>
+    <button class="btn brown" type="button" id="resultLeadCta">עזרה אישית</button>
+  </div>
 </div>
 </section>
 
@@ -958,6 +997,10 @@ nav a:hover,.share-site:hover{
   </div>
   <div class="status" id="aiStatus" role="status" aria-live="polite">כתוב בכמה מילים מה החופשה שאתה רוצה.</div>
   <div class="ai-answer" id="aiAnswer"></div>
+  <div class="ai-conversion" id="aiConversion">
+    <span>אהבת את הכיוון?</span>
+    <button class="btn brown" type="button" id="aiLeadCta">שלח לי הצעה מסודרת</button>
+  </div>
 </section>
 
 <div class="ribbon" id="serviceRibbon"><div class="rib"><b>🎟️ אטרקציות</b><small>GetYourGuide</small></div><div class="rib"><b>🚗 רכב</b><small>DiscoverCars</small></div><div class="rib" id="esimRibbon"><b>📶 eSIM</b><small>Airalo</small></div><div class="rib"><b>🍽️ אוכל</b><small>מסעדות</small></div></div>
@@ -976,7 +1019,7 @@ nav a:hover,.share-site:hover{
 </div>
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><button class="btn" type="button" id="copyLead">העתק פרטי חופשה</button><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><a class="btn" href="#leadForm" id="openLeadForm">השאר פרטים כאן</a></div><p id="leadStatus" role="status">בלחיצה על ״השאר פרטים כאן״ סיכום החופשה יצורף אוטומטית לפנייה.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30b</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30c</span></div>
 </div>
 
 <script>
@@ -1495,7 +1538,16 @@ $("shareSite").addEventListener("click",async()=>{
   else{status.textContent="קישור לשיתוף: "+url;}
  }catch(error){if(error.name!=="AbortError")status.textContent="לא הצלחנו לפתוח שיתוף. קישור האתר: "+url;}
 });
-$("openLeadForm").addEventListener("click",()=>{trackEvent("begin_lead_form",{destination:$("dest").value||"unknown"});$("leadForm").hidden=false;});
+function openLeadForm(source){
+ refreshLeadSummary();
+ trackEvent("begin_lead_form",{destination:$("dest").value||"unknown",source});
+ $("leadForm").hidden=false;
+ $("lead").scrollIntoView({behavior:"smooth",block:"start"});
+ setTimeout(()=>$("leadName").focus(),420);
+}
+$("openLeadForm").addEventListener("click",e=>{e.preventDefault();openLeadForm("lead_section");});
+$("resultLeadCta").addEventListener("click",()=>openLeadForm("trip_result"));
+$("aiLeadCta").addEventListener("click",()=>openLeadForm("ai_result"));
 $("newLeadRequest").addEventListener("click",()=>{
  $("nativeLeadForm").hidden=false;$("newLeadRequest").hidden=true;$("leadFallback").hidden=true;
  const status=$("nativeLeadStatus");status.textContent="";delete status.dataset.state;

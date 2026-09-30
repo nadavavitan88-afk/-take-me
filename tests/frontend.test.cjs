@@ -144,3 +144,13 @@ test('affiliate integrations keep verified tracking identifiers',()=>{
  assert.match(html,/a_aid=Nadavavitan050/);
  assert.match(html,/rel="sponsored noopener"/);
 });
+
+
+test('expanded destination coverage includes Cyprus and Thailand resorts',()=>{
+ assert.match(html,/city:"איה נאפה",en:"Ayia Napa",country:"קפריסין"/);
+ assert.match(html,/city:"פרוטארס",en:"Protaras",country:"קפריסין"/);
+ assert.match(html,/city:"קוסמוי",en:"Koh Samui",country:"תאילנד"/);
+ assert.match(html,/city:"צ׳יאנג מאי",en:"Chiang Mai",country:"תאילנד"/);
+ assert.match(html,/function destinationScore\(d,q\)/);
+ assert.match(html,/slice\(0,14\)/);
+});

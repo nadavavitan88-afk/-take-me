@@ -232,3 +232,16 @@ test('homepage explains the flow and exposes matching FAQ content',()=>{
  assert.match(html,/האם ההזמנה מתבצעת בתוך TAKE ME/);
  assert.match(html,/אפשר לחפש כל יעד בעולם/);
 });
+
+
+test('outbound partner clicks are tracked by provider and service',()=>{
+ assert.match(html,/function outboundPartnerMeta\(id\)/);
+ for(const id of ['resExpediaFlights','resExpediaHotels','resBookingHotels','resAgodaHotels','packageLive','gyg','car','esim']){
+  assert.ok(html.includes('"'+id+'"'));
+ }
+ assert.match(html,/trackEvent\("outbound_click"/);
+ assert.match(html,/trackEvent\("outbound_"\+meta\.provider/);
+ assert.match(html,/provider:"discovercars"/);
+ assert.match(html,/provider:"getyourguide"/);
+ assert.match(html,/provider:"airalo"/);
+});

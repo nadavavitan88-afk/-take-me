@@ -204,3 +204,10 @@ test('destination SEO guides are linked and included in sitemap',()=>{
   assert.ok(sitemapApi.includes('/'+slug+'.html'));
  }
 });
+
+
+test('destination hub is linked and indexed in sitemap',()=>{
+ assert.ok(html.includes('/destinations.html'));
+ const sitemapApi=fs.readFileSync(path.join(root,'api','sitemap.js'),'utf8');
+ assert.ok(sitemapApi.includes('/destinations.html'));
+});

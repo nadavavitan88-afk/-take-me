@@ -1343,8 +1343,18 @@ function money(n){return new Intl.NumberFormat("he-IL").format(Math.round(n))+" 
 function findDestination(q){
  const n=norm(q);
  if(!n) return null;
- return activeDestinations().find(d=>[d.city,d.en,d.city+", "+d.country].some(v=>norm(v)===n))
-     || (n.length>=2 ? activeDestinations().find(d=>[d.city,d.en].some(v=>norm(v).startsWith(n))) : null);
+ return activeDestinations().find(d=>[d.city,d.en,d.city+", "+d.country,d.aliases||""].some(v=>norm(v)===n))
+     || (n.length>=2 ? activeDestinations().find(d=>[d.city,d.en,d.aliases||""].some(v=>norm(v).startsWith(n))) : null);
+}
+function destinationScore(d,q){
+ const city=norm(d.city), en=norm(d.en), country=norm(d.country), aliases=norm(d.aliases||"");
+ if(city===q||en===q)return 100;
+ if(city.startsWith(q)||en.startsWith(q))return 90;
+ if(country===q)return 80;
+ if(city.includes(q)||en.includes(q))return 70;
+ if(aliases.includes(q))return 65;
+ if(country.includes(q))return 60;
+ return 0;
 }
 function resolveDestination(q){
  const known=findDestination(q);

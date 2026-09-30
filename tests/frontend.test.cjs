@@ -185,3 +185,12 @@ test('SEO files are generated from the active host',()=>{
  assert.doesNotMatch(sitemapApi,/take-me-v7-full\.vercel\.app/);
  assert.doesNotMatch(robotsApi,/take-me-v7-full\.vercel\.app/);
 });
+
+
+test('lead submission has timeout and analytics diagnostics',()=>{
+ assert.match(html,/AbortSignal\.timeout\(15000\)/);
+ assert.match(html,/lead_submit_success/);
+ assert.match(html,/lead_submit_error/);
+ assert.match(html,/delivery_formspree/);
+ assert.match(html,/delivery_sheets/);
+});

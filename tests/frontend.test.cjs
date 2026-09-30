@@ -155,3 +155,10 @@ test('expanded destination coverage includes Cyprus and Thailand resorts',()=>{
  assert.match(html,/slice\(0,14\)/);
 });
 
+
+
+test('structured search no longer includes a budget field',()=>{
+ assert.doesNotMatch(html,/id="budget"/);
+ assert.doesNotMatch(html,/<label>תקציב<\/label>/);
+ assert.match(html,/יעד, תאריכים ונוסעים/);
+});

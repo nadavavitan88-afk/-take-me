@@ -7,6 +7,7 @@ module.exports = function handler(req,res){
  const urls=[
   {path:"/",priority:"1.0",changefreq:"weekly"},
   {path:"/privacy.html",priority:"0.3"},
+  {path:"/destinations.html",priority:"0.9",changefreq:"weekly"},
   {path:"/terms.html",priority:"0.3"},
   {path:"/cyprus.html",priority:"0.8",changefreq:"weekly"},
   {path:"/thailand.html",priority:"0.8",changefreq:"weekly"},

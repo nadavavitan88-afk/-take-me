@@ -59,9 +59,10 @@ test('lead phone input normalizes local and international mobile formats',()=>{
  assert.match(html,/replace\(\/\^\\\+9720\?\//);
 });
 
-test('site includes canonical and social preview metadata',()=>{
- assert.match(html,/<link rel="canonical" href="https:\/\/take-me-v7-full\.vercel\.app\/"/);
- for(const key of ['og:title','og:description','og:image','og:url'])assert.ok(html.includes('property="'+key+'"'));
+test('site includes domain-portable canonical and social preview metadata',()=>{
+ assert.match(html,/<link rel="canonical" href="\/"/);
+ for(const key of ['og:title','og:description','og:image'])assert.ok(html.includes('property="'+key+'"'));
+ assert.doesNotMatch(html,/take-me-v7-full\.vercel\.app/);
  assert.match(html,/<link rel="icon" type="image\/svg\+xml" href="\/favicon\.svg">/);
 });
 
@@ -168,4 +169,17 @@ test('country-only structured search asks for a city or region',()=>{
  assert.match(html,/function exactCountryMatches\(q\)/);
  assert.match(html,/בחר עיר או אזור מתוך/);
  assert.match(html,/renderSuggestions\(\);/);
+});
+
+
+test('SEO files are generated from the active host',()=>{
+ const vercel=fs.readFileSync(path.join(root,'vercel.json'),'utf8');
+ const sitemapApi=fs.readFileSync(path.join(root,'api','sitemap.js'),'utf8');
+ const robotsApi=fs.readFileSync(path.join(root,'api','robots.js'),'utf8');
+ assert.match(vercel,/"source": "\/sitemap\.xml"/);
+ assert.match(vercel,/"source": "\/robots\.txt"/);
+ assert.match(sitemapApi,/req\.headers\.host/);
+ assert.match(robotsApi,/req\.headers\.host/);
+ assert.doesNotMatch(sitemapApi,/take-me-v7-full\.vercel\.app/);
+ assert.doesNotMatch(robotsApi,/take-me-v7-full\.vercel\.app/);
 });

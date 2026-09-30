@@ -1794,6 +1794,37 @@ $("newLeadRequest").addEventListener("click",()=>{
  const status=$("nativeLeadStatus");status.textContent="";delete status.dataset.state;
  refreshLeadSummary();$("leadName").focus();
 });
+function outboundPartnerMeta(id){
+ const base={
+  resExpediaFlights:{provider:"expedia",service:"flights",monetized:true,location:"trip_result"},
+  resExpediaHotels:{provider:"expedia",service:"hotels",monetized:true,location:"trip_result"},
+  resBookingHotels:{provider:"booking",service:"hotels",monetized:false,location:"trip_result"},
+  resAgodaHotels:{provider:"agoda",service:"hotels",monetized:false,location:"trip_result"},
+  resGoogleFlights:{provider:"google_flights",service:"flights",monetized:false,location:"trip_result"},
+  gyg:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"services"},
+  car:{provider:travelMode==="israel"?"google_maps":"discovercars",service:"car",monetized:travelMode!=="israel",location:"services"},
+  esim:{provider:"airalo",service:"esim",monetized:false,location:"services"},
+  food:{provider:"google_maps",service:"restaurants",monetized:false,location:"services"},
+  kosher:{provider:"google_maps",service:"kosher_restaurants",monetized:false,location:"services"},
+  weather:{provider:"google",service:"weather",monetized:false,location:"services"},
+  map:{provider:"google_maps",service:"map",monetized:false,location:"services"}
+ };
+ if(id==="packageLive")return {provider:travelMode==="israel"?"booking":"expedia",service:travelMode==="israel"?"hotels":"package",monetized:travelMode!=="israel",location:"trip_result"};
+ return base[id]||null;
+}
+const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleFlights","packageLive","gyg","car","esim","food","kosher","weather","map"];
+for(const id of outboundTrackedIds){
+ const el=$(id);
+ if(!el)continue;
+ el.addEventListener("click",()=>{
+  const meta=outboundPartnerMeta(id);
+  if(!meta)return;
+  const destination=$("dest").value||"unknown";
+  trackEvent("outbound_click",{...meta,destination,travel_mode:travelMode});
+  trackEvent("outbound_"+meta.provider,{service:meta.service,location:meta.location,destination,travel_mode:travelMode,monetized:meta.monetized});
+ });
+}
+
 $("nativeLeadForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const form=e.currentTarget,button=$("leadSubmit"),status=$("nativeLeadStatus");

@@ -2,6 +2,8 @@ const FORM_URL = "https://formspree.io/f/mrpbyjar";
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyw-gK7cevf8cRPDTO9Kg23n31ieqhe9kwhoTt-1ay5u6CvBQpl6hap1uGeNy0xHYRq/exec";
 
 export default async function handler(req,res){
+ res.setHeader("Content-Type","application/json; charset=utf-8");
+ res.setHeader("Cache-Control","no-store");
  if(req.method!=="POST"){
   res.setHeader("Allow","POST");
   return res.status(405).json({ok:false,error:"Method not allowed"});

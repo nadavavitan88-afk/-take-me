@@ -196,11 +196,11 @@ test('lead submission has timeout and analytics diagnostics',()=>{
 
 
 test('destination SEO guides are linked and included in sitemap',()=>{
- for(const slug of ['cyprus','thailand','dubai','greece']){
+ for(const slug of ['cyprus','thailand','dubai','greece','italy','spain','prague','budapest','barcelona','marbella']){
   assert.ok(html.includes('/'+slug+'.html'));
  }
  const sitemapApi=fs.readFileSync(path.join(root,'api','sitemap.js'),'utf8');
- for(const slug of ['cyprus','thailand','dubai','greece']){
+ for(const slug of ['cyprus','thailand','dubai','greece','italy','spain','prague','budapest','barcelona','marbella']){
   assert.ok(sitemapApi.includes('/'+slug+'.html'));
  }
 });

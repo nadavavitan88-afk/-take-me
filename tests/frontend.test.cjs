@@ -193,3 +193,14 @@ test('lead submission has timeout and analytics diagnostics',()=>{
  assert.match(html,/delivery_formspree/);
  assert.match(html,/delivery_sheets/);
 });
+
+
+test('destination SEO guides are linked and included in sitemap',()=>{
+ for(const slug of ['cyprus','thailand','dubai','greece']){
+  assert.ok(html.includes('/'+slug+'.html'));
+ }
+ const sitemapApi=fs.readFileSync(path.join(root,'api','sitemap.js'),'utf8');
+ for(const slug of ['cyprus','thailand','dubai','greece']){
+  assert.ok(sitemapApi.includes('/'+slug+'.html'));
+ }
+});

@@ -946,10 +946,25 @@ nav a:hover,.share-site:hover{
 @media(max-width:650px){.resultgrid>.stat:last-child{grid-column:1 / -1}}
 
 .hero-destinations{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 14px}.hero-destinations>span{font-size:11px;font-weight:900;color:#7b5d46}.hero-destinations a{font-size:11px;font-weight:900;color:#5f4432;background:rgba(255,250,243,.84);border:1px solid #d8c3a7;border-radius:999px;padding:6px 9px}.hero-destinations a:hover{background:#fffaf3}@media(max-width:650px){.hero-destinations{gap:6px}.hero-destinations a{padding:6px 8px}}
+.how-it-works,.home-faq{margin:24px 0;padding:20px;border:1px solid rgba(214,173,99,.18);border-radius:20px;background:rgba(255,255,255,.025)}
+.how-it-works h2,.home-faq h2{margin:5px 0 14px;color:#f5e6cf;font-size:25px}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.how-grid article{padding:16px;border:1px solid rgba(214,173,99,.14);border-radius:16px;background:rgba(255,255,255,.025)}
+.how-grid article>span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#d7ae62,#ba8841);color:#1b140e;font-weight:950}
+.how-grid h3{margin:10px 0 6px;color:#f3e2c7;font-size:17px}
+.how-grid p,.home-faq p{margin:0;color:#bfae93;line-height:1.65;font-size:12px}
+.home-faq details{border-top:1px solid rgba(214,173,99,.14);padding:12px 0}
+.home-faq details:first-of-type{border-top:0}
+.home-faq summary{cursor:pointer;color:#ead9bd;font-weight:900;font-size:14px}
+.home-faq details p{margin-top:8px}
+@media(max-width:650px){.how-grid{grid-template-columns:1fr}.how-it-works,.home-faq{padding:16px}.how-grid article{padding:14px}}
 .seo-guides{margin:22px 0 16px;padding:18px;border:1px solid #d8c3a7;border-radius:18px;background:rgba(255,250,243,.76)}
 .seo-guides-head span{font-size:10px;font-weight:950;color:#8d6b50}.seo-guides-head h2{margin:4px 0 5px;font-size:22px}.seo-guides-head p{margin:0;color:#765941;font-size:12px;line-height:1.5}
 .seo-guide-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.seo-guide-links a{padding:9px 13px;border:1px solid #d8c3a7;border-radius:999px;background:#fff7ed;font-size:12px;font-weight:900;color:#604733}
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -1047,9 +1062,28 @@ nav a:hover,.share-site:hover{
 
 </div>
 
+<section class="how-it-works" id="howItWorks" aria-labelledby="howTitle">
+  <div class="section-kicker">HOW IT WORKS</div>
+  <h2 id="howTitle">איך TAKE ME עובד?</h2>
+  <div class="how-grid">
+    <article><span>1</span><h3>בוחרים יעד ופרטים</h3><p>מזינים יעד, תאריכים והרכב נוסעים — או מתארים ב-AI את סוג החופשה שרוצים.</p></article>
+    <article><span>2</span><h3>מקבלים כיוון מסודר</h3><p>TAKE ME מרכז קישורים לטיסות, מלונות, אטרקציות ושירותים נוספים לפי החופשה שבניתם.</p></article>
+    <article><span>3</span><h3>ממשיכים לבד או עם עזרה</h3><p>אפשר לעבור לספקים החיצוניים להזמנה, לשתף את החופשה או להשאיר פרטים לעזרה אישית.</p></article>
+  </div>
+</section>
+
+<section class="home-faq" aria-labelledby="faqTitle">
+  <div class="section-kicker">FAQ</div>
+  <h2 id="faqTitle">שאלות נפוצות</h2>
+  <details><summary>האם ההזמנה מתבצעת בתוך TAKE ME?</summary><p>ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים.</p></details>
+  <details><summary>אפשר לחפש כל יעד בעולם?</summary><p>כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש.</p></details>
+  <details><summary>מה קורה אם אני עדיין לא יודע לאן לטוס?</summary><p>אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם — כדי לקבל כיוון ליעד ולחיפוש.</p></details>
+  <details><summary>אפשר לקבל עזרה אישית אחרי החיפוש?</summary><p>כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה.</p></details>
+</section>
+
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><a class="btn brown lead-primary" href="#leadForm" id="openLeadForm">קבל הצעה אישית</a><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><button class="btn" type="button" id="copyLead">העתק פרטים</button></div><p id="leadStatus" role="status">בלחיצה על ״קבל הצעה אישית״ פרטי החופשה יצורפו אוטומטית.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
 <section class="seo-guides" aria-labelledby="seoGuidesTitle"><div class="seo-guides-head"><span>מדריכי יעד</span><h2 id="seoGuidesTitle">מתחילים מהיעד הנכון</h2><p>מדריכים קצרים שיעזרו לבחור אזור לפני שמתחילים לחפש טיסות ומלונות.</p></div><div class="seo-guide-links"><a href="/cyprus.html">קפריסין</a><a href="/thailand.html">תאילנד</a><a href="/dubai.html">דובאי</a><a href="/greece.html">יוון</a><a href="/italy.html">איטליה</a><a href="/spain.html">ספרד</a><a href="/prague.html">פראג</a><a href="/budapest.html">בודפשט</a><a href="/barcelona.html">ברצלונה</a><a href="/marbella.html">מרבלה</a></div><a class="btn" href="/destinations.html" style="margin-top:12px">כל מדריכי היעדים</a></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30y</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <span class="version">גרסה: 2026-09-30z</span></div>
 </div>
 
 <script>

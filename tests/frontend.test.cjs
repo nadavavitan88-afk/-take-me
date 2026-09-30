@@ -162,3 +162,10 @@ test('structured search no longer includes a budget field',()=>{
  assert.doesNotMatch(html,/<label>תקציב<\/label>/);
  assert.match(html,/יעד, תאריכים ונוסעים/);
 });
+
+
+test('country-only structured search asks for a city or region',()=>{
+ assert.match(html,/function exactCountryMatches\(q\)/);
+ assert.match(html,/בחר עיר או אזור מתוך/);
+ assert.match(html,/renderSuggestions\(\);/);
+});

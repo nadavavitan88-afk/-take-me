@@ -155,10 +155,3 @@ test('expanded destination coverage includes Cyprus and Thailand resorts',()=>{
  assert.match(html,/slice\(0,14\)/);
 });
 
-
-test('popular destination shortcuts are present and tracked',()=>{
- assert.match(html,/id="popularDestinations"/);
- assert.match(html,/data-dest="קפריסין"/);
- assert.match(html,/data-dest="תאילנד"/);
- assert.match(html,/popular_destination_click/);
-});

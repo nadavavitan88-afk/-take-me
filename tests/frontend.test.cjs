@@ -85,8 +85,10 @@ test('single trip share button provides restorable link',()=>{
 
 test('lead submit is guarded against duplicate requests',()=>{
  assert.match(html,/if\(button\.disabled\)return/);
- assert.match(html,/button\.disabled=true;button\.textContent="שולחים…"/);
- assert.match(html,/finally\{button\.disabled=false;button\.textContent="שלח לי הצעה"/);
+ assert.match(html,/button\.disabled=true;button\.classList\.add\("is-loading"\)/);
+ assert.match(html,/button\.textContent="שולחים"/);
+ assert.match(html,/button\.disabled=false;button\.classList\.remove\("is-loading"\)/);
+ assert.match(html,/button\.textContent="שלח לי הצעה"/);
 });
 
 test('shared itinerary links restore travel details',()=>{

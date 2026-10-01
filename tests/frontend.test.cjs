@@ -335,3 +335,15 @@ test('restored trip state is explained to the user and measured',()=>{
  assert.match(html,/החיפוש האחרון שלך נטען אוטומטית/);
  assert.match(html,/trackEvent\("trip_state_restored"/);
 });
+
+
+test('main search supports labels, autocomplete semantics and keyboard submit',()=>{
+ assert.match(html,/label for="origin"/);
+ assert.match(html,/label for="dest"/);
+ assert.match(html,/aria-autocomplete="list"/);
+ assert.match(html,/role="listbox"/);
+ assert.match(html,/role="option"/);
+ assert.match(html,/\$\("dest"\)\.addEventListener\("keydown"/);
+ assert.match(html,/e\.key==="ArrowDown"/);
+ assert.match(html,/method:"keyboard"/);
+});

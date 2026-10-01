@@ -366,3 +366,13 @@ test('trip result exposes quick edit and share actions',()=>{
  assert.match(html,/trackEvent\("result_edit_search"/);
  assert.match(html,/trackEvent\("result_share_trip"/);
 });
+
+
+test('AI and lead submission show reliable loading states',()=>{
+ assert.match(html,/classList\.add\("is-loading"\)/);
+ assert.match(html,/setAttribute\("aria-busy","true"\)/);
+ assert.match(html,/document\.querySelectorAll\("\.ai-chip"\)\.forEach\(chip=>chip\.disabled=true\)/);
+ assert.match(html,/document\.querySelectorAll\("\.ai-chip"\)\.forEach\(chip=>chip\.disabled=false\)/);
+ assert.match(html,/החיפוש התארך מהרגיל/);
+ assert.doesNotMatch(html,/החיפוש התארך מעבר ל־10 שניות/);
+});

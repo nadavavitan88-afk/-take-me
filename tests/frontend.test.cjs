@@ -317,3 +317,14 @@ test('trip search state is saved locally without storing lead contact details',(
  const saveBlock=html.slice(html.indexOf('function saveTripState()'),html.indexOf('function queueTripSave()'));
  assert.doesNotMatch(saveBlock,/leadName|leadPhone|leadEmail/);
 });
+
+
+test('PWA service worker is registered and avoids caching API traffic',()=>{
+ assert.match(html,/navigator\.serviceWorker\.register\("\/sw\.js"\)/);
+ const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+ assert.ok(sw.includes('url.pathname.startsWith("/api/")'));
+ assert.ok(sw.includes('"/offline.html"'));
+ const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));
+ assert.equal(manifest.display,'standalone');
+ assert.ok(Array.isArray(manifest.shortcuts)&&manifest.shortcuts.length>=3);
+});

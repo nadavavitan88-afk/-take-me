@@ -170,10 +170,18 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
       recommendations = recommendations.slice(0,1);
     } else recommendations = recommendations.slice(0,3);
     if (!recommendations.length) return res.status(502).json({error:"לא התקבלו המלצות ליעד שביקשת. נסו שוב.",code:"DESTINATION_MISMATCH"});
-    result = {recommendations: recommendations.map(x => ({
-      city:requested||clean(x.city),country:domestic?"ישראל":clean(x.country),why:clean(x.why),
-      hotels:items(x.hotels),attractions:items(x.attractions)
-    }))};
+    result = {
+      summary:clean(result?.summary),
+      recommendations: recommendations.map(x => ({
+        city:requested||clean(x.city),
+        country:domestic?"ישראל":clean(x.country),
+        why:clean(x.why),
+        vibe:clean(x.vibe),
+        estimatedBudget:clean(x.estimatedBudget),
+        hotels:items(x.hotels),
+        attractions:items(x.attractions)
+      }))
+    };
     return res.status(200).json(result);
   } catch (error) {
     console.error("TAKE ME AI error", {name:error?.name || "Error",message:error?.message || "unknown"});

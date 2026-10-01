@@ -245,3 +245,15 @@ test('outbound partner clicks are tracked by provider and service',()=>{
   assert.ok(html.includes(provider));
  }
 });
+
+
+test('AI recommendations preserve useful metadata and can feed the main search funnel',()=>{
+ const plan=fs.readFileSync(path.join(root,'api','plan.js'),'utf8');
+ assert.ok(plan.includes('vibe:clean(x.vibe)'));
+ assert.ok(plan.includes('estimatedBudget:clean(x.estimatedBudget)'));
+ assert.match(html,/function aiRecommendationMeta\(d\)/);
+ assert.match(html,/class="btn brown ai-use-destination"/);
+ assert.match(html,/trackEvent\("ai_destination_selected"/);
+ assert.match(html,/trackEvent\("ai_results_view"/);
+ assert.match(html,/trackEvent\("ai_outbound_click"/);
+});

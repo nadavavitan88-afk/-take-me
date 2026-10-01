@@ -306,3 +306,14 @@ test('Google Flights and Agoda links preserve trip context',()=>{
  assert.match(html,/checkIn:\$\("from"\)\.value/);
  assert.match(html,/checkOut:\$\("to"\)\.value/);
 });
+
+
+test('trip search state is saved locally without storing lead contact details',()=>{
+ assert.match(html,/const TRIP_STORAGE_KEY="take_me_trip_v1"/);
+ assert.match(html,/function saveTripState\(\)/);
+ assert.match(html,/function restoreSavedTrip\(\)/);
+ assert.match(html,/localStorage\.setItem\(TRIP_STORAGE_KEY/);
+ assert.match(html,/restoreSavedTrip\(\);/);
+ const saveBlock=html.slice(html.indexOf('function saveTripState()'),html.indexOf('function queueTripSave()'));
+ assert.doesNotMatch(saveBlock,/leadName|leadPhone|leadEmail/);
+});

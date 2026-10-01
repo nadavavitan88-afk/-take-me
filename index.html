@@ -69,6 +69,10 @@ header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
 .ai-row{display:grid;grid-template-columns:1fr auto;gap:8px}.ai-input{width:100%;min-height:92px;resize:vertical;border:1px solid #d8c3a7;border-radius:15px;background:#fffaf3;padding:13px;outline:0;color:#4c3728;font:inherit;line-height:1.5}
 .ai-input:focus{border-color:#b98d57;box-shadow:0 0 0 2px rgba(191,150,88,.12)}
 .ai-go{border:0;border-radius:15px;background:linear-gradient(#876247,#604532);color:#fff8ef;font-weight:950;padding:0 18px;cursor:pointer}
+.ai-go[disabled],#leadSubmit[disabled]{cursor:wait;opacity:.78}
+.is-loading{position:relative;pointer-events:none}
+.is-loading::after{content:"";display:inline-block;width:12px;height:12px;margin-inline-start:8px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;vertical-align:-2px;animation:takeMeSpin .75s linear infinite}
+@keyframes takeMeSpin{to{transform:rotate(360deg)}}
 .ai-answer{display:none;margin-top:12px;padding:15px;border-radius:15px;background:#5b4230;color:#f9e8d2;line-height:1.55}.ai-answer.show{display:block}
 .ai-answer b{color:#fff7ec}.ai-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 
@@ -1162,7 +1166,11 @@ function invalidateResults(){
  searchRevision++;
  if(activeAiController){activeAiController.abort();activeAiController=null;}
  $("aiBuild").disabled=false;
+ $("aiBuild").classList.remove("is-loading");
+ $("aiBuild").removeAttribute("aria-busy");
  $("aiBuild").textContent="מצא לי חופשה";
+ $("aiPlanner").removeAttribute("aria-busy");
+ document.querySelectorAll(".ai-chip").forEach(chip=>chip.disabled=false);
  $("result").classList.remove("show");
  $("aiAnswer").classList.remove("show");
  $("aiAnswer").innerHTML="";
@@ -1784,7 +1792,7 @@ async function aiRecommend(){
   }
   const controller=new AbortController();
   activeAiController=controller;
-  btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent=(datesAdjusted?"עדכנתי את תאריך החזרה ל־"+$("to").value+" לפי מספר הלילות שביקשת. ":"")+"מחפש המלצות מותאמות…";st.className="status";if(travelMode!=="israel")out.classList.remove("show");
+  btn.disabled=true;btn.classList.add("is-loading");btn.setAttribute("aria-busy","true");btn.textContent="מכין המלצות";$("aiPlanner").setAttribute("aria-busy","true");document.querySelectorAll(".ai-chip").forEach(chip=>chip.disabled=true);st.textContent=(datesAdjusted?"עדכנתי את תאריך החזרה ל־"+$("to").value+" לפי מספר הלילות שביקשת. ":"")+"מחפש המלצות מותאמות…";st.className="status";if(travelMode!=="israel")out.classList.remove("show");
   try{
     const body={prompt:raw,destination:explicit?explicit.city:"",countryHint:countryMention,childAges:childAges(),travelMode};
     ["origin","from","to","adults","children"].forEach(id=>body[id]=$(id).value);
@@ -1833,10 +1841,10 @@ async function aiRecommend(){
       out.innerHTML='<article class="destination-result"><h3>חופשה בישראל</h3><p>ההמלצות האישיות לא נטענו כרגע. אפשר לחפש אירוח לפי התאריכים והנוסעים שבחרת.</p><details class="recommendation-section" open><summary>מלונות ואירוח בישראל</summary>'+hotelSearchInfo()+'<a class="btn" target="_blank" rel="noopener" href="'+esc(bookingHotelsLink(place))+'">חיפוש ב־Booking</a><a class="btn" target="_blank" rel="noopener" href="'+esc(expediaHotelLink(place))+'">חיפוש ב־Expedia</a></details><details class="recommendation-section" open><summary>אטרקציות בישראל</summary><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent("אטרקציות בישראל")+'">חיפוש אטרקציות במפה</a></details></article>';
       out.classList.add("show");st.textContent="החיפוש האישי לא נטען; מוצגים קישורי חיפוש בישראל.";st.className="status";
     }else{
-      st.textContent=e.name==="TimeoutError"?"החיפוש התארך מעבר ל־10 שניות. נסה שוב או ציין יעד מפורש לקבלת קישורים חלופיים.": "שירות ההמלצות זמנית לא זמין. נסה שוב או כתוב יעד מפורש.";st.className="status error";
+      st.textContent=e.name==="TimeoutError"?"החיפוש התארך מהרגיל. נסה שוב או ציין יעד מפורש לקבלת קישורים חלופיים.": "שירות ההמלצות זמנית לא זמין. נסה שוב או כתוב יעד מפורש.";st.className="status error";
     }
   }
-  finally{if(activeAiController===controller)activeAiController=null;if(revision===searchRevision){btn.disabled=false;btn.textContent="מצא לי חופשה";}}
+  finally{if(activeAiController===controller)activeAiController=null;if(revision===searchRevision){btn.disabled=false;btn.classList.remove("is-loading");btn.removeAttribute("aria-busy");btn.textContent="מצא לי חופשה";$("aiPlanner").removeAttribute("aria-busy");document.querySelectorAll(".ai-chip").forEach(chip=>chip.disabled=false);}}
 }
 $("aiAnswer").addEventListener("click",e=>{
  const choose=e.target.closest(".ai-use-destination");
@@ -2009,7 +2017,7 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
  const selectedDestination=resolveDestination($("dest").value);
  refreshLeadSummary(selectedDestination);
  trackEvent("lead_submit_attempt",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource});
- button.disabled=true;button.textContent="שולחים…";$("leadFallback").hidden=true;status.dataset.state="sending";status.textContent="שולחים את הבקשה…";
+ button.disabled=true;button.classList.add("is-loading");button.setAttribute("aria-busy","true");button.textContent="שולחים";form.setAttribute("aria-busy","true");$("leadFallback").hidden=true;status.dataset.state="sending";status.textContent="שולחים את הבקשה…";
  try{
   const response=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("leadName").value.trim(),phone:$("leadPhone").value.trim(),email:$("leadEmail").value.trim(),fax:$("leadFax").value.trim(),summary:$("leadSummary").textContent,consent:$("leadConsent").checked,attribution:analyticsAttribution()}),signal:AbortSignal.timeout(15000)});
   const result=await response.json().catch(()=>({}));
@@ -2017,7 +2025,7 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
   trackEvent("generate_lead",{lead_source:"native_form",lead_cta_source:lastLeadSource,destination:$("dest").value||"unknown",travel_mode:travelMode,delivery_formspree:result.channels?.formspree===true,delivery_sheets:result.channels?.sheets===true});
   trackEvent("lead_submit_success",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource});
   form.reset();form.hidden=true;$("leadFallback").hidden=true;$("newLeadRequest").hidden=false;status.hidden=false;status.dataset.state="success";status.textContent="תודה! בקשת החופשה התקבלה בהצלחה. נחזור אליכם בהקדם.";status.setAttribute("tabindex","-1");status.focus();
- }catch(error){trackEvent("lead_submit_error",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource,error_name:error?.name||"Error"});$("leadFallback").hidden=false;status.dataset.state="error";status.textContent=error?.name==="TimeoutError"?"השליחה מתעכבת. הפרטים שמילאת נשמרו — אפשר לנסות שוב בעוד רגע.":"לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.textContent="שלח לי הצעה";}
+ }catch(error){trackEvent("lead_submit_error",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource,error_name:error?.name||"Error"});$("leadFallback").hidden=false;status.dataset.state="error";status.textContent=error?.name==="TimeoutError"?"השליחה מתעכבת. הפרטים שמילאת נשמרו — אפשר לנסות שוב בעוד רגע.":"לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.classList.remove("is-loading");button.removeAttribute("aria-busy");button.textContent="שלח לי הצעה";form.removeAttribute("aria-busy");}
 });
 const TRIP_STORAGE_KEY="take_me_trip_v1";
 let tripSaveTimer=null;

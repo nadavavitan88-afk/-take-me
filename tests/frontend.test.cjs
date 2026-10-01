@@ -357,3 +357,12 @@ test('trip results clearly explain flight hotel and package paths',()=>{
  assert.match(html,/בחר מלון, ואז אפשר להמשיך לאטרקציות/);
  assert.match(html,/אפשר לבחור חבילה אחת, או להרכיב טיסה ומלון בנפרד/);
 });
+
+
+test('trip result exposes quick edit and share actions',()=>{
+ assert.match(html,/id="editTrip"/);
+ assert.match(html,/id="resultShareTrip"/);
+ assert.match(html,/async function shareCurrentTrip\(status\)/);
+ assert.match(html,/trackEvent\("result_edit_search"/);
+ assert.match(html,/trackEvent\("result_share_trip"/);
+});

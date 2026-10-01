@@ -1508,7 +1508,17 @@ function bookingHotelsLink(place){
 function agodaHotelsLink(place){
  // Agoda affiliate CID is not active yet, so keep this as a regular search
  // link until the Partner Center verification/CID is completed.
- return "https://www.agoda.com/search?textToSearch="+encodeURIComponent(place);
+ const ages=childAges().filter(age=>Number.isInteger(age));
+ const params=new URLSearchParams({
+  textToSearch:place,
+  checkIn:$("from").value,
+  checkOut:$("to").value,
+  rooms:"1",
+  adults:$("adults").value,
+  children:String(ages.length)
+ });
+ if(ages.length)params.set("childages",ages.join(","));
+ return "https://www.agoda.com/search?"+params.toString();
 }
 function hotelLocationLink(name,place){
  return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(name+", "+place);
@@ -1520,8 +1530,18 @@ function hotelSearchInfo(){
  (ages.length?' (גילים: '+esc(ages.join(", "))+')':'')+'</p>'+
  '<p>המחיר, הזמינות והרכב האורחים הסופי מחייבים בדיקה באתר ההזמנה.</p>';
 }
-function googleFlightLink(){
- return "https://www.google.com/travel/flights";
+function googleFlightLink(d){
+ const chosen=d||resolveDestination($("dest").value)||{};
+ const airport=String(chosen.iata||"").split("/")[0]||String(chosen.en||chosen.city||$("dest").value||"");
+ const ages=childAges().filter(age=>Number.isInteger(age));
+ const query=[
+  "round trip flights from",originCode(),"to",airport,
+  "departing",$("from").value,"returning",$("to").value,
+  "for",$("adults").value,"adults",
+  ages.length?("and "+ages.length+" children"):""
+ ].filter(Boolean).join(" ");
+ const params=new URLSearchParams({q:query,hl:"he",curr:"ILS"});
+ return "https://www.google.com/travel/flights?"+params.toString();
 }
 function expediaFlightLink(d){
  // Expedia's documented flight deeplink keeps route, dates and passenger count.

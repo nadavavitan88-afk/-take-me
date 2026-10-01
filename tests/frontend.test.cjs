@@ -274,3 +274,13 @@ test('AI can infer traveler counts and keep country-scoped discovery inside one 
  assert.ok(plan.includes('אם נמסרה מדינה בלבד'));
  assert.ok(plan.includes('recommendations = recommendations.filter'));
 });
+
+
+test('Expedia flight link carries route dates and passengers into search',()=>{
+ assert.match(html,/go\/flight\/search\/Roundtrip/);
+ assert.match(html,/FromAirport/);
+ assert.match(html,/ToAirport/);
+ assert.match(html,/NumAdult/);
+ assert.match(html,/NumChild/);
+ assert.match(html,/Child"\+\(i\+1\)\+"Age/);
+});

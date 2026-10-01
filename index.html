@@ -811,12 +811,33 @@ nav a:hover,.share-site:hover{
  border-radius:14px;
  background:rgba(255,255,255,.035);
 }
-.provider-group>span{
- display:block;
+.provider-title{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
  margin-bottom:8px;
+}
+.provider-title>span{
  color:#e6d2b0;
  font-size:12px;
  font-weight:900;
+}
+.provider-title>small{
+ flex:0 0 auto;
+ padding:4px 7px;
+ border:1px solid rgba(214,173,99,.18);
+ border-radius:999px;
+ color:#bda889;
+ background:rgba(255,255,255,.025);
+ font-size:9px;
+ font-weight:900;
+}
+.result-choice-help{
+ margin:0 0 8px!important;
+ color:#a99578!important;
+ font-size:10px;
+ line-height:1.5;
 }
 .provider-group>div{
  display:flex;
@@ -979,18 +1000,21 @@ nav a:hover,.share-site:hover{
     
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
-  <div class="result-choice-title">בחר איפה להמשיך</div>
+  <div class="result-choice-head">
+    <div class="result-choice-title">בחר איך להמשיך</div>
+    <p class="result-choice-help" id="resultChoiceHelp">אפשר לבחור חבילה אחת, או להרכיב טיסה ומלון בנפרד.</p>
+  </div>
   <div class="result-providers" id="resultProviders">
     <div class="provider-group" id="flightProviders">
-      <span>✈️ טיסות</span>
+      <div class="provider-title"><span>✈️ טיסות</span><small id="flightStep">שלב 1</small></div>
       <div><a class="provider-link featured" id="resExpediaFlights" target="_blank" rel="sponsored noopener">Expedia</a><a class="provider-link" id="resGoogleFlights" target="_blank" rel="noopener">Google Flights</a></div>
     </div>
-    <div class="provider-group">
-      <span>🏨 מלונות</span>
+    <div class="provider-group" id="hotelProviders">
+      <div class="provider-title"><span>🏨 מלונות</span><small id="hotelStep">שלב 2</small></div>
       <div><a class="provider-link featured" id="resExpediaHotels" target="_blank" rel="sponsored noopener">Expedia</a><a class="provider-link" id="resBookingHotels" target="_blank" rel="noopener">Booking</a><a class="provider-link" id="resAgodaHotels" target="_blank" rel="noopener">Agoda</a></div>
     </div>
     <div class="provider-group package-group" id="packageProviders">
-      <span>✈️ + 🏨 חבילה</span>
+      <div class="provider-title"><span>✈️ + 🏨 חבילה</span><small id="packageStep">הכול יחד</small></div>
       <div><a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">טיסה + מלון ב־Expedia</a></div>
     </div>
   </div>
@@ -1596,6 +1620,12 @@ function updateLinks(d){
  $("packageLive").textContent=travelMode==="israel"?"מלונות ואירוח בישראל":"טיסה + מלון ב־Expedia";
  $("flightProviders").hidden=travelMode==="israel";
  $("packageProviders").hidden=travelMode==="israel";
+ $("resultChoiceHelp").textContent=travelMode==="israel"
+   ?"בחר מלון, ואז אפשר להמשיך לאטרקציות, מסעדות ומסלול נסיעה."
+   :"אפשר לבחור חבילה אחת, או להרכיב טיסה ומלון בנפרד.";
+ $("hotelStep").textContent=travelMode==="israel"?"לינה":"שלב 2";
+ $("flightStep").textContent="שלב 1";
+ $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
  $("resGoogleFlights").href=googleFlightLink();
  $("resExpediaHotels").href=expediaHotelLink(label);

@@ -1632,6 +1632,22 @@ function aiRecommendationMeta(d){
 function aiChooseButton(d){
  return '<button type="button" class="btn brown ai-use-destination" data-city="'+esc((d&&d.city)||"")+'" data-country="'+esc((d&&d.country)||"")+'">בחר את היעד הזה</button>';
 }
+function findCountryMention(raw){
+ const q=norm(raw);
+ const countries=[...new Set(destinations.map(d=>d.country))].sort((a,b)=>b.length-a.length);
+ return countries.find(country=>q.includes(norm(country)))||"";
+}
+function inferAiTravelers(raw){
+ const text=String(raw||"").replace(/[–—]/g,"-");
+ let adults=null,children=null,explicit=false;
+ const adultsMatch=text.match(/(?:^|\s)([1-6])\s*(?:מבוגרים|מבוגר|מבוגרות)(?=\s|$|[,.!?+-])/);
+ if(adultsMatch){adults=Number(adultsMatch[1]);explicit=true;}
+ else if(/(?:^|\s)זוג(?:\s|$|[,.!?+-])/.test(text)){adults=2;}
+ const childrenMatch=text.match(/(?:^|\s)([1-5])\s*(?:ילדים|ילדות|ילד|ילדה|תינוקות|תינוקות)(?=\s|$|[,.!?+-])/);
+ if(childrenMatch){children=Number(childrenMatch[1]);explicit=true;}
+ else if(/(?:ילד|ילדה|תינוק|תינוקת)(?=\s|$|[,.!?])/.test(text)){children=1;}
+ return {adults,children,explicit};
+}
 async function aiRecommend(){
   if(activeAiController){activeAiController.abort();activeAiController=null;searchRevision++;}
   let revision=searchRevision;
@@ -1639,10 +1655,11 @@ async function aiRecommend(){
   if(raw.length<5){st.textContent="כתוב קצת יותר פרטים כדי למקד את החיפוש.";st.className="status error";return;}
   const domesticMention=israelDestinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en)));
   const foreignMention=destinations.find(d=>norm(raw).includes(norm(d.city))||norm(raw).includes(norm(d.en))||(d.aliases&&norm(raw).includes(norm(d.aliases))));
+  const countryMention=findCountryMention(raw);
   const asksIsrael=/(?:בארץ|בישראל|חופשה בישראל|נופש בארץ|צימר|צימרים)/.test(raw);
   const asksAbroad=/(?:בחו"ל|לחו"ל|בחול|לחול|טיסה ל)/.test(raw);
   if((domesticMention&&!foreignMention || asksIsrael&&!foreignMention&&!asksAbroad) && travelMode!=="israel")setTravelMode("israel");
-  if((foreignMention&&!domesticMention || asksAbroad&&!domesticMention&&!asksIsrael) && travelMode!=="abroad")setTravelMode("abroad");
+  if((foreignMention&&!domesticMention || countryMention&&!domesticMention || asksAbroad&&!domesticMention&&!asksIsrael) && travelMode!=="abroad")setTravelMode("abroad");
   let datesAdjusted=false;
   const nightsMatch=raw.match(/(?:^|\s)([1-9]|1[0-4])\s*(?:לילות|לילה)(?=\s|$|[,.!?])/);
   if(nightsMatch && validTravelDates() && nights()!==Number(nightsMatch[1])){
@@ -1659,6 +1676,14 @@ async function aiRecommend(){
   if(explicit)updateLinks(explicit);
   refreshLeadSummary(explicit);
   revision=searchRevision;
+  const inferredTravelers=inferAiTravelers(raw);
+  const currentAdults=Number($("adults").value),currentChildren=Number($("children").value);
+  const useInference=inferredTravelers.explicit||(currentAdults===2&&currentChildren===0);
+  if(useInference&&Number.isInteger(inferredTravelers.adults)&&inferredTravelers.adults>=1&&inferredTravelers.adults<=6)$("adults").value=String(inferredTravelers.adults);
+  if(useInference&&Number.isInteger(inferredTravelers.children)&&inferredTravelers.children>=0&&inferredTravelers.children<=5){
+    $("children").value=String(inferredTravelers.children);
+    renderChildAges();
+  }
   const childMention=/ילד|ילדה|ילדים|ילדות|תינוק|תינוקת/.test(raw);
   if(nights()<=0){st.textContent="בחר תאריכי יציאה וחזרה תקינים לפני החיפוש.";st.className="status error";$("from").focus();return;}
   const totalTravelers=Number($("adults").value)+Number($("children").value);
@@ -1674,7 +1699,7 @@ async function aiRecommend(){
   activeAiController=controller;
   btn.disabled=true;btn.textContent="מכין המלצות…";st.textContent=(datesAdjusted?"עדכנתי את תאריך החזרה ל־"+$("to").value+" לפי מספר הלילות שביקשת. ":"")+"מחפש המלצות מותאמות…";st.className="status";if(travelMode!=="israel")out.classList.remove("show");
   try{
-    const body={prompt:raw,destination:explicit?explicit.city:"",childAges:childAges(),travelMode};
+    const body={prompt:raw,destination:explicit?explicit.city:"",countryHint:countryMention,childAges:childAges(),travelMode};
     ["origin","from","to","adults","children"].forEach(id=>body[id]=$(id).value);
     const r=await fetch("/api/plan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:AbortSignal.any([controller.signal,AbortSignal.timeout(19000)])});
     const data=await r.json();if(revision!==searchRevision)return;if(!r.ok){const diagnostic=data.code?(" ["+data.code+(data.reason?": "+data.reason:"")+"]"):" [HTTP "+r.status+"]";throw new Error((data.error||"החיפוש נכשל")+diagnostic);}

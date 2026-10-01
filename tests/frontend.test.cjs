@@ -347,3 +347,13 @@ test('main search supports labels, autocomplete semantics and keyboard submit',(
  assert.match(html,/e\.key==="ArrowDown"/);
  assert.match(html,/method:"keyboard"/);
 });
+
+
+test('trip results clearly explain flight hotel and package paths',()=>{
+ assert.match(html,/id="resultChoiceHelp"/);
+ assert.match(html,/id="flightStep">שלב 1/);
+ assert.match(html,/id="hotelStep">שלב 2/);
+ assert.match(html,/id="packageStep">הכול יחד/);
+ assert.match(html,/בחר מלון, ואז אפשר להמשיך לאטרקציות/);
+ assert.match(html,/אפשר לבחור חבילה אחת, או להרכיב טיסה ומלון בנפרד/);
+});

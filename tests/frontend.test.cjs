@@ -257,3 +257,9 @@ test('AI recommendations preserve useful metadata and can feed the main search f
  assert.match(html,/trackEvent\("ai_results_view"/);
  assert.match(html,/trackEvent\("ai_outbound_click"/);
 });
+
+
+test('homepage omits popular destination chips',()=>{
+ assert.doesNotMatch(html,/hero-destinations/);
+ assert.doesNotMatch(html,/יעדים פופולריים/);
+});

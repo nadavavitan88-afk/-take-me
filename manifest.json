@@ -16,5 +16,27 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
+  ],
+  "id": "/",
+  "categories": [
+    "travel",
+    "lifestyle"
+  ],
+  "shortcuts": [
+    {
+      "name": "בנה חופשה",
+      "short_name": "חיפוש",
+      "url": "/#planner"
+    },
+    {
+      "name": "תכנון עם AI",
+      "short_name": "AI",
+      "url": "/#aiPlanner"
+    },
+    {
+      "name": "מדריכי יעדים",
+      "short_name": "יעדים",
+      "url": "/destinations.html"
+    }
   ]
 }

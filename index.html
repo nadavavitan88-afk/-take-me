@@ -2065,9 +2065,14 @@ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.ge
 $("from").value=iso(start); $("to").value=iso(end);
 $("from").min=$("to").min=iso(new Date());
 renderChildAges();
-restoreSavedTrip();
+const restoredSavedTrip=restoreSavedTrip();
 restoreSharedTrip();
 refreshLeadSummary();
+if(restoredSavedTrip&&!new URLSearchParams(window.location.search).has("dest")){
+ $("status").textContent="החיפוש האחרון שלך נטען אוטומטית. אפשר להמשיך או לשנות פרטים.";
+ $("status").className="status ok";
+ trackEvent("trip_state_restored",{destination:$("dest").value||"unknown",travel_mode:travelMode});
+}
 ["origin","dest","from","to","adults","children","aiPrompt"].forEach(id=>{
  const el=$(id);if(!el)return;
  el.addEventListener("input",queueTripSave);

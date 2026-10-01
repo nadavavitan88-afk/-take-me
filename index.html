@@ -1513,8 +1513,25 @@ function googleFlightLink(){
  return "https://www.google.com/travel/flights";
 }
 function expediaFlightLink(d){
- // Open Expedia's flights page through the Creator affiliate wrapper.
- return expediaAffiliateLink("https://www.expedia.com/Flights","take_me_flights");
+ // Expedia's documented flight deeplink keeps route, dates and passenger count.
+ const from=$("from").value||"0000-00-00", to=$("to").value||from;
+ const airport=String((d&&d.iata)||"").split("/")[0]||String((d&&d.en)||(d&&d.city)||"");
+ const params=new URLSearchParams({
+  load:"1",
+  FromAirport:originCode(),
+  ToAirport:airport,
+  FromTime:"362",
+  ToTime:"362",
+  NumAdult:$("adults").value
+ });
+ const ages=childAges().filter(age=>Number.isInteger(age));
+ if(ages.length){
+  params.set("NumChild",String(ages.length));
+  ages.forEach((age,i)=>params.set("Child"+(i+1)+"Age",String(age)));
+ }
+ const destination="https://www.expedia.com/go/flight/search/Roundtrip/"
+   +encodeURIComponent(from)+"/"+encodeURIComponent(to)+"?"+params.toString();
+ return expediaAffiliateLink(destination,"take_me_flights");
 }
 function expediaDisclosure(){
  return "";

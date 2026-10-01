@@ -328,3 +328,10 @@ test('PWA service worker is registered and avoids caching API traffic',()=>{
  assert.equal(manifest.display,'standalone');
  assert.ok(Array.isArray(manifest.shortcuts)&&manifest.shortcuts.length>=3);
 });
+
+
+test('restored trip state is explained to the user and measured',()=>{
+ assert.match(html,/const restoredSavedTrip=restoreSavedTrip\(\)/);
+ assert.match(html,/החיפוש האחרון שלך נטען אוטומטית/);
+ assert.match(html,/trackEvent\("trip_state_restored"/);
+});

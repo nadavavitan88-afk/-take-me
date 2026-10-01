@@ -22,6 +22,7 @@ module.exports = async function handler(req, res) {
 
   const body = req.body || {};
   const userPrompt = String(body.prompt || "").trim().slice(0, 1800);
+  const countryHint = String(body.countryHint || "").trim().slice(0, 100);
   const children = Number(body.children ?? 0);
   const ages = body.childAges;
   const adults = Number(body.adults ?? 2);
@@ -58,6 +59,8 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
 כלל חשוב מאוד:
 - אם המשתמש ציין יעד ספציפי וברור, למשל "דובאי", "רומא", "לימסול" או כל עיר/אי/אזור אחר — אל תציע יעדים חלופיים.
 - במקרה כזה החזר המלצה אחת בלבד לאותו יעד, מותאמת לבקשה שלו. אם המשתמש כתב גם מדינה/אזור, אפשר להחזיר בשדה city את שם העיר/האי/האזור בלבד וב-country את המדינה.
+- אם נמסרה מדינה בלבד ללא עיר ספציפית, החזר עד 3 ערים/איים/אזורים שונים בתוך אותה מדינה בלבד. אל תציע מדינות אחרות.
+- התאם את ההמלצות במפורש להרכב הנוסעים ולמה שנכתב בבקשה: משפחה/ילדים, זוג, חופים, חיי לילה, קניות, כשרות, רוגע או אטרקציות. השדה why צריך להסביר את ההתאמה לבקשה ולא להיות תיאור כללי.
 - אם המשתמש לא ציין יעד ספציפי — הצע בדיוק 3 יעדים שונים שמתאימים לבקשה.
 
 אל תטען שיש לך מחירי טיסות, מלונות או זמינות בזמן אמת.
@@ -91,6 +94,7 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
   const context = `
 סוג חופשה: ${domestic ? "ישראל" : "חו״ל"}\nבקשת המשתמש: ${userPrompt}
 יעד מפורש שאומת בטופס (אם ריק, זהה מתוך הבקשה): ${String(body.destination || "").slice(0,100)}
+מדינה שזוהתה בבקשה (אם יש): ${countryHint || "לא זוהתה"}
 כאשר נמסר יעד מפורש, ההמלצה חייבת להתייחס לאותו מקום. אין להחליף אותו ביעד אחר.
 נקודת יציאה: ${String(body.origin || "תל אביב")}
 תאריך יציאה: ${String(body.from || "לא צוין")}
@@ -158,11 +162,15 @@ ${domestic ? "מצב חופשה בישראל בלבד: הצע אך ורק יעד
     }
 
     const requested = typeof body.destination === "string" ? body.destination.trim().slice(0,100) : "";
+    const normalizePlace = value => String(value||"").toLowerCase().replace(/[׳']/g,"'").replace(/[״"]/g,'"').replace(/\s+/g," ").trim();
     const clean = value => typeof value === "string" ? value.trim().slice(0,500) : "";
     const items = value => Array.isArray(value) ? value.slice(0,3).map(x => ({
       name: clean(x?.name), why: clean(x?.why)
     })).filter(x => x.name) : [];
     let recommendations = result.recommendations.filter(x => x && clean(x.city) && (domestic ? /^(ישראל|מדינת ישראל|Israel)$/i.test(clean(x.country)) : !/^(ישראל|מדינת ישראל|Israel)$/i.test(clean(x.country))));
+    if (countryHint && !requested) {
+      recommendations = recommendations.filter(x => normalizePlace(clean(x.country)) === normalizePlace(countryHint));
+    }
     if (requested) {
       // A user may type the destination in English while the Hebrew-only model
       // returns a translated name. Keep the requested place as the canonical

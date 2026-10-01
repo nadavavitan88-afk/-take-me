@@ -1013,7 +1013,7 @@ nav a:hover,.share-site:hover{
       <div><a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">טיסה + מלון ב־Expedia</a></div>
     </div>
   </div>
-  <div class="live-note">מחירים וזמינות מוצגים אצל הספק. <span class="affiliate-disclosure inline">חלק מהקישורים במסגרת שותפות מסחרית · ללא תוספת מחיר.</span></div>
+  <div class="live-note">מחירים, זמינות ותנאי ההזמנה מוצגים אצל הספק.</div>
   <div class="result-help">
     <div><b>רוצה שנבדוק מה הכי מתאים לך?</b><small>בלי התחייבות · פרטי החופשה כבר מצורפים לפנייה.</small></div>
     <button class="btn brown" type="button" id="resultLeadCta">קבל הצעה אישית</button>
@@ -1971,15 +1971,6 @@ $("copyLead").addEventListener("click",async()=>{
  catch(e){$("leadStatus").textContent="ההעתקה נכשלה. ניתן ללחוץ לחיצה ארוכה על הסיכום כדי להעתיק אותו.";}
 });
 document.querySelectorAll(".chip").forEach(x=>x.addEventListener("click",()=>x.classList.toggle("active")));
-["packageLive","resExpediaFlights","resGoogleFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","gyg","car","esim","food","kosher","weather","map"].forEach(id=>{
- const el=$(id);
- if(!el)return;
- el.addEventListener("click",()=>trackEvent("outbound_click",{
-  service:id,
-  destination:$("dest").value||"unknown",
-  link_url:el.href
- }));
-});
 $("aiAnswer").addEventListener("click",e=>{
  const a=e.target.closest("a");
  if(!a)return;

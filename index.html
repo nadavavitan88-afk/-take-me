@@ -1471,6 +1471,8 @@ function expediaPackageLink(d){
  const params=new URLSearchParams();
  params.set("FromAirport", originCode());
  params.set("Destination", d.en || d.city);
+ params.set("FromTime","362");
+ params.set("ToTime","362");
  params.set("NumRoom","1");
  params.set("NumAdult", String(adults));
  if(kids.length){
@@ -1483,10 +1485,19 @@ function expediaPackageLink(d){
 }
 
 function expediaHotelLink(place){
- const params=new URLSearchParams({destination:place,startDate:$("from").value,endDate:$("to").value,rooms:"1",adults:$("adults").value});
- const ages=childAges();
- if(ages.length){params.set("children",String(ages.length));params.set("childrenAges",ages.join(","));params.set("NumChild-Room1",String(ages.length));ages.forEach((age,i)=>params.set("Room1-Child"+(i+1)+"Age",String(age)));}
- const destination="https://www.expedia.com/Hotel-Search?"+params.toString();
+ const from=$("from").value||"0000-00-00", to=$("to").value||from;
+ const params=new URLSearchParams({
+  CityName:place,
+  NumRoom:"1",
+  "NumAdult-Room1":$("adults").value
+ });
+ const ages=childAges().filter(age=>Number.isInteger(age));
+ if(ages.length){
+  params.set("NumChild-Room1",String(ages.length));
+  ages.forEach((age,i)=>params.set("Room1-Child"+(i+1)+"Age",String(age)));
+ }
+ const destination="https://www.expedia.com/go/hotel/search/Destination/"
+   +encodeURIComponent(from)+"/"+encodeURIComponent(to)+"?"+params.toString();
  return expediaAffiliateLink(destination,"take_me_hotels");
 }
 function bookingHotelsLink(place){

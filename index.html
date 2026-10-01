@@ -1928,6 +1928,55 @@ $("nativeLeadForm").addEventListener("submit",async e=>{
   form.reset();form.hidden=true;$("leadFallback").hidden=true;$("newLeadRequest").hidden=false;status.hidden=false;status.dataset.state="success";status.textContent="תודה! בקשת החופשה התקבלה בהצלחה. נחזור אליכם בהקדם.";status.setAttribute("tabindex","-1");status.focus();
  }catch(error){trackEvent("lead_submit_error",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource,error_name:error?.name||"Error"});$("leadFallback").hidden=false;status.dataset.state="error";status.textContent=error?.name==="TimeoutError"?"השליחה מתעכבת. הפרטים שמילאת נשמרו — אפשר לנסות שוב בעוד רגע.":"לא התקבל אישור קליטה. הפרטים שמילאת נשמרו בטופס. אפשר לנסות שוב או להשתמש בטופס החלופי."; }finally{button.disabled=false;button.textContent="שלח לי הצעה";}
 });
+const TRIP_STORAGE_KEY="take_me_trip_v1";
+let tripSaveTimer=null;
+function saveTripState(){
+ try{
+  if(typeof localStorage==="undefined")return;
+  const state={
+   mode:travelMode,
+   dest:$("dest").value,
+   origin:$("origin").value,
+   from:$("from").value,
+   to:$("to").value,
+   adults:$("adults").value,
+   children:$("children").value,
+   ages:childAges().filter(x=>x!==null),
+   aiPrompt:$("aiPrompt").value
+  };
+  localStorage.setItem(TRIP_STORAGE_KEY,JSON.stringify(state));
+ }catch{}
+}
+function queueTripSave(){
+ clearTimeout(tripSaveTimer);
+ tripSaveTimer=setTimeout(saveTripState,120);
+}
+function restoreSavedTrip(){
+ try{
+  if(typeof localStorage==="undefined"||new URLSearchParams(window.location.search).has("dest"))return false;
+  const state=JSON.parse(localStorage.getItem(TRIP_STORAGE_KEY)||"null");
+  if(!state||typeof state!=="object")return false;
+  if(state.mode==="israel"||state.mode==="abroad")setTravelMode(state.mode);
+  if(typeof state.dest==="string")$("dest").value=state.dest.slice(0,100);
+  if(typeof state.origin==="string"&&state.origin)$("origin").value=state.origin.slice(0,100);
+  if(state.adults&&[...$("adults").options].some(o=>o.value===String(state.adults)))$("adults").value=String(state.adults);
+  if(state.children&&[...$("children").options].some(o=>o.value===String(state.children)))$("children").value=String(state.children);
+  const today=iso(new Date());
+  if(/^\d{4}-\d{2}-\d{2}$/.test(state.from||"")&&/^\d{4}-\d{2}-\d{2}$/.test(state.to||"")&&state.from>=today&&state.to>state.from){
+   $("from").value=state.from;
+   $("to").value=state.to;
+  }
+  if(typeof state.aiPrompt==="string")$("aiPrompt").value=state.aiPrompt.slice(0,1800);
+  renderChildAges();
+  const ages=Array.isArray(state.ages)?state.ages:[];
+  document.querySelectorAll(".child-age").forEach((field,i)=>{
+   const value=String(ages[i]??"");
+   if(value&&[...field.options].some(o=>o.value===value))field.value=value;
+  });
+  refreshLeadSummary();
+  return Boolean(state.dest||state.aiPrompt);
+ }catch{return false;}
+}
 function tripShareUrl(){
  const url=new URL(window.location.href);
  url.search="";url.hash="";
@@ -2016,8 +2065,17 @@ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.ge
 $("from").value=iso(start); $("to").value=iso(end);
 $("from").min=$("to").min=iso(new Date());
 renderChildAges();
+restoreSavedTrip();
 restoreSharedTrip();
 refreshLeadSummary();
+["origin","dest","from","to","adults","children","aiPrompt"].forEach(id=>{
+ const el=$(id);if(!el)return;
+ el.addEventListener("input",queueTripSave);
+ el.addEventListener("change",queueTripSave);
+});
+$("ageGrid").addEventListener("change",queueTripSave);
+$("modeAbroad").addEventListener("click",queueTripSave);
+$("modeIsrael").addEventListener("click",queueTripSave);
 $("engineStatus").textContent="מנוע האתר פעיל ✓";
 $("engineStatus").classList.add("ok");
 })();

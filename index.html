@@ -2078,6 +2078,11 @@ $("modeAbroad").addEventListener("click",queueTripSave);
 $("modeIsrael").addEventListener("click",queueTripSave);
 $("engineStatus").textContent="מנוע האתר פעיל ✓";
 $("engineStatus").classList.add("ok");
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>{
+  navigator.serviceWorker.register("/sw.js").catch(()=>{});
+ });
+}
 })();
 </script>
 

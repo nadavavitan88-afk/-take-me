@@ -284,3 +284,14 @@ test('Expedia flight link carries route dates and passengers into search',()=>{
  assert.match(html,/NumChild/);
  assert.match(html,/Child"\+\(i\+1\)\+"Age/);
 });
+
+
+test('Expedia hotel and package links keep trip details',()=>{
+ assert.match(html,/go\/hotel\/search\/Destination/);
+ assert.match(html,/CityName/);
+ assert.match(html,/NumAdult-Room1/);
+ assert.match(html,/NumChild-Room1/);
+ assert.match(html,/go\/package\/search\/FlightHotel/);
+ assert.ok(html.includes('params.set("FromTime","362")'));
+ assert.ok(html.includes('params.set("ToTime","362")'));
+});

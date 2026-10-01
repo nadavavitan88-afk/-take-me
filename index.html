@@ -956,13 +956,13 @@ nav a:hover,.share-site:hover{
 <p id="heroDescription">יעד, תאריכים ונוסעים — ואנחנו מרכזים לך במקום אחד את הטיסות, המלונות, האטרקציות וכל מה שצריך מסביב.</p>
 <div class="proof"><span>✓ הכול במקום אחד</span><span>✓ הצעות יעד בזמן ההקלדה</span><span id="modeProof">✓ טיסה + מלון</span><span>✓ בלי להתחיל מחדש</span></div>
 <div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
-  <div class="field" id="originField"><label>מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
-  <div class="field"><label>לאן נוסעים? · כל יעד</label><input id="dest" placeholder="עיר, אי או אזור בכל העולם" autocomplete="off"><div class="suggest" id="destSuggest"></div></div>
-  <div class="field"><label>יציאה</label><input id="from" type="date"></div>
-  <div class="field"><label>חזרה</label><input id="to" type="date"></div>
+  <div class="field" id="originField"><label for="origin">מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
+  <div class="field"><label for="dest">לאן נוסעים? · כל יעד</label><input id="dest" placeholder="עיר, אי או אזור בכל העולם" autocomplete="off" aria-autocomplete="list" aria-controls="destSuggest" aria-expanded="false"><div class="suggest" id="destSuggest" role="listbox" aria-label="הצעות ליעדים"></div></div>
+  <div class="field"><label for="from">יציאה</label><input id="from" type="date"></div>
+  <div class="field"><label for="to">חזרה</label><input id="to" type="date"></div>
   
-  <div class="field"><label>מבוגרים</label><select id="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
-  <div class="field"><label>ילדים</label><select id="children"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  <div class="field"><label for="adults">מבוגרים</label><select id="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+  <div class="field"><label for="children">ילדים</label><select id="children"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
   <button class="go" type="button" id="build">בנה לי חופשה</button>
 </div>
 <div class="child-ages" id="childAges"><div class="child-ages-title">גילאי הילדים</div><div class="age-grid" id="ageGrid"></div></div>
@@ -1403,7 +1403,7 @@ function exactCountryMatches(q){
 }
 function renderSuggestions(){
  const q=norm($("dest").value), box=$("destSuggest");
- if(q.length<2){box.classList.remove("open"); box.innerHTML=""; return;}
+ if(q.length<2){box.classList.remove("open"); box.innerHTML=""; $("dest").setAttribute("aria-expanded","false"); return;}
  const all=activeDestinations()
    .map(d=>({d,score:destinationScore(d,q)}))
    .filter(x=>x.score>0)
@@ -1412,16 +1412,17 @@ function renderSuggestions(){
  if(!found.length){
    const raw=$("dest").value.trim();
    box.innerHTML='<button type="button" class="sopt free-dest"><span><b>חפש את “'+esc(raw)+'”</b><small>'+(travelMode==="israel"?"גם אם היעד לא ברשימה":"בכל העולם — גם אם היעד לא ברשימה")+'</small></span></button>';
-   box.classList.add("open");
-   box.querySelector(".free-dest").addEventListener("click",()=>{box.classList.remove("open");$("status").textContent="היעד ייחפש גם אם הוא לא ברשימה ✓";refreshLeadSummary(resolveDestination(raw));});
+   box.classList.add("open"); $("dest").setAttribute("aria-expanded","true");
+   box.querySelector(".free-dest").setAttribute("role","option");
+   box.querySelector(".free-dest").addEventListener("click",()=>{box.classList.remove("open");$("dest").setAttribute("aria-expanded","false");$("status").textContent="היעד ייחפש גם אם הוא לא ברשימה ✓";refreshLeadSummary(resolveDestination(raw));});
    return;
  }
  const exactCountry=found.length&&found.every(d=>norm(d.country)===q);
  const meta=exactCountry?'<div class="suggest-meta">יעדים ב'+esc(found[0].country)+' · '+all.length+' אפשרויות</div>':'<div class="suggest-meta">'+all.length+' יעדים מתאימים</div>';
- box.innerHTML=meta+found.map((d,i)=>'<button type="button" class="sopt" data-i="'+i+'"><span><b>'+d.city+'</b><small>'+d.country+'</small></span>'+(d.iata?'<span class="code">'+d.iata+'</span>':"")+'</button>').join("");
- box.classList.add("open");
+ box.innerHTML=meta+found.map((d,i)=>'<button type="button" class="sopt" role="option" data-i="'+i+'"><span><b>'+d.city+'</b><small>'+d.country+'</small></span>'+(d.iata?'<span class="code">'+d.iata+'</span>':"")+'</button>').join("");
+ box.classList.add("open"); $("dest").setAttribute("aria-expanded","true");
  box.querySelectorAll(".sopt").forEach((btn,i)=>btn.addEventListener("click",()=>{
-   const d=found[i]; invalidateResults(); $("dest").value=d.city+", "+d.country; box.classList.remove("open"); $("status").textContent="היעד נבחר ✓"; refreshLeadSummary(d);
+   const d=found[i]; invalidateResults(); $("dest").value=d.city+", "+d.country; box.classList.remove("open"); $("dest").setAttribute("aria-expanded","false"); $("status").textContent="היעד נבחר ✓"; refreshLeadSummary(d);
  }));
 }
 function renderChildAges(){
@@ -1835,7 +1836,40 @@ $("dest").addEventListener("input",()=>{
  refreshLeadSummary(resolveDestination($("dest").value));
 });
 $("dest").addEventListener("focus",renderSuggestions);
-document.addEventListener("click",e=>{if(!e.target.closest("#dest")&&!e.target.closest("#destSuggest"))$("destSuggest").classList.remove("open");});
+$("dest").addEventListener("keydown",e=>{
+ const box=$("destSuggest");
+ if(e.key==="ArrowDown"&&box.classList.contains("open")){
+  const first=box.querySelector(".sopt");
+  if(first){e.preventDefault();first.focus();}
+ }else if(e.key==="Escape"&&box.classList.contains("open")){
+  box.classList.remove("open");$("dest").setAttribute("aria-expanded","false");
+ }else if(e.key==="Enter"&&!box.classList.contains("open")){
+  e.preventDefault();
+  trackEvent("search_attempt",{destination:$("dest").value||"unknown",travel_mode:travelMode,method:"keyboard"});
+  buildTrip();
+ }
+});
+$("destSuggest").addEventListener("keydown",e=>{
+ const options=[...$("destSuggest").querySelectorAll(".sopt")];
+ if(!options.length)return;
+ const current=options.indexOf(document.activeElement);
+ if(e.key==="ArrowDown"){
+  e.preventDefault();options[(current+1+options.length)%options.length].focus();
+ }else if(e.key==="ArrowUp"){
+  e.preventDefault();options[(current-1+options.length)%options.length].focus();
+ }else if(e.key==="Escape"){
+  e.preventDefault();$("destSuggest").classList.remove("open");$("dest").setAttribute("aria-expanded","false");$("dest").focus();
+ }
+});
+document.querySelectorAll(".search input:not(#dest), .search select").forEach(el=>el.addEventListener("keydown",e=>{
+ if(e.key==="Enter"){
+  e.preventDefault();
+  trackEvent("search_attempt",{destination:$("dest").value||"unknown",travel_mode:travelMode,method:"keyboard"});
+  buildTrip();
+ }
+}));
+
+document.addEventListener("click",e=>{if(!e.target.closest("#dest")&&!e.target.closest("#destSuggest")){$("destSuggest").classList.remove("open");$("dest").setAttribute("aria-expanded","false");}});
 $("children").addEventListener("change",renderChildAges);
 $("ageGrid").addEventListener("change",()=>{invalidateResults();refreshLeadSummary();});
 ["origin","to","adults","children","aiPrompt"].forEach(id=>$(id).addEventListener("input",()=>{invalidateResults();refreshLeadSummary();}));

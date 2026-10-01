@@ -263,3 +263,14 @@ test('homepage omits popular destination chips',()=>{
  assert.doesNotMatch(html,/hero-destinations/);
  assert.doesNotMatch(html,/יעדים פופולריים/);
 });
+
+
+test('AI can infer traveler counts and keep country-scoped discovery inside one country',()=>{
+ const plan=fs.readFileSync(path.join(root,'api','plan.js'),'utf8');
+ assert.match(html,/function findCountryMention\(raw\)/);
+ assert.match(html,/function inferAiTravelers\(raw\)/);
+ assert.match(html,/countryHint:countryMention/);
+ assert.ok(plan.includes('const countryHint = String(body.countryHint'));
+ assert.ok(plan.includes('אם נמסרה מדינה בלבד'));
+ assert.ok(plan.includes('recommendations = recommendations.filter'));
+});

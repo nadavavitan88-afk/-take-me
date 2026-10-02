@@ -1241,10 +1241,6 @@ nav a:hover,.share-site:hover{
     
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
-  <div class="result-tools">
-    <button type="button" class="result-tool" id="editTrip">שנה פרטים</button>
-    <button type="button" class="result-tool" id="resultShareTrip">שתף חופשה</button>
-  </div>
   <div class="compare-launcher" id="compareLauncher" aria-label="בחר סוג השוואה">
     <button type="button" class="compare-launch-btn" data-compare="flights">✈️ טיסות</button>
     <button type="button" class="compare-launch-btn" data-compare="hotels">🏨 מלונות</button>
@@ -2484,16 +2480,6 @@ async function shareCurrentTrip(status){
  return false;
 }
 $("shareTrip").addEventListener("click",()=>shareCurrentTrip($("leadStatus")));
-$("resultShareTrip").addEventListener("click",async()=>{
- const status=$("status");
- const ok=await shareCurrentTrip(status);
- if(ok)trackEvent("result_share_trip",{destination:$("dest").value||"unknown"});
-});
-$("editTrip").addEventListener("click",()=>{
- trackEvent("result_edit_search",{destination:$("dest").value||"unknown",travel_mode:travelMode});
- $("planner").scrollIntoView({behavior:"smooth",block:"start"});
- setTimeout(()=>$("dest").focus(),350);
-});
 $("copyLead").addEventListener("click",async()=>{
  refreshLeadSummary();
  const field=$("leadSummary");

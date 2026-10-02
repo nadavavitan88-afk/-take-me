@@ -411,7 +411,6 @@ nav a:hover,.share-site:hover{
 .servicegrid .service .btn{border-radius:13px}
 .servicegrid .service>b{font-size:18px}
 .servicegrid .service>small{font-size:12px}
-#extrasDescription{max-width:700px}
 @media(max-width:650px){
  body{padding-bottom:18px}
  .mobile-lead-cta{display:none!important}
@@ -1730,11 +1729,29 @@ function setTravelMode(mode){
  travelMode=mode;
  for(const [id,active] of [["modeAbroad",mode==="abroad"],["modeIsrael",mode==="israel"]]){$(id).classList.toggle("mode-active",active);$(id).setAttribute("aria-pressed",String(active));}
  $("originField").hidden=mode==="israel";
- $("esimRibbon").hidden=mode==="israel";
  $("heroDescription").textContent=mode==="israel"?"יעד בארץ, תאריכים ונוסעים — ואנחנו מרכזים לך אירוח, אטרקציות וכל מה שצריך מסביב.":"יעד, תאריכים ונוסעים — ואנחנו מרכזים לך במקום אחד טיסות, מלונות, אטרקציות וכל מה שצריך מסביב.";
  $("modeProof").textContent=mode==="israel"?"✓ מלונות ואטרקציות":"✓ טיסה + מלון";
- $("extrasDescription").textContent=mode==="israel"?"אירוח, אטרקציות, מסעדות ומסלול נסיעה — במקום אחד.":"אטרקציות, רכב, eSIM, מסעדות ומזג אוויר — בלי לפתוח עשר לשוניות.";
- $("gyg").textContent=mode==="israel"?"חפש אטרקציות בישראל":"פתח GetYourGuide";$("gyg").href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";$("esim").closest(".service").hidden=mode==="israel";$("car").textContent=mode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";$("dest").value="";$("dest").placeholder=mode==="israel"?"כל עיר, אזור או נופש בישראל":"עיר, אי או אזור בכל העולם";
+
+ const gyg=$("gyg");
+ if(gyg){
+  gyg.href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+  const title=gyg.querySelector("b"),meta=gyg.querySelector("small");
+  if(title)title.textContent="אטרקציות";
+  if(meta)meta.textContent=mode==="israel"?"Google Maps":"GetYourGuide";
+ }
+
+ const esim=$("esim");
+ if(esim)esim.hidden=mode==="israel";
+
+ const car=$("car");
+ if(car){
+  const title=car.querySelector("b"),meta=car.querySelector("small");
+  if(title)title.textContent=mode==="israel"?"מסלול":"רכב";
+  if(meta)meta.textContent=mode==="israel"?"Google Maps":"DiscoverCars";
+ }
+
+ $("dest").value="";
+ $("dest").placeholder=mode==="israel"?"כל עיר, אזור או נופש בישראל":"עיר, אי או אזור בכל העולם";
  $("destSuggest").classList.remove("open");$("destSuggest").innerHTML="";invalidateResults();
  $("status").textContent=mode==="israel"?"בחר יעד בישראל מהרשימה.":"בחר יעד בחו״ל מהרשימה.";
 }
@@ -1994,9 +2011,18 @@ function updateLinks(d){
  $("food").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות "+label);
  $("kosher").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות כשרות "+label);
  $("car").href=travelMode==="israel"?"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(label):(d.car?"https://www.discovercars.com/"+d.car+"/?a_aid=Nadavavitan050":"https://www.discovercars.com/?a_aid=Nadavavitan050");
- $("car").textContent=travelMode==="israel"?"מסלול נסיעה ליעד":"בדוק רכב";
- $("esim").closest(".service").hidden=travelMode==="israel";
- $("esim").href=d.country==="קפריסין"?"https://www.airalo.com/he/cyprus-esim":"https://www.airalo.com/he/";
+ {
+  const car=$("car"),title=car&&car.querySelector("b"),meta=car&&car.querySelector("small");
+  if(title)title.textContent=travelMode==="israel"?"מסלול":"רכב";
+  if(meta)meta.textContent=travelMode==="israel"?"Google Maps":"DiscoverCars";
+ }
+ {
+  const esim=$("esim");
+  if(esim){
+   esim.hidden=travelMode==="israel";
+   esim.href=d.country==="קפריסין"?"https://www.airalo.com/he/cyprus-esim":"https://www.airalo.com/he/";
+  }
+ }
  $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label);
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
  $("packageLive").href=travelMode==="israel"?bookingHotelsLink(label):expediaPackageLink(d);

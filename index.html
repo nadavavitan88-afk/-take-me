@@ -1920,7 +1920,15 @@ function expediaHotelLink(place){
  return expediaAffiliateLink(destination,"take_me_hotels");
 }
 function bookingHotelsLink(place){
- const params=new URLSearchParams({ss:place,checkin:$("from").value,checkout:$("to").value,group_adults:$("adults").value,no_rooms:"1",group_children:String(childAges().length)});
+ const params=new URLSearchParams({
+  ss:place,
+  checkin:$("from").value,
+  checkout:$("to").value,
+  group_adults:$("adults").value,
+  no_rooms:"1",
+  group_children:String(childAges().length),
+  selected_currency:"ILS"
+ });
  childAges().forEach(age=>params.append("age",String(age)));
  return "https://www.booking.com/searchresults.html?"+params.toString();
 }
@@ -1934,13 +1942,15 @@ function agodaHotelsLink(place){
   checkOut:$("to").value,
   rooms:"1",
   adults:$("adults").value,
-  children:String(ages.length)
+  children:String(ages.length),
+  currency:"ILS"
  });
  if(ages.length)params.set("childages",ages.join(","));
  return "https://www.agoda.com/search?"+params.toString();
 }
 function googleHotelsLink(place){
- const query=["hotels in",place,$("from").value?("from "+$("from").value):"", $("to").value?("to "+$("to").value):"", $("adults").value?("for "+$("adults").value+" adults"):""].filter(Boolean).join(" ");
+ const ages=childAges().filter(age=>Number.isInteger(age));
+ const query=["hotels in",place,$("from").value?("from "+$("from").value):"", $("to").value?("to "+$("to").value):"", $("adults").value?("for "+$("adults").value+" adults"):"",ages.length?("and "+ages.length+" children ages "+ages.join(",")):""].filter(Boolean).join(" ");
  const params=new URLSearchParams({q:query,hl:"he",curr:"ILS"});
  return "https://www.google.com/travel/hotels?"+params.toString();
 }
@@ -2011,12 +2021,19 @@ function openCompareDrawer(type){
  const target=$(map[type]);
  if(target){
   target.classList.add("open");
+  trackEvent("comparison_open",{comparison_type:type,travel_mode:travelMode});
   if(typeof target.scrollIntoView==="function")setTimeout(()=>target.scrollIntoView({behavior:"smooth",block:"nearest"}),40);
  }
 }
 document.addEventListener("click",event=>{
  const btn=event.target.closest&&event.target.closest(".compare-launch-btn");
  if(btn)openCompareDrawer(btn.dataset.compare);
+
+ const partner=event.target.closest&&event.target.closest(".compare-row,.extra-link,.kosher-shortcut,.provider-link");
+ if(partner){
+  const label=(partner.querySelector("strong,b")?.textContent||partner.textContent||partner.id||"partner").trim().slice(0,80);
+  trackEvent("partner_click",{partner:label,element_id:partner.id||"",travel_mode:travelMode});
+ }
 });
 
 function updateLinks(d){
@@ -2049,7 +2066,7 @@ function updateLinks(d){
  if(packageLaunch)packageLaunch.hidden=travelMode==="israel";
  if(travelMode==="israel"&&$("compareFlightsDrawer"))$("compareFlightsDrawer").classList.remove("open");
  if(travelMode==="israel"&&$("comparePackageDrawer"))$("comparePackageDrawer").classList.remove("open");
-  $("hotelStep").textContent="מקורות נוספים";
+ $("hotelStep").textContent=$("from").value+" → "+$("to").value+" · "+passengerText();
  $("flightStep").textContent="מקורות נוספים";
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);

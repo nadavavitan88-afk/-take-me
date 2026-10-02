@@ -933,6 +933,102 @@ nav a:hover,.share-site:hover{
 }
 #tpwl-search:empty,#tpwl-tickets:empty{display:none}
 
+/* TAKE ME compact comparison selector */
+.compare-launcher{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
+ margin-top:14px;
+}
+.compare-launch-btn{
+ min-height:58px;
+ border:1px solid rgba(214,173,99,.2);
+ border-radius:14px;
+ background:rgba(255,255,255,.035);
+ color:#ead9bc;
+ font:inherit;
+ font-size:14px;
+ font-weight:950;
+ cursor:pointer;
+}
+.compare-launch-btn.active{
+ border:0;
+ color:#1d160f;
+ background:linear-gradient(135deg,#e0b868,#bc8c45);
+}
+.compare-drawer{
+ display:none;
+ margin-top:10px;
+ padding:12px;
+ border:1px solid rgba(214,173,99,.18);
+ border-radius:16px;
+ background:linear-gradient(155deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+}
+.compare-drawer.open{display:block}
+.compare-drawer-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ margin-bottom:9px;
+}
+.compare-drawer-head strong{color:#f1dfc0;font-size:14px}
+.compare-drawer-head small{color:#958166;font-size:9px;font-weight:900}
+.compare-drawer .compare-service,
+.compare-drawer .package-compare,
+.compare-drawer .trip-compare,
+.compare-drawer .sky-compare{margin:0;padding-top:0;border-top:0}
+.compare-drawer .compare-service-head,
+.compare-drawer .package-copy,
+.compare-drawer .trip-compare>summary small,
+.compare-drawer .sky-compare>summary small{display:none}
+.compare-drawer .trip-compare,
+.compare-drawer .sky-compare{margin-top:8px;padding-top:8px;border-top:1px solid rgba(214,173,99,.1)}
+.compare-drawer .trip-compare>summary,
+.compare-drawer .sky-compare>summary{font-size:11px}
+.top-deals{
+ display:grid;
+ gap:6px;
+ margin-bottom:8px;
+}
+.top-deal{
+ display:grid;
+ grid-template-columns:auto minmax(0,1fr) auto;
+ align-items:center;
+ gap:9px;
+ min-height:48px;
+ padding:8px 10px;
+ border:1px solid rgba(214,173,99,.14);
+ border-radius:12px;
+ background:rgba(255,255,255,.03);
+}
+.top-deal-rank{
+ display:grid;
+ place-items:center;
+ width:26px;height:26px;
+ border-radius:50%;
+ background:rgba(214,173,99,.1);
+ color:#d9b66e;
+ font-size:10px;
+ font-weight:950;
+}
+.top-deal-main{min-width:0}
+.top-deal-main strong{display:block;color:#f1dfc0;font-size:12px}
+.top-deal-main small{display:block;margin-top:2px;color:#907d63;font-size:9px}
+.top-deal-price{color:#f0d8aa;font-size:13px;font-weight:950;white-space:nowrap}
+.top-deals-empty{
+ padding:11px;
+ border:1px dashed rgba(214,173,99,.16);
+ border-radius:12px;
+ color:#9c8769;
+ font-size:10px;
+ line-height:1.55;
+ text-align:center;
+}
+@media(max-width:650px){
+ .compare-launch-btn{min-height:54px;font-size:13px}
+ .compare-drawer{padding:10px}
+}
 /* TAKE ME price comparison engine — same search, multiple sources */
 .compare-panel{
  margin-top:12px;
@@ -1149,49 +1245,61 @@ nav a:hover,.share-site:hover{
     <button type="button" class="result-tool" id="editTrip">שנה פרטים</button>
     <button type="button" class="result-tool" id="resultShareTrip">שתף חופשה</button>
   </div>
-  <div class="result-choice-head">
-    <div class="result-choice-title">השווה לפני שמזמינים</div>
-    <p class="result-choice-help" id="resultChoiceHelp">אותם פרטי חיפוש אצל כמה מקורות — בלי להזין הכול מחדש.</p>
+  <div class="compare-launcher" id="compareLauncher" aria-label="בחר סוג השוואה">
+    <button type="button" class="compare-launch-btn" data-compare="flights">✈️ טיסות</button>
+    <button type="button" class="compare-launch-btn" data-compare="hotels">🏨 מלונות</button>
+    <button type="button" class="compare-launch-btn" data-compare="package">✈️+🏨 חבילה</button>
   </div>
+
   <div class="tpwl-shell" id="tpwlComparisonMount" aria-live="polite">
     <!-- TAKE_ME_TRAVELPAYOUTS_WHITE_LABEL: the official account-generated widget renders here -->
     <div id="tpwl-search"></div>
     <div id="tpwl-tickets"></div>
   </div>
-  <div class="compare-panel" id="resultProviders">
-    <div class="compare-topline"><span class="compare-badge">TAKE ME PRICE CHECK</span><span class="compare-count" id="compareSourceCount">מקורות נפרדים לפי שירות</span></div>
-    <div class="reference-fare" id="referenceFare" hidden></div>
+
+  <div class="compare-drawer" id="compareFlightsDrawer">
+    <div class="compare-drawer-head"><strong>5 הטיסות הזולות שמצאנו</strong><small>לפי מחיר</small></div>
+    <div class="top-deals" id="flightTopDeals"><div class="top-deals-empty">ברגע שמקור המחירים החי יחובר, יוצגו כאן עד 5 תוצאות אמיתיות מהזול ליקר.</div></div>
     <div class="compare-service" id="flightProviders">
-      <div class="compare-service-head"><span>✈️ טיסות</span><small id="flightStep">2 מקורות כרגע</small></div>
+      <div class="compare-service-head"><span>✈️ טיסות</span><small id="flightStep">מקורות נוספים</small></div>
       <div class="compare-list">
         <a class="compare-row" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>השוואת טיסות רחבה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
       </div>
     </div>
-    <div class="compare-service" id="hotelProviders">
-      <div class="compare-service-head"><span>🏨 מלונות</span><small id="hotelStep">3 מקורות כרגע</small></div>
-      <div class="compare-list">
-        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>השוואת מחירים בין שותפי הזמנה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
-      </div>
-    </div>
-    <div class="package-compare" id="packageProviders">
-      <div class="package-copy"><strong>✈️ + 🏨 מעדיף חבילה?</strong><small id="packageStep">הכול יחד</small></div>
-      <a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">טיסה + מלון ב־Expedia</a>
-    </div>
-    <details class="trip-compare" id="tripCompare">
-      <summary><span>Trip.com — מנוע נוסף להשוואה</span><small>נפתח בתוך TAKE ME</small></summary>
-      <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
-    </details>
     <details class="sky-compare" id="skyscannerCompare">
-      <summary><span>Skyscanner — השוואת טיסות רחבה</span><small>ללא עמלה ל‑TAKE ME כרגע</small></summary>
+      <summary><span>Skyscanner</span><small>השוואה רחבה</small></summary>
       <div class="sky-widget-wrap" id="skyscannerWidgetMount"></div>
-      <div class="sky-widget-note">TAKE ME מעביר ל‑Skyscanner את המסלול והתאריכים שבחרת. ההזמנה והמחיר הסופי נקבעים אצל הספק.</div>
+      <div class="sky-widget-note">המחיר הסופי נקבע אצל הספק.</div>
     </details>
   </div>
-  <div class="live-note">המחיר הסופי, הזמינות והתנאים נקבעים באתר הספק. TAKE ME לא מציג מחיר כ״הכי זול״ לפני שקיבלנו נתון אמיתי ממקור מחובר.</div>
+
+  <div class="compare-drawer" id="compareHotelsDrawer">
+    <div class="compare-drawer-head"><strong>5 המלונות הזולים שמצאנו</strong><small>לפי מחיר</small></div>
+    <div class="top-deals" id="hotelTopDeals"><div class="top-deals-empty">ברגע שמקורות מחירי המלונות יחוברו, יוצגו כאן עד 5 תוצאות אמיתיות מהזול ליקר.</div></div>
+    <div class="compare-service" id="hotelProviders">
+      <div class="compare-service-head"><span>🏨 מלונות</span><small id="hotelStep">מקורות נוספים</small></div>
+      <div class="compare-list">
+        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותם תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>אותם תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>אותם תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>השוואת מחירים רחבה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
+      </div>
+    </div>
+    <details class="trip-compare" id="tripCompare">
+      <summary><span>Trip.com</span><small>חיפוש נוסף</small></summary>
+      <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
+    </details>
+  </div>
+
+  <div class="compare-drawer" id="comparePackageDrawer">
+    <div class="compare-drawer-head"><strong>חבילות טיסה + מלון</strong><small>הכול יחד</small></div>
+    <div class="package-compare" id="packageProviders">
+      <a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">בדוק חבילה</a>
+      <small id="packageStep" hidden>הכול יחד</small>
+    </div>
+  </div>
+  <div class="live-note">המחיר הסופי והזמינות נקבעים אצל הספק.</div>
   <div class="result-help">
     <div><b>רוצה שנבדוק מה הכי מתאים לך?</b><small>בלי התחייבות · פרטי החופשה כבר מצורפים לפנייה.</small></div>
     <button class="btn brown" type="button" id="resultLeadCta">קבל הצעה אישית</button>
@@ -1787,6 +1895,21 @@ function flightSearchInfo(d){
  return '<p class="flight-search-summary">'+esc(flightSearchSummary(d))+'</p>'+
  '<p>אפשר להמשיך ל־Expedia או ל־Google Flights ולהשתמש בפרטי החיפוש שלמעלה.</p>';
 }
+function openCompareDrawer(type){
+ const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",package:"comparePackageDrawer"};
+ document.querySelectorAll(".compare-drawer").forEach(el=>el.classList.remove("open"));
+ document.querySelectorAll(".compare-launch-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.compare===type));
+ const target=$(map[type]);
+ if(target){
+  target.classList.add("open");
+  if(typeof target.scrollIntoView==="function")setTimeout(()=>target.scrollIntoView({behavior:"smooth",block:"nearest"}),40);
+ }
+}
+document.addEventListener("click",event=>{
+ const btn=event.target.closest&&event.target.closest(".compare-launch-btn");
+ if(btn)openCompareDrawer(btn.dataset.compare);
+});
+
 function updateLinks(d){
  const label=destinationLabel(d),q=encodeURIComponent(label);
  $("gyg").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
@@ -1802,11 +1925,14 @@ function updateLinks(d){
  $("packageLive").textContent=travelMode==="israel"?"מלונות ואירוח בישראל":"טיסה + מלון ב־Expedia";
  $("flightProviders").hidden=travelMode==="israel";
  $("packageProviders").hidden=travelMode==="israel";
- $("resultChoiceHelp").textContent=travelMode==="israel"
-   ?"בחר בין מקורות הלינה הזמינים, ואז אפשר להמשיך לאטרקציות, מסעדות ומסלול נסיעה."
-   :"אותם פרטי חיפוש מול כמה מקורות. כשיתקבל מחיר אמיתי ממקור מחובר, נוכל למיין ולהדגיש את הזול ביותר." ;
- $("hotelStep").textContent=travelMode==="israel"?"4 מקורות כרגע":"4 מקורות כרגע";
- $("flightStep").textContent="2 קישורים + Skyscanner";
+ const flightLaunch=document.querySelector('.compare-launch-btn[data-compare="flights"]');
+ const packageLaunch=document.querySelector('.compare-launch-btn[data-compare="package"]');
+ if(flightLaunch)flightLaunch.hidden=travelMode==="israel";
+ if(packageLaunch)packageLaunch.hidden=travelMode==="israel";
+ if(travelMode==="israel"&&$("compareFlightsDrawer"))$("compareFlightsDrawer").classList.remove("open");
+ if(travelMode==="israel"&&$("comparePackageDrawer"))$("comparePackageDrawer").classList.remove("open");
+  $("hotelStep").textContent="מקורות נוספים";
+ $("flightStep").textContent="מקורות נוספים";
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
  $("resGoogleFlights").href=googleFlightLink();
@@ -1814,7 +1940,6 @@ function updateLinks(d){
  $("resBookingHotels").href=bookingHotelsLink(label);
  $("resAgodaHotels").href=agodaHotelsLink(label);
  $("resGoogleHotels").href=googleHotelsLink(label);
- if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"4 מקורות לינה":"טיסות: Expedia + Google + Skyscanner · מלונות: 4";
  if($("referenceFare"))$("referenceFare").hidden=true;
 }
 
@@ -1860,8 +1985,18 @@ async function loadReferenceFare(d){
    })
   });
   const data=await response.json().catch(()=>null);
-  const fare=data&&Array.isArray(data.fares)&&data.fares.length?data.fares[0]:null;
-  if(!response.ok||!data||!data.connected||!fare||!Number.isFinite(Number(fare.price))){box.hidden=true;return;}
+  const fares=data&&Array.isArray(data.fares)?data.fares.filter(x=>Number.isFinite(Number(x.price))&&Number(x.price)>0).slice(0,5):[];
+  const topDeals=$("flightTopDeals");
+  if(topDeals&&fares.length){
+   topDeals.innerHTML=fares.map((item,i)=>{
+    const airline=item.airline?esc(item.airline):"טיסה";
+    const stops=Number(item.transfers||0);
+    const meta=(stops===0?"ישירה":stops+" עצירות");
+    return '<div class="top-deal"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+airline+'</strong><small>'+meta+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.price)).toLocaleString("he-IL")+'</span></div>';
+   }).join("");
+  }
+  const fare=fares[0]||null;
+  if(!response.ok||!data||!data.connected||!fare){box.hidden=true;return;}
   const found=fare.foundAt?new Date(fare.foundAt):null;
   const foundText=found&&!Number.isNaN(found.getTime())?" · נמצא "+found.toLocaleDateString("he-IL"):"";
   box.innerHTML='<strong>₪'+Math.round(Number(fare.price)).toLocaleString("he-IL")+'</strong> מחיר טיסה שנמצא לאחרונה במסלול הזה'+esc(foundText)+'. <span>זהו מחיר ייחוס שנמצא במאגר ב־48 השעות האחרונות, לא הצעת מחיר חיה ולא התחייבות לזמינות.</span>';

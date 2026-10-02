@@ -47,12 +47,13 @@ export default async function handler(req,res){
    const r=String(x.return_at||x.return_date||"").slice(0,10);
    return d===departure&&r===returnDate;
   });
-  const sourceRows=exact.length?exact:rows;
+  const sourceRows=exact;
   const fares=sourceRows
    .map(x=>({
     price:Number(x.price??x.value),
     airline:String(x.airline||""),
     transfers:Number(x.transfers??x.number_of_changes??0),
+    returnTransfers:Number(x.return_transfers??0),
     departureAt:String(x.departure_at||x.depart_date||""),
     returnAt:String(x.return_at||x.return_date||""),
     foundAt:String(x.found_at||"")
@@ -75,6 +76,7 @@ export default async function handler(req,res){
    source:"travelpayouts",
    freshness:"cached_last_48_hours",
    sources,
+   priceBasis:"per_person_reference",
    fares
   });
  }catch(error){

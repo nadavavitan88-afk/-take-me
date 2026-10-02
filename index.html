@@ -1257,6 +1257,23 @@ nav a:hover,.share-site:hover{
 .home-faq summary{cursor:pointer;color:#ead9bd;font-weight:900;font-size:14px}
 .home-faq details p{margin-top:8px}
 @media(max-width:650px){.how-grid{grid-template-columns:1fr}.how-it-works,.home-faq{padding:16px}.how-grid article{padding:14px}}
+
+@media(max-width:650px){
+ .how-it-works{padding:14px}
+ .how-it-works h2{font-size:22px;margin-bottom:10px}
+ .how-grid{gap:7px}
+ .how-grid article{
+  display:grid;
+  grid-template-columns:30px 1fr;
+  align-items:center;
+  gap:10px;
+  padding:10px 11px;
+ }
+ .how-grid article>span{width:27px;height:27px}
+ .how-grid h3{margin:0 0 2px;font-size:15px}
+ .how-grid p{font-size:10px;line-height:1.35}
+}
+
 .seo-guides{margin:22px 0 16px;padding:18px;border:1px solid #d8c3a7;border-radius:18px;background:rgba(255,250,243,.76)}
 .seo-guides-head span{font-size:10px;font-weight:950;color:#8d6b50}.seo-guides-head h2{margin:4px 0 5px;font-size:22px}.seo-guides-head p{margin:0;color:#765941;font-size:12px;line-height:1.5}
 .seo-guide-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.seo-guide-links a{padding:9px 13px;border:1px solid #d8c3a7;border-radius:999px;background:#fff7ed;font-size:12px;font-weight:900;color:#604733}
@@ -1408,11 +1425,11 @@ nav a:hover,.share-site:hover{
 
 <section class="how-it-works" id="howItWorks" aria-labelledby="howTitle">
   <div class="section-kicker">HOW IT WORKS</div>
-  <h2 id="howTitle">איך TAKE ME עובד?</h2>
+  <h2 id="howTitle">איך זה עובד?</h2>
   <div class="how-grid">
-    <article><span>1</span><h3>בוחרים יעד ופרטים</h3><p>מזינים יעד, תאריכים והרכב נוסעים — או מתארים ב-AI את סוג החופשה שרוצים.</p></article>
-    <article><span>2</span><h3>מקבלים כיוון מסודר</h3><p>TAKE ME מרכז קישורים לטיסות, מלונות, אטרקציות ושירותים נוספים לפי החופשה שבניתם.</p></article>
-    <article><span>3</span><h3>ממשיכים לבד או עם עזרה</h3><p>אפשר לעבור לספקים החיצוניים להזמנה, לשתף את החופשה או להשאיר פרטים לעזרה אישית.</p></article>
+    <article><span>1</span><div><h3>בוחרים חופשה</h3><p>יעד, תאריכים ונוסעים.</p></div></article>
+    <article><span>2</span><div><h3>משווים אפשרויות</h3><p>הכול מרוכז במקום אחד.</p></div></article>
+    <article><span>3</span><div><h3>ממשיכים להזמנה</h3><p>עוברים לספק או משאירים פרטים.</p></div></article>
   </div>
 </section>
 

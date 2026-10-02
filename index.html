@@ -1094,19 +1094,19 @@ nav a:hover,.share-site:hover{
     <p class="result-choice-help" id="resultChoiceHelp">אותם פרטי חיפוש אצל כמה מקורות — בלי להזין הכול מחדש.</p>
   </div>
   <div class="compare-panel" id="resultProviders">
-    <div class="compare-topline"><span class="compare-badge">TAKE ME PRICE CHECK</span><span class="compare-count" id="compareSourceCount">5 מקורות להשוואה</span></div>
+    <div class="compare-topline"><span class="compare-badge">TAKE ME PRICE CHECK</span><span class="compare-count" id="compareSourceCount">מקורות נפרדים לפי שירות</span></div>
     <div class="reference-fare" id="referenceFare" hidden></div>
     <div class="compare-service" id="flightProviders">
-      <div class="compare-service-head"><span>✈️ טיסות</span><small id="flightStep">השוואת מקורות</small></div>
+      <div class="compare-service-head"><span>✈️ טיסות</span><small id="flightStep">2 מקורות כרגע</small></div>
       <div class="compare-list">
-        <a class="compare-row featured" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>השוואת טיסות רחבה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
       </div>
     </div>
     <div class="compare-service" id="hotelProviders">
-      <div class="compare-service-head"><span>🏨 מלונות</span><small id="hotelStep">השוואת מקורות</small></div>
+      <div class="compare-service-head"><span>🏨 מלונות</span><small id="hotelStep">3 מקורות כרגע</small></div>
       <div class="compare-list">
-        <a class="compare-row featured" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
       </div>
@@ -1723,17 +1723,17 @@ function updateLinks(d){
  $("flightProviders").hidden=travelMode==="israel";
  $("packageProviders").hidden=travelMode==="israel";
  $("resultChoiceHelp").textContent=travelMode==="israel"
-   ?"בחר מלון, ואז אפשר להמשיך לאטרקציות, מסעדות ומסלול נסיעה."
-   :"אפשר לבחור חבילה אחת, או להרכיב טיסה ומלון בנפרד.";
- $("hotelStep").textContent=travelMode==="israel"?"לינה":"שלב 2";
- $("flightStep").textContent="שלב 1";
+   ?"בחר בין מקורות הלינה הזמינים, ואז אפשר להמשיך לאטרקציות, מסעדות ומסלול נסיעה."
+   :"אותם פרטי חיפוש מול כמה מקורות. כשיתקבל מחיר אמיתי ממקור מחובר, נוכל למיין ולהדגיש את הזול ביותר." ;
+ $("hotelStep").textContent=travelMode==="israel"?"3 מקורות כרגע":"3 מקורות כרגע";
+ $("flightStep").textContent="2 מקורות כרגע";
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
  $("resGoogleFlights").href=googleFlightLink();
  $("resExpediaHotels").href=expediaHotelLink(label);
  $("resBookingHotels").href=bookingHotelsLink(label);
  $("resAgodaHotels").href=agodaHotelsLink(label);
- if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"3 מקורות לינה":"5 מקורות להשוואה";
+ if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"3 מקורות לינה":"טיסות: 2 · מלונות: 3";
  if($("referenceFare"))$("referenceFare").hidden=true;
 }
 

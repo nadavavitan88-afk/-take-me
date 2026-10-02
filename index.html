@@ -1081,6 +1081,7 @@ nav a:hover,.share-site:hover{
 .top-deal-main strong{display:block;color:#f1dfc0;font-size:12px}
 .top-deal-main small{display:block;margin-top:2px;color:#907d63;font-size:9px}
 .top-deal-price{color:#f0d8aa;font-size:13px;font-weight:950;white-space:nowrap}
+.top-deal-price small{font-size:8px;color:#9c8769;font-weight:800}
 .top-deals-empty{
  padding:11px;
  border:1px dashed rgba(214,173,99,.16);
@@ -2109,9 +2110,11 @@ async function loadReferenceFare(d){
   if(topDeals&&fares.length){
    topDeals.innerHTML=fares.map((item,i)=>{
     const airline=item.airline?esc(item.airline):"טיסה";
-    const stops=Number(item.transfers||0);
-    const meta=(stops===0?"ישירה":stops===1?"עצירה אחת":stops+" עצירות");
-    return '<div class="top-deal"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+airline+'</strong><small>'+meta+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.price)).toLocaleString("he-IL")+'</span></div>';
+    const outboundStops=Number(item.transfers||0);
+    const inboundStops=Number(item.returnTransfers||0);
+    const maxStops=Math.max(outboundStops,inboundStops);
+    const meta=(maxStops===0?"ישירה":maxStops===1?"עד עצירה אחת":"עד "+maxStops+" עצירות");
+    return '<div class="top-deal"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+airline+'</strong><small>'+meta+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.price)).toLocaleString("he-IL")+' <small>לאדם</small></span></div>';
    }).join("");
   }else if(topDeals){
    const connected=!!(data&&data.connected);
@@ -2122,7 +2125,7 @@ async function loadReferenceFare(d){
   if(!box||!response.ok||!data||!data.connected||!fare){if(box)box.hidden=true;return;}
   const found=fare.foundAt?new Date(fare.foundAt):null;
   const foundText=found&&!Number.isNaN(found.getTime())?" · נמצא "+found.toLocaleDateString("he-IL"):"";
-  box.innerHTML='<strong>החל מ־₪'+Math.round(Number(fare.price)).toLocaleString("he-IL")+'</strong>'+esc(foundText)+' · מחיר ייחוס שנמצא במאגר ב־48 השעות האחרונות. המחיר והזמינות הסופיים נקבעים אצל הספק.';
+  box.innerHTML='<strong>החל מ־₪'+Math.round(Number(fare.price)).toLocaleString("he-IL")+' לאדם</strong>'+esc(foundText)+' · מחיר ייחוס למסלול ולתאריכים שבחרת, שנמצא במאגר ב־48 השעות האחרונות. המחיר והזמינות הסופיים נקבעים אצל הספק.';
   box.hidden=false;
  }catch{
   if(box)box.hidden=true;

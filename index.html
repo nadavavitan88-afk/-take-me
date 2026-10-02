@@ -922,6 +922,17 @@ nav a:hover,.share-site:hover{
 }
 
 
+/* Travelpayouts White Label mount: empty until the account-generated widget code is added. */
+.tpwl-shell{margin-top:10px}
+#tpwl-search:not(:empty),#tpwl-tickets:not(:empty){
+ margin-top:10px;
+ border:1px solid rgba(214,173,99,.16);
+ border-radius:16px;
+ overflow:hidden;
+ background:#fff;
+}
+#tpwl-search:empty,#tpwl-tickets:empty{display:none}
+
 /* TAKE ME price comparison engine — same search, multiple sources */
 .compare-panel{
  margin-top:12px;
@@ -1092,6 +1103,11 @@ nav a:hover,.share-site:hover{
   <div class="result-choice-head">
     <div class="result-choice-title">השווה לפני שמזמינים</div>
     <p class="result-choice-help" id="resultChoiceHelp">אותם פרטי חיפוש אצל כמה מקורות — בלי להזין הכול מחדש.</p>
+  </div>
+  <div class="tpwl-shell" id="tpwlComparisonMount" aria-live="polite">
+    <!-- TAKE_ME_TRAVELPAYOUTS_WHITE_LABEL: the official account-generated widget renders here -->
+    <div id="tpwl-search"></div>
+    <div id="tpwl-tickets"></div>
   </div>
   <div class="compare-panel" id="resultProviders">
     <div class="compare-topline"><span class="compare-badge">TAKE ME PRICE CHECK</span><span class="compare-count" id="compareSourceCount">מקורות נפרדים לפי שירות</span></div>

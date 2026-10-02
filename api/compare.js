@@ -10,7 +10,7 @@ export default async function handler(req,res){
  if(req.method!=="POST")return res.status(405).json({ok:false,error:"Method not allowed"});
 
  const token=String(process.env.TRAVELPAYOUTS_TOKEN||"").trim();
- if(!token)return res.status(200).json({ok:true,connected:false,source:"travelpayouts",fares:[]});
+ if(!token)return res.status(200).json({ok:true,connected:false,source:"travelpayouts",sources:[],fares:[]});
 
  const body=req.body&&typeof req.body==="object"?req.body:{};
  const origin=String(body.origin||"").trim().toUpperCase();
@@ -38,7 +38,7 @@ export default async function handler(req,res){
   const upstream=await fetch("https://api.travelpayouts.com/aviasales/v3/prices_for_dates?"+params.toString(),{
    headers:{"X-Access-Token":token}
   });
-  if(!upstream.ok)return res.status(200).json({ok:true,connected:true,source:"travelpayouts",fares:[],upstreamStatus:upstream.status});
+  if(!upstream.ok)return res.status(200).json({ok:true,connected:true,source:"travelpayouts",sources:[{id:"travelpayouts_data",type:"flight_reference",status:"connected",fares:[]}],fares:[],upstreamStatus:upstream.status});
 
   const payload=await upstream.json();
   const rows=Array.isArray(payload?.data)?payload.data:[];
@@ -61,15 +61,24 @@ export default async function handler(req,res){
    .sort((a,b)=>a.price-b.price)
    .slice(0,5);
 
+  const sources=[{
+   id:"travelpayouts_data",
+   type:"flight_reference",
+   status:"connected",
+   freshness:"cached_last_48_hours",
+   fares
+  }];
+
   return res.status(200).json({
    ok:true,
    connected:true,
    source:"travelpayouts",
    freshness:"cached_last_48_hours",
+   sources,
    fares
   });
  }catch(error){
   console.error("TAKE ME compare error",{name:error?.name||"Error",message:error?.message||"unknown"});
-  return res.status(200).json({ok:true,connected:true,source:"travelpayouts",fares:[]});
+  return res.status(200).json({ok:true,connected:true,source:"travelpayouts",sources:[{id:"travelpayouts_data",type:"flight_reference",status:"error",fares:[]}],fares:[]});
  }
 }

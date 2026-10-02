@@ -802,6 +802,72 @@ nav a:hover,.share-site:hover{
 
 
 
+
+/* TAKE ME refinement pass 8 — one compact services area */
+.extras-compact{
+ margin:24px 0;
+ padding:20px;
+ border:1px solid rgba(214,173,99,.17);
+ border-radius:20px;
+ background:linear-gradient(155deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+}
+.extras-compact h2{
+ margin:0 0 14px;
+ color:#f5e6cd;
+ font-size:28px;
+ letter-spacing:-.02em;
+}
+.extras-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+}
+.extra-link{
+ min-height:96px;
+ padding:13px 10px;
+ border:1px solid rgba(214,173,99,.16);
+ border-radius:15px;
+ background:rgba(255,255,255,.03);
+ color:#f0dfc1;
+ text-decoration:none;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:3px;
+ text-align:center;
+ transition:.18s ease;
+}
+.extra-link:hover{
+ transform:translateY(-1px);
+ border-color:rgba(214,173,99,.3);
+ background:rgba(214,173,99,.07);
+}
+.extra-link>span{font-size:22px;line-height:1}
+.extra-link>b{font-size:16px}
+.extra-link>small{color:#aa9577;font-size:10px}
+.kosher-shortcut{
+ display:block;
+ margin-top:10px;
+ padding:10px 12px;
+ border-radius:12px;
+ color:#d8c5a7;
+ background:rgba(255,255,255,.025);
+ font-size:11px;
+ font-weight:800;
+ text-align:center;
+ text-decoration:none;
+}
+@media(max-width:650px){
+ .extras-compact{padding:16px 13px;border-radius:17px}
+ .extras-compact h2{font-size:24px;margin-bottom:12px}
+ .extras-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+ .extra-link{min-height:84px;padding:11px 8px}
+ .extra-link>span{font-size:20px}
+ .extra-link>b{font-size:15px}
+}
+
+
 /* TAKE ME refinement pass 6 — providers belong inside the trip result */
 .result-providers{
  display:grid;
@@ -1326,18 +1392,19 @@ nav a:hover,.share-site:hover{
   </div>
 </section>
 
-<div class="section services-title" id="extras"><div class="section-kicker">TRAVEL ESSENTIALS</div><h2>כל מה שצריך, במקום אחד</h2><p id="extrasDescription">אטרקציות, רכב, eSIM, מסעדות ומזג אוויר — בלי לפתוח עשר לשוניות ולהתחיל מחדש.</p></div>
-<div class="grid">
-  <article class="card attractions service-card"><div class="service-icon">🎟️</div><h3>אטרקציות</h3><p>סיורים, כרטיסים וחוויות לפי היעד.</p><div class="actions"><a class="btn brown" id="gyg" href="https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="sponsored noopener">פתח GetYourGuide</a></div></article>
-  <article class="card food service-card"><div class="service-icon">🍽️</div><h3>אוכל</h3><p>מסעדות מומלצות ואפשרויות כשרות לפי היעד.</p><div class="actions"><a class="btn brown" id="food" href="https://www.google.com/maps/search/restaurants" target="_blank" rel="noopener">מסעדות</a><a class="btn" id="kosher" href="https://www.google.com/maps/search/kosher+restaurants" target="_blank" rel="noopener">כשר</a></div></article>
-  <article class="card services services-card"><div class="section-kicker">SMART EXTRAS</div><h3>שירותים משלימים</h3><div class="servicegrid">
-    <div class="service"><b>🚗 רכב</b><small>DiscoverCars</small><a class="btn brown" id="car" href="https://www.discovercars.com/?a_aid=Nadavavitan050" target="_blank" rel="sponsored noopener">בדוק רכב</a></div>
-    <div class="service"><b>📶 eSIM</b><small>Airalo</small><a class="btn brown" id="esim" href="https://www.airalo.com/he/" target="_blank" rel="noopener">פתח Airalo</a></div>
-    <div class="service"><b>☀️ מזג אוויר ומפה</b><small>לפי היעד</small><div class="actions"><a class="btn brown" id="weather" href="https://www.google.com/search?q=%D7%9E%D7%96%D7%92+%D7%90%D7%95%D7%95%D7%99%D7%A8" target="_blank" rel="noopener">מזג אוויר</a><a class="btn brown" id="map" href="https://www.google.com/maps" target="_blank" rel="noopener">מפה</a></div></div>
-  </div></article>
-  
-
-</div>
+<section class="extras-compact" id="extras" aria-labelledby="extrasTitle">
+  <div class="section-kicker">TRAVEL ESSENTIALS</div>
+  <h2 id="extrasTitle">כל מה שצריך לחופשה</h2>
+  <div class="extras-grid">
+    <a class="extra-link" id="gyg" href="https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="sponsored noopener"><span>🎟️</span><b>אטרקציות</b><small>GetYourGuide</small></a>
+    <a class="extra-link" id="food" href="https://www.google.com/maps/search/restaurants" target="_blank" rel="noopener"><span>🍽️</span><b>מסעדות</b><small>לפי היעד</small></a>
+    <a class="extra-link" id="car" href="https://www.discovercars.com/?a_aid=Nadavavitan050" target="_blank" rel="sponsored noopener"><span>🚗</span><b>רכב</b><small>DiscoverCars</small></a>
+    <a class="extra-link" id="esim" href="https://www.airalo.com/he/" target="_blank" rel="noopener"><span>📶</span><b>eSIM</b><small>Airalo</small></a>
+    <a class="extra-link" id="weather" href="https://www.google.com/search?q=%D7%9E%D7%96%D7%92+%D7%90%D7%95%D7%95%D7%99%D7%A8" target="_blank" rel="noopener"><span>☀️</span><b>מזג אוויר</b><small>לפני שיוצאים</small></a>
+    <a class="extra-link" id="map" href="https://www.google.com/maps" target="_blank" rel="noopener"><span>🗺️</span><b>מפה</b><small>Google Maps</small></a>
+  </div>
+  <a class="kosher-shortcut" id="kosher" href="https://www.google.com/maps/search/kosher+restaurants" target="_blank" rel="noopener">מחפש מסעדות כשרות? פתח חיפוש כשר ←</a>
+</section>
 
 <section class="how-it-works" id="howItWorks" aria-labelledby="howTitle">
   <div class="section-kicker">HOW IT WORKS</div>

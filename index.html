@@ -1174,6 +1174,7 @@ nav a:hover,.share-site:hover{
         <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>תאריכים והרכב נוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>השוואת מחירים בין שותפי הזמנה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
       </div>
     </div>
     <div class="package-compare" id="packageProviders">
@@ -1721,6 +1722,11 @@ function agodaHotelsLink(place){
  if(ages.length)params.set("childages",ages.join(","));
  return "https://www.agoda.com/search?"+params.toString();
 }
+function googleHotelsLink(place){
+ const query=["hotels in",place,$("from").value?("from "+$("from").value):"", $("to").value?("to "+$("to").value):"", $("adults").value?("for "+$("adults").value+" adults"):""].filter(Boolean).join(" ");
+ const params=new URLSearchParams({q:query,hl:"he",curr:"ILS"});
+ return "https://www.google.com/travel/hotels?"+params.toString();
+}
 function hotelLocationLink(name,place){
  return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(name+", "+place);
 }
@@ -1799,7 +1805,7 @@ function updateLinks(d){
  $("resultChoiceHelp").textContent=travelMode==="israel"
    ?"בחר בין מקורות הלינה הזמינים, ואז אפשר להמשיך לאטרקציות, מסעדות ומסלול נסיעה."
    :"אותם פרטי חיפוש מול כמה מקורות. כשיתקבל מחיר אמיתי ממקור מחובר, נוכל למיין ולהדגיש את הזול ביותר." ;
- $("hotelStep").textContent=travelMode==="israel"?"3 מקורות כרגע":"3 מקורות כרגע";
+ $("hotelStep").textContent=travelMode==="israel"?"4 מקורות כרגע":"4 מקורות כרגע";
  $("flightStep").textContent="2 קישורים + Skyscanner";
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
@@ -1807,7 +1813,8 @@ function updateLinks(d){
  $("resExpediaHotels").href=expediaHotelLink(label);
  $("resBookingHotels").href=bookingHotelsLink(label);
  $("resAgodaHotels").href=agodaHotelsLink(label);
- if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"3 מקורות לינה":"טיסות: Expedia + Google + Skyscanner · מלונות: 3";
+ $("resGoogleHotels").href=googleHotelsLink(label);
+ if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"4 מקורות לינה":"טיסות: Expedia + Google + Skyscanner · מלונות: 4";
  if($("referenceFare"))$("referenceFare").hidden=true;
 }
 
@@ -2181,6 +2188,7 @@ function outboundPartnerMeta(id){
   resExpediaHotels:{provider:"expedia",service:"hotels",monetized:true,location:"trip_result"},
   resBookingHotels:{provider:"booking",service:"hotels",monetized:false,location:"trip_result"},
   resAgodaHotels:{provider:"agoda",service:"hotels",monetized:false,location:"trip_result"},
+  resGoogleHotels:{provider:"google_hotels",service:"hotels",monetized:false,location:"trip_result"},
   resGoogleFlights:{provider:"google_flights",service:"flights",monetized:false,location:"trip_result"},
   gyg:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"services"},
   car:{provider:travelMode==="israel"?"google_maps":"discovercars",service:"car",monetized:travelMode!=="israel",location:"services"},
@@ -2193,7 +2201,7 @@ function outboundPartnerMeta(id){
  if(id==="packageLive")return {provider:travelMode==="israel"?"booking":"expedia",service:travelMode==="israel"?"hotels":"package",monetized:travelMode!=="israel",location:"trip_result"};
  return base[id]||null;
 }
-const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleFlights","packageLive","gyg","car","esim","food","kosher","weather","map"];
+const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","gyg","car","esim","food","kosher","weather","map"];
 for(const id of outboundTrackedIds){
  const el=$(id);
  if(!el)continue;

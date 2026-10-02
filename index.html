@@ -992,6 +992,26 @@ nav a:hover,.share-site:hover{
 }
 .trip-compare summary::-webkit-details-marker{display:none}
 .trip-compare summary small{color:#907d63;font-size:9px;font-weight:900}
+.sky-compare{
+ margin-top:10px;
+ padding-top:11px;
+ border-top:1px solid rgba(214,173,99,.1);
+}
+.sky-compare summary{
+ cursor:pointer;
+ list-style:none;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ color:#ead8b9;
+ font-size:11px;
+ font-weight:950;
+}
+.sky-compare summary::-webkit-details-marker{display:none}
+.sky-compare summary small{color:#907d63;font-size:9px;font-weight:900}
+.sky-widget-wrap{margin-top:10px;min-height:0}
+.sky-widget-note{margin-top:7px;color:#8f7c63;font-size:9px;line-height:1.45}
 .trip-compare iframe{
  display:block;
  width:100%;
@@ -1163,6 +1183,11 @@ nav a:hover,.share-site:hover{
     <details class="trip-compare" id="tripCompare">
       <summary><span>Trip.com — מנוע נוסף להשוואה</span><small>נפתח בתוך TAKE ME</small></summary>
       <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
+    </details>
+    <details class="sky-compare" id="skyscannerCompare">
+      <summary><span>Skyscanner — השוואת טיסות רחבה</span><small>ללא עמלה ל‑TAKE ME כרגע</small></summary>
+      <div class="sky-widget-wrap" id="skyscannerWidgetMount"></div>
+      <div class="sky-widget-note">TAKE ME מעביר ל‑Skyscanner את המסלול והתאריכים שבחרת. ההזמנה והמחיר הסופי נקבעים אצל הספק.</div>
     </details>
   </div>
   <div class="live-note">המחיר הסופי, הזמינות והתנאים נקבעים באתר הספק. TAKE ME לא מציג מחיר כ״הכי זול״ לפני שקיבלנו נתון אמיתי ממקור מחובר.</div>
@@ -1775,15 +1800,37 @@ function updateLinks(d){
    ?"בחר בין מקורות הלינה הזמינים, ואז אפשר להמשיך לאטרקציות, מסעדות ומסלול נסיעה."
    :"אותם פרטי חיפוש מול כמה מקורות. כשיתקבל מחיר אמיתי ממקור מחובר, נוכל למיין ולהדגיש את הזול ביותר." ;
  $("hotelStep").textContent=travelMode==="israel"?"3 מקורות כרגע":"3 מקורות כרגע";
- $("flightStep").textContent="2 מקורות כרגע";
+ $("flightStep").textContent="2 קישורים + Skyscanner";
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
  $("resGoogleFlights").href=googleFlightLink();
  $("resExpediaHotels").href=expediaHotelLink(label);
  $("resBookingHotels").href=bookingHotelsLink(label);
  $("resAgodaHotels").href=agodaHotelsLink(label);
- if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"3 מקורות לינה":"טיסות: 2 · מלונות: 3";
+ if($("compareSourceCount"))$("compareSourceCount").textContent=travelMode==="israel"?"3 מקורות לינה":"טיסות: Expedia + Google + Skyscanner · מלונות: 3";
  if($("referenceFare"))$("referenceFare").hidden=true;
+}
+
+function renderSkyscannerWidget(d){
+ const shell=$("skyscannerCompare"),mount=$("skyscannerWidgetMount");
+ if(!shell||!mount)return;
+ const destination=String((d&&d.iata)||"").split("/")[0].trim().toUpperCase();
+ const origin=String(originCode()||"").trim().toUpperCase();
+ if(travelMode==="israel"||!/^[A-Z]{3}$/.test(origin)||!/^[A-Z]{3}$/.test(destination)){
+  shell.hidden=true;mount.innerHTML="";return;
+ }
+ shell.hidden=false;
+ const from=$("from").value,to=$("to").value;
+ mount.innerHTML='<div data-skyscanner-widget="FlightSearchWidget" data-locale="en-GB" data-market="IL" data-currency="ILS" data-origin-iata-code="'+esc(origin)+'" data-destination-iata-code="'+esc(destination)+'" data-flight-outbound-date="'+esc(from)+'" data-flight-inbound-date="'+esc(to)+'" data-flight-type="return" data-target="_blank" data-web-only-redirects="true" data-button-label="Search flights"></div>';
+ const load=()=>{try{if(window.skyscanner&&window.skyscanner.widgets&&typeof window.skyscanner.widgets.load==="function")window.skyscanner.widgets.load();}catch{}};
+ const existing=document.getElementById("skyscannerWidgetLoader");
+ if(existing){load();setTimeout(load,250);return;}
+ const script=document.createElement("script");
+ script.id="skyscannerWidgetLoader";
+ script.src="https://widgets.skyscanner.net/widget-server/js/loader.js";
+ script.async=true;
+ script.onload=()=>{load();setTimeout(load,150);};
+ document.body.appendChild(script);
 }
 
 async function loadReferenceFare(d){
@@ -1855,6 +1902,7 @@ function buildTrip(){
  $("rNights").textContent=n+" לילות";
  $("rTrav").textContent=passengerText();
  updateLinks(d);
+ renderSkyscannerWidget(d);
  loadReferenceFare(d);
  refreshLeadSummary(d);
  $("result").classList.add("show");

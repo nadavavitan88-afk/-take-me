@@ -1337,7 +1337,8 @@ nav a:hover,.share-site:hover{
 
   <div class="compare-drawer" id="compareFlightsDrawer">
     <div class="compare-drawer-head"><strong>5 הטיסות הזולות שמצאנו</strong><small>לפי מחיר</small></div>
-    <div class="top-deals" id="flightTopDeals"><div class="top-deals-empty">ברגע שמקור המחירים החי יחובר, יוצגו כאן עד 5 תוצאות אמיתיות מהזול ליקר.</div></div>
+    <div class="top-deals" id="flightTopDeals"><div class="top-deals-empty">מחפש את המחירים הזולים למסלול שבחרת…</div></div>
+    <div class="reference-fare" id="referenceFare" hidden></div>
     <div class="compare-service" id="flightProviders">
       <div class="compare-service-head"><span>✈️ טיסות</span><small id="flightStep">מקורות נוספים</small></div>
       <div class="compare-list">
@@ -2071,10 +2072,21 @@ function renderSkyscannerWidget(d){
 
 async function loadReferenceFare(d){
  const box=$("referenceFare");
- if(!box||travelMode==="israel"){if(box)box.hidden=true;return;}
+ const topDeals=$("flightTopDeals");
+ if(travelMode==="israel"){
+  if(box)box.hidden=true;
+  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">בחופשה בישראל אין צורך בהשוואת טיסות.</div>';
+  return;
+ }
  const destination=String((d&&d.iata)||"").split("/")[0].trim().toUpperCase();
  const origin=String(originCode()||"").trim().toUpperCase();
- if(!/^[A-Z]{3}$/.test(origin)||!/^[A-Z]{3}$/.test(destination)){box.hidden=true;return;}
+ if(!/^[A-Z]{3}$/.test(origin)||!/^[A-Z]{3}$/.test(destination)){
+  if(box)box.hidden=true;
+  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">לא הצלחנו לזהות את שדות התעופה לחיפוש.</div>';
+  return;
+ }
+ if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">מחפש עד 5 מחירים זולים למסלול שבחרת…</div>';
+ if(box)box.hidden=true;
  try{
   const response=await fetch("/api/compare",{
    method:"POST",
@@ -2089,24 +2101,32 @@ async function loadReferenceFare(d){
    })
   });
   const data=await response.json().catch(()=>null);
-  const fares=data&&Array.isArray(data.fares)?data.fares.filter(x=>Number.isFinite(Number(x.price))&&Number(x.price)>0).slice(0,5):[];
-  const topDeals=$("flightTopDeals");
+  const fares=data&&Array.isArray(data.fares)?data.fares
+   .filter(x=>Number.isFinite(Number(x.price))&&Number(x.price)>0)
+   .sort((a,b)=>Number(a.price)-Number(b.price))
+   .slice(0,5):[];
+
   if(topDeals&&fares.length){
    topDeals.innerHTML=fares.map((item,i)=>{
     const airline=item.airline?esc(item.airline):"טיסה";
     const stops=Number(item.transfers||0);
-    const meta=(stops===0?"ישירה":stops+" עצירות");
+    const meta=(stops===0?"ישירה":stops===1?"עצירה אחת":stops+" עצירות");
     return '<div class="top-deal"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+airline+'</strong><small>'+meta+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.price)).toLocaleString("he-IL")+'</span></div>';
    }).join("");
+  }else if(topDeals){
+   const connected=!!(data&&data.connected);
+   topDeals.innerHTML='<div class="top-deals-empty">'+(connected?'לא נמצאו כרגע מחירי ייחוס למסלול ולתאריכים האלה. אפשר לבדוק מיד ב־Expedia, Google Flights ו־Skyscanner למטה.':'מקור המחירים האוטומטי עדיין לא מחובר. אפשר בינתיים להשוות ב־Expedia, Google Flights ו־Skyscanner למטה.')+'</div>';
   }
+
   const fare=fares[0]||null;
-  if(!response.ok||!data||!data.connected||!fare){box.hidden=true;return;}
+  if(!box||!response.ok||!data||!data.connected||!fare){if(box)box.hidden=true;return;}
   const found=fare.foundAt?new Date(fare.foundAt):null;
   const foundText=found&&!Number.isNaN(found.getTime())?" · נמצא "+found.toLocaleDateString("he-IL"):"";
-  box.innerHTML='<strong>₪'+Math.round(Number(fare.price)).toLocaleString("he-IL")+'</strong> מחיר טיסה שנמצא לאחרונה במסלול הזה'+esc(foundText)+'. <span>זהו מחיר ייחוס שנמצא במאגר ב־48 השעות האחרונות, לא הצעת מחיר חיה ולא התחייבות לזמינות.</span>';
+  box.innerHTML='<strong>החל מ־₪'+Math.round(Number(fare.price)).toLocaleString("he-IL")+'</strong>'+esc(foundText)+' · מחיר ייחוס שנמצא במאגר ב־48 השעות האחרונות. המחיר והזמינות הסופיים נקבעים אצל הספק.';
   box.hidden=false;
  }catch{
-  box.hidden=true;
+  if(box)box.hidden=true;
+  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">לא הצלחנו לטעון מחירים אוטומטיים כרגע. אפשר להמשיך להשוואה אצל הספקים למטה.</div>';
  }
 }
 function leadTrackingText(){

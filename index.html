@@ -1125,6 +1125,18 @@ nav a:hover,.share-site:hover{
  background:rgba(255,255,255,.028);color:#ead9bc;text-decoration:none;transition:.16s ease
 }
 .compare-row:hover{transform:translateY(-1px);border-color:rgba(214,173,99,.3);background:rgba(255,255,255,.05)}
+
+.compare-row-primary{
+ border-color:rgba(214,173,99,.28);
+ background:rgba(214,173,99,.075);
+}
+.compare-honesty{
+ margin-top:9px;
+ color:#8f7c63;
+ font-size:9px;
+ line-height:1.45;
+ text-align:center;
+}
 .compare-row.featured{border-color:rgba(214,173,99,.28);background:rgba(214,173,99,.06)}
 .compare-brand{display:flex;flex-direction:column;min-width:0}
 .compare-brand strong{font-size:12px;color:#f1dfc0}
@@ -1355,21 +1367,21 @@ nav a:hover,.share-site:hover{
   </div>
 
   <div class="compare-drawer" id="compareHotelsDrawer">
-    <div class="compare-drawer-head"><strong>5 המלונות הזולים שמצאנו</strong><small>לפי מחיר</small></div>
-    <div class="top-deals" id="hotelTopDeals"><div class="top-deals-empty">ברגע שמקורות מחירי המלונות יחוברו, יוצגו כאן עד 5 תוצאות אמיתיות מהזול ליקר.</div></div>
+    <div class="compare-drawer-head"><strong>השוואת מלונות</strong><small>5 מקורות</small></div>
     <div class="compare-service" id="hotelProviders">
-      <div class="compare-service-head"><span>🏨 מלונות</span><small id="hotelStep">מקורות נוספים</small></div>
+      <div class="compare-service-head"><span>🏨 אותו יעד · אותם תאריכים</span><small id="hotelStep">בחר מקור</small></div>
       <div class="compare-list">
-        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותם תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>אותם תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>אותם תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>השוואת מחירים רחבה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row compare-row-primary" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>משווה מחירים בין כמה אתרי הזמנות</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
       </div>
     </div>
     <details class="trip-compare" id="tripCompare">
-      <summary><span>Trip.com</span><small>חיפוש נוסף</small></summary>
+      <summary><span>Trip.com</span><small>מקור חמישי</small></summary>
       <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
     </details>
+    <div class="compare-honesty">המחיר הסופי מוצג אצל הספק. TAKE ME לא מציג מחיר מלון כאילו הוא חי עד שנחבר מקור מחירים מאושר.</div>
   </div>
 
   <div class="compare-drawer" id="comparePackageDrawer">
@@ -2175,6 +2187,7 @@ function buildTrip(){
  loadReferenceFare(d);
  refreshLeadSummary(d);
  $("result").classList.add("show");
+ openCompareDrawer(travelMode==="israel"?"hotels":"flights");
  status.textContent="החיפוש מוכן ✓";status.classList.add("ok");
  trackEvent("vacation_search",{destination:destinationLabel(d),travel_mode:travelMode,nights:n,travelers:total});
  trackEvent("trip_result_view",{destination:destinationLabel(d),travel_mode:travelMode,nights:n,travelers:total});

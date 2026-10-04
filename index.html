@@ -1361,6 +1361,13 @@ header{align-items:center}
 .trip-steps .compare-launch-btn.active b{background:currentColor}
 .trip-steps .compare-launch-btn.active b{color:var(--bg,#111)}
 #comparePackageDrawer{display:none!important}
+
+.destination-info{margin:22px 0 6px;padding:20px;border:1px solid rgba(216,195,167,.8);border-radius:22px;background:rgba(255,250,243,.55)}
+.destination-info-head{text-align:center;margin-bottom:14px}.destination-info-head small{font-weight:900}.destination-info-head h3{font-size:25px;margin:4px 0}
+.destination-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.destination-info-grid a{display:grid;grid-template-columns:auto 1fr;gap:2px 9px;align-items:center;padding:13px;border:1px solid #decbb3;border-radius:15px;background:#fffaf4;text-decoration:none;color:inherit}
+.destination-info-grid a span{grid-row:1/3;font-size:22px}.destination-info-grid a b{font-size:13px}.destination-info-grid a small{font-size:10px;opacity:.72}
+@media(max-width:650px){.destination-info{padding:14px}.destination-info-grid{grid-template-columns:1fr 1fr}.destination-info-grid a{padding:11px 9px}.destination-info-head h3{font-size:21px}}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1484,6 +1491,17 @@ header{align-items:center}
     <div class="package-compare" id="packageProviders">
       <a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">בדוק חבילה</a>
       <small id="packageStep" hidden>הכול יחד</small>
+    </div>
+  </div>
+  <div class="destination-info" id="destinationInfo">
+    <div class="destination-info-head"><small>אחרי שבנית את החופשה</small><h3>הכירו את <span id="infoDestination">היעד</span></h3></div>
+    <div class="destination-info-grid">
+      <a id="infoWeather" target="_blank" rel="noopener"><span>☀️</span><b>מזג אוויר</b><small>מה צפוי בתאריכים שלך</small></a>
+      <a id="infoAreas" target="_blank" rel="noopener"><span>📍</span><b>איפה כדאי לישון</b><small>אזורים ושכונות מומלצים</small></a>
+      <a id="infoThings" target="_blank" rel="noopener"><span>🎟️</span><b>מה עושים</b><small>אטרקציות ודברים שאסור לפספס</small></a>
+      <a id="infoFood" target="_blank" rel="noopener"><span>🍽️</span><b>אוכל וכשר</b><small>מסעדות ומקומות מומלצים</small></a>
+      <a id="infoTransport" target="_blank" rel="noopener"><span>🚇</span><b>תחבורה</b><small>איך מתניידים ביעד</small></a>
+      <a id="infoGuide"><span>💡</span><b>המדריך המלא</b><small>כל מה שכדאי לדעת לפני שטסים</small></a>
     </div>
   </div>
   <div class="live-note">המחיר הסופי והזמינות נקבעים אצל הספק.</div>
@@ -2176,6 +2194,14 @@ function updateLinks(d){
  $("resAgodaHotels").href=agodaHotelsLink(label);
  $("resGoogleHotels").href=googleHotelsLink(label);
  $("resultAttractions").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+ $("infoDestination").textContent=label;
+ $("infoWeather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label+" "+$("from").value);
+ $("infoAreas").href="https://www.google.com/search?q="+encodeURIComponent("איפה כדאי לישון "+label);
+ $("infoThings").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+ $("infoFood").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("מסעדות כשרות ומומלצות "+label);
+ $("infoTransport").href="https://www.google.com/search?q="+encodeURIComponent("תחבורה ציבורית התניידות "+label);
+ const guideMap={דובאי:"/dubai.html",קפריסין:"/cyprus.html",תאילנד:"/thailand.html",יוון:"/greece.html",איטליה:"/italy.html",ספרד:"/spain.html",פראג:"/prague.html",בודפשט:"/budapest.html",ברצלונה:"/barcelona.html",מרבלה:"/marbella.html"};
+ $("infoGuide").href=guideMap[d.city]||guideMap[d.country]||"/destinations.html";
  if($("referenceFare"))$("referenceFare").hidden=true;
 }
 

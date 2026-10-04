@@ -1933,6 +1933,7 @@ function setTravelMode(mode){
  const gyg=$("gyg");
  if(gyg){
   gyg.href=mode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות בישראל"):"https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+  gyg.rel=mode==="israel"?"noopener":"sponsored noopener";
   const title=gyg.querySelector("b"),meta=gyg.querySelector("small");
   if(title)title.textContent="אטרקציות";
   if(meta)meta.textContent=mode==="israel"?"Google Maps":"GetYourGuide";
@@ -1943,6 +1944,7 @@ function setTravelMode(mode){
 
  const car=$("car");
  if(car){
+  car.rel=mode==="israel"?"noopener":"sponsored noopener";
   const title=car.querySelector("b"),meta=car.querySelector("small");
   if(title)title.textContent=mode==="israel"?"מסלול":"רכב";
   if(meta)meta.textContent=mode==="israel"?"Google Maps":"DiscoverCars";
@@ -2267,6 +2269,7 @@ function updateLinks(d){
  $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label);
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
  $("packageLive").href=travelMode==="israel"?bookingHotelsLink(label):expediaPackageLink(d);
+ $("packageLive").rel=travelMode==="israel"?"noopener":"sponsored noopener";
  $("packageLive").textContent=travelMode==="israel"?"מלונות ואירוח בישראל":"טיסה + מלון ב־Expedia";
  $("flightProviders").hidden=travelMode==="israel";
  $("packageProviders").hidden=travelMode==="israel";
@@ -2301,6 +2304,7 @@ function updateLinks(d){
  $("resAgodaHotels").href=agodaHotelsLink(label);
  $("resGoogleHotels").href=googleHotelsLink(label);
  $("resultAttractions").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
+ $("resultAttractions").rel=travelMode==="israel"?"noopener":"sponsored noopener";
  $("infoDestination").textContent=label;
  $("infoWeather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label+" "+$("from").value);
  $("infoAreas").href="https://www.google.com/search?q="+encodeURIComponent("איפה כדאי לישון "+label);

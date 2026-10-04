@@ -1470,6 +1470,29 @@ header{align-items:center}
 <div class="status" id="engineStatus" role="status" aria-live="polite">טוען מנוע האתר…</div>
 <div class="status" id="status" role="status" aria-live="polite">כתוב יעד — ותופיע רשימה לבחירה.</div>
 
+<section class="ai-planner ai-inside-result" id="aiPlanner">
+  <div class="eyebrow">✨ TAKE ME AI</div>
+  <h2>לא יודע לאן? ספר לנו מה בא לך</h2>
+  <p>תכתוב חופשי — זוג, משפחה, תקציב, ים, חיי לילה או כל דבר שחשוב לך.</p>
+  <div class="ai-row">
+    <textarea class="ai-input" id="aiPrompt" placeholder="מה אתם מחפשים? תקציב, תאריכים, סגנון חופשה, ילדים, חופים, חיי לילה, כשר..."></textarea>
+    <button class="ai-go" type="button" id="aiBuild">מצא לי חופשה</button>
+  </div>
+  <div class="ai-quick" aria-label="הצעות מהירות">
+    <button type="button" class="ai-chip" data-text="זוג, חופשה רומנטית">זוג 💛</button>
+    <button type="button" class="ai-chip" data-text="משפחה עם ילדים">משפחה 👨‍👩‍👧‍👦</button>
+    <button type="button" class="ai-chip" data-text="חופים ובטן גב">חופים 🏖️</button>
+    <button type="button" class="ai-chip" data-text="חיי לילה ומסעדות">חיי לילה ✨</button>
+    <button type="button" class="ai-chip" data-text="מלונות ברמה גבוהה">יוקרה ✦</button>
+  </div>
+  <div class="status" id="aiStatus" role="status" aria-live="polite">כתוב בכמה מילים מה החופשה שאתה רוצה.</div>
+  <div class="ai-answer" id="aiAnswer"></div>
+  <div class="ai-conversion" id="aiConversion">
+    <span>אהבת את הכיוון?</span>
+    <button class="btn brown" type="button" id="aiLeadCta">קבל הצעה אישית</button>
+  </div>
+</section>
+
 <div class="result" id="result">
   <small class="trip-progress">שלב 1 מתוך 4 · בוחרים טיסה</small>
   <h2 id="resultTitle">—</h2>
@@ -1570,28 +1593,7 @@ header{align-items:center}
     </div>
   </div>
   <div class="live-note">המחיר הסופי והזמינות נקבעים אצל הספק.</div>
-  <section class="ai-planner ai-inside-result" id="aiPlanner">
-  <div class="eyebrow">✨ TAKE ME AI</div>
-  <h2>לא יודע לאן? ספר לנו מה בא לך</h2>
-  <p>תכתוב חופשי — זוג, משפחה, תקציב, ים, חיי לילה או כל דבר שחשוב לך.</p>
-  <div class="ai-row">
-    <textarea class="ai-input" id="aiPrompt" placeholder="מה אתם מחפשים? תקציב, תאריכים, סגנון חופשה, ילדים, חופים, חיי לילה, כשר..."></textarea>
-    <button class="ai-go" type="button" id="aiBuild">מצא לי חופשה</button>
-  </div>
-  <div class="ai-quick" aria-label="הצעות מהירות">
-    <button type="button" class="ai-chip" data-text="זוג, חופשה רומנטית">זוג 💛</button>
-    <button type="button" class="ai-chip" data-text="משפחה עם ילדים">משפחה 👨‍👩‍👧‍👦</button>
-    <button type="button" class="ai-chip" data-text="חופים ובטן גב">חופים 🏖️</button>
-    <button type="button" class="ai-chip" data-text="חיי לילה ומסעדות">חיי לילה ✨</button>
-    <button type="button" class="ai-chip" data-text="מלונות ברמה גבוהה">יוקרה ✦</button>
-  </div>
-  <div class="status" id="aiStatus" role="status" aria-live="polite">כתוב בכמה מילים מה החופשה שאתה רוצה.</div>
-  <div class="ai-answer" id="aiAnswer"></div>
-  <div class="ai-conversion" id="aiConversion">
-    <span>אהבת את הכיוון?</span>
-    <button class="btn brown" type="button" id="aiLeadCta">קבל הצעה אישית</button>
-  </div>
-</section>
+  
   <div class="result-help">
     <div><b>רוצה שנבדוק מה הכי מתאים לך?</b><small>בלי התחייבות · פרטי החופשה כבר מצורפים לפנייה.</small></div>
     <button class="btn brown" type="button" id="resultLeadCta">קבל הצעה אישית</button>

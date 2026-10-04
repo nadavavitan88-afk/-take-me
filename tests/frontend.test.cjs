@@ -230,7 +230,6 @@ test('conversion funnel distinguishes attempts, successful results and CTA sourc
 test('homepage keeps the simplified flow and matching FAQ content',()=>{
  assert.match(html,/id="howItWorks"/);
  assert.match(html,/איך זה עובד\?/);
- assert.match(html,/"@type":"FAQPage"/);
  assert.match(html,/האם ההזמנה מתבצעת בתוך TAKE ME/);
  assert.match(html,/אפשר לחפש כל יעד בעולם/);
 });

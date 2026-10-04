@@ -1539,7 +1539,7 @@ header{align-items:center}
         <a class="compare-row compare-row-primary" id="resultAttractions" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>GetYourGuide</strong><small>סיורים, כרטיסים ואטרקציות ביעד</small></span><span class="compare-price">מצא אטרקציות</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
-    <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="esim">סיימתי אטרקציות · המשך ל־eSIM ←</button></div>
+    <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="esim">המשך ל־eSIM ←</button></div>
   </div>
 
   <div class="compare-drawer" id="compareEsimDrawer">
@@ -2254,11 +2254,13 @@ function updateLinks(d){
   if(meta)meta.textContent=travelMode==="israel"?"Google Maps":"DiscoverCars";
  }
  {
-  const esim=$("esim");
+  const esim=$("esim"),resultEsim=$("resultEsim");
+  const esimUrl=d.country==="קפריסין"?"https://www.airalo.com/he/cyprus-esim":"https://www.airalo.com/he/";
   if(esim){
    esim.hidden=travelMode==="israel";
-   esim.href=d.country==="קפריסין"?"https://www.airalo.com/he/cyprus-esim":"https://www.airalo.com/he/";
+   esim.href=esimUrl;
   }
+  if(resultEsim)resultEsim.href=esimUrl;
  }
  $("weather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label);
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
@@ -2715,6 +2717,8 @@ function outboundPartnerMeta(id){
   gyg:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"services"},
   car:{provider:travelMode==="israel"?"google_maps":"discovercars",service:"car",monetized:travelMode!=="israel",location:"services"},
   esim:{provider:"airalo",service:"esim",monetized:false,location:"services"},
+  resultAttractions:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"trip_result"},
+  resultEsim:{provider:"airalo",service:"esim",monetized:false,location:"trip_result"},
   food:{provider:"google_maps",service:"restaurants",monetized:false,location:"services"},
   kosher:{provider:"google_maps",service:"kosher_restaurants",monetized:false,location:"services"},
   weather:{provider:"google",service:"weather",monetized:false,location:"services"},
@@ -2723,7 +2727,7 @@ function outboundPartnerMeta(id){
  if(id==="packageLive")return {provider:travelMode==="israel"?"booking":"expedia",service:travelMode==="israel"?"hotels":"package",monetized:travelMode!=="israel",location:"trip_result"};
  return base[id]||null;
 }
-const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","gyg","car","esim","food","kosher","weather","map"];
+const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","resultAttractions","resultEsim","gyg","car","esim","food","kosher","weather","map"];
 for(const id of outboundTrackedIds){
  const el=$(id);
  if(!el)continue;

@@ -1385,6 +1385,21 @@ header{align-items:center}
  .destination-info-grid a{min-height:78px;border-radius:14px}
  .destination-info-grid a span{font-size:24px}
 }
+
+.compare-drawer.open{padding:18px!important;border-radius:22px}
+.compare-drawer-head{padding-bottom:12px;margin-bottom:10px;border-bottom:1px solid rgba(216,195,167,.35)}
+.compare-drawer-head strong{display:block;font-size:22px;line-height:1.25}
+.compare-drawer-head small{display:block;margin-top:5px;font-size:12px;opacity:.8}
+.compare-row{min-height:70px;border-radius:15px!important}
+.compare-brand strong{font-size:15px}
+.compare-price{font-weight:950}
+.top-deals{margin:10px 0 14px}
+@media(max-width:650px){
+ .compare-drawer.open{padding:14px 11px!important}
+ .compare-drawer-head strong{font-size:19px}
+ .compare-row{min-height:66px;padding:11px 9px!important}
+ .compare-open{font-size:11px}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1446,11 +1461,11 @@ header{align-items:center}
   </div>
 
   <div class="compare-drawer" id="compareFlightsDrawer">
-    <div class="compare-drawer-head"><strong>השוואת טיסות</strong><small>בדוק כמה מקורות</small></div>
+    <div class="compare-drawer-head"><strong>✈️ מצאנו לך אפשרויות טיסה</strong><small>בחר את האפשרות שמתאימה לך</small></div>
     <div class="top-deals" id="flightTopDeals"><div class="top-deals-empty">מחפש את המחירים הזולים למסלול שבחרת…</div></div>
     <div class="reference-fare" id="referenceFare" hidden></div>
     <div class="compare-service" id="flightProviders">
-      <div class="compare-service-head"><span>✈️ טיסות</span><small id="flightStep">מקורות נוספים</small></div>
+      <div class="compare-service-head"><span>אפשרויות נוספות להשוואה</span><small id="flightStep">אותו יעד ואותם תאריכים</small></div>
       <div class="compare-list">
         <a class="compare-row" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>השוואת טיסות רחבה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
@@ -1465,9 +1480,9 @@ header{align-items:center}
   </div>
 
   <div class="compare-drawer" id="compareHotelsDrawer">
-    <div class="compare-drawer-head"><strong>השוואת מלונות</strong><small>5 מקורות</small></div>
+    <div class="compare-drawer-head"><strong>🏨 עכשיו בוחרים מלון</strong><small>השווה כמה אפשרויות לאותם תאריכים</small></div>
     <div class="compare-service" id="hotelProviders">
-      <div class="compare-service-head"><span>🏨 אותו יעד · אותם תאריכים</span><small id="hotelStep">בחר מקור</small></div>
+      <div class="compare-service-head"><span>מלונות ביעד שבחרת</span><small id="hotelStep">אותם תאריכים ונוסעים</small></div>
       <div class="compare-list">
         <a class="compare-row compare-row-primary" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>משווה מחירים בין כמה אתרי הזמנות</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
         <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
@@ -2202,7 +2217,7 @@ function updateLinks(d){
  if(travelMode==="israel"&&$("compareFlightsDrawer"))$("compareFlightsDrawer").classList.remove("open");
  if(travelMode==="israel"&&$("comparePackageDrawer"))$("comparePackageDrawer").classList.remove("open");
  $("hotelStep").textContent=$("from").value+" → "+$("to").value+" · "+passengerText();
- $("flightStep").textContent="מקורות נוספים";
+ $("flightStep").textContent=$("from").value+" → "+$("to").value;
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
  $("resGoogleFlights").href=googleFlightLink();

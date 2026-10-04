@@ -1417,6 +1417,23 @@ header{align-items:center}
 .trip-steps{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 .trip-steps .compare-launch-btn[hidden]{display:none!important}
 @media(max-width:650px){.trip-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+@media(max-width:650px){
+ .trip-steps{
+  position:sticky;
+  top:6px;
+  z-index:30;
+  padding:7px!important;
+  margin-inline:-4px!important;
+  border-radius:16px!important;
+  background:rgba(28,23,19,.94)!important;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+ }
+ .trip-steps .compare-launch-btn{min-height:46px!important;font-size:11px!important;padding:7px 5px!important}
+ .compare-price{font-size:10px!important;padding:6px 9px!important}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1484,8 +1501,8 @@ header{align-items:center}
     <div class="compare-service" id="flightProviders">
       <div class="compare-service-head"><span>אפשרויות נוספות להשוואה</span><small id="flightStep">אותו יעד ואותם תאריכים</small></div>
       <div class="compare-list">
-        <a class="compare-row" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>השוואת טיסות רחבה</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>השוואת טיסות רחבה</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
     <details class="sky-compare" id="skyscannerCompare">
@@ -1501,14 +1518,14 @@ header{align-items:center}
     <div class="compare-service" id="hotelProviders">
       <div class="compare-service-head"><span>מלונות ביעד שבחרת</span><small id="hotelStep">אותם תאריכים ונוסעים</small></div>
       <div class="compare-list">
-        <a class="compare-row compare-row-primary" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>משווה מחירים בין כמה אתרי הזמנות</small></span><span class="compare-price">השווה</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
-        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row compare-row-primary" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>משווה מחירים בין כמה אתרי הזמנות</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
     <details class="trip-compare" id="tripCompare">
-      <summary><span>Trip.com</span><small>מקור חמישי</small></summary>
+      <summary><span>Trip.com</span><small>אפשרות נוספת להשוואה</small></summary>
       <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
     </details>
     <div class="compare-honesty">המחיר הסופי מוצג אצל הספק. TAKE ME לא מציג מחיר מלון כאילו הוא חי עד שנחבר מקור מחירים מאושר.</div>
@@ -1519,7 +1536,7 @@ header{align-items:center}
     <div class="compare-drawer-head"><strong>אטרקציות ביעד</strong><small>שלב 3 מתוך 4</small></div>
     <div class="compare-service">
       <div class="compare-list">
-        <a class="compare-row compare-row-primary" id="resultAttractions" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>GetYourGuide</strong><small>סיורים, כרטיסים ואטרקציות ביעד</small></span><span class="compare-price">מצא אטרקציות</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row compare-row-primary" id="resultAttractions" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>GetYourGuide</strong><small>סיורים, כרטיסים ואטרקציות ביעד</small></span><span class="compare-price">מצא אטרקציות</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
     <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="esim">סיימתי אטרקציות · המשך ל־eSIM ←</button></div>
@@ -1529,7 +1546,7 @@ header{align-items:center}
     <div class="compare-drawer-head"><strong>אינטרנט בחו״ל</strong><small>שלב 4 מתוך 4</small></div>
     <div class="compare-service">
       <div class="compare-list">
-        <a class="compare-row compare-row-primary" id="resultEsim" href="https://www.airalo.com/he/" target="_blank" rel="noopener"><span class="compare-brand"><strong>Airalo eSIM</strong><small>בחר חבילת גלישה ליעד</small></span><span class="compare-price">בדוק חבילות</span><span class="compare-open">פתח ↗</span></a>
+        <a class="compare-row compare-row-primary" id="resultEsim" href="https://www.airalo.com/he/" target="_blank" rel="noopener"><span class="compare-brand"><strong>Airalo eSIM</strong><small>בחר חבילת גלישה ליעד</small></span><span class="compare-price">בדוק חבילות</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
     <div class="step-actions"><button type="button" class="btn brown trip-finish" id="tripFinish">סיימתי לבנות את החופשה ✓</button></div>

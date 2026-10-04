@@ -13,7 +13,7 @@ test('changing travelers removes old booking results and ignores an in-flight AI
   return elements.get(id);
  };
  let resolveFetch;
- const document={getElementById:get,querySelectorAll:()=>[],addEventListener(){}};
+ const document={getElementById:get,querySelector:()=>get('mock-query'),querySelectorAll:()=>[],addEventListener(){}};
  const script=fs.readFileSync('index.html','utf8').match(/<script>\s*(\(function\(\)\{[\s\S]*?\}\)\(\);)\s*<\/script>/)[1];
  vm.runInNewContext(script,{document,URLSearchParams,AbortSignal,AbortController,Intl,Date,console,fetch:()=>new Promise(r=>resolveFetch=r)});
  get('adults').value='2';get('children').value='0';get('aiPrompt').value='חופשה ברומא';

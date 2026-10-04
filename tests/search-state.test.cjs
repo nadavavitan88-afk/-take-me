@@ -8,7 +8,7 @@ test('changing travelers removes old booking results and ignores an in-flight AI
   if(!elements.has(id)){
    const classes=new Set();
    const attrs=new Map();
-   elements.set(id,{value:'',textContent:'',innerHTML:'',listeners:{},classList:{add:c=>classes.add(c),remove:c=>classes.delete(c),contains:c=>classes.has(c)},setAttribute(k,v){attrs.set(k,String(v));},removeAttribute(k){attrs.delete(k);},getAttribute(k){return attrs.get(k)??null;},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},querySelectorAll:()=>[],querySelector:()=>get('mock-child'),closest:()=>get('mock-parent'),focus(){}});
+   elements.set(id,{value:'',textContent:'',innerHTML:'',listeners:{},dataset:{},classList:{add:c=>classes.add(c),remove:c=>classes.delete(c),contains:c=>classes.has(c)},setAttribute(k,v){attrs.set(k,String(v));},removeAttribute(k){attrs.delete(k);},getAttribute(k){return attrs.get(k)??null;},addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},querySelectorAll:()=>[],querySelector:()=>get('mock-child'),closest:()=>get('mock-parent'),focus(){}});
   }
   return elements.get(id);
  };

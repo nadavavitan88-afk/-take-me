@@ -11,5 +11,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test travel planner
-        run: node --test tests/*.test.cjs
+      - name: Frontend tests
+        run: node --test tests/frontend.test.cjs
+      - name: Lead API tests
+        run: node --test tests/lead.test.cjs
+      - name: AI planner tests
+        run: node --test tests/plan.test.cjs
+      - name: Search state tests
+        run: node --test tests/search-state.test.cjs

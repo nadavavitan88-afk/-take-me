@@ -1289,6 +1289,15 @@ nav a:hover,.share-site:hover{
 .seo-guides{margin:22px 0 16px;padding:18px;border:1px solid #d8c3a7;border-radius:18px;background:rgba(255,250,243,.76)}
 .seo-guides-head span{font-size:10px;font-weight:950;color:#8d6b50}.seo-guides-head h2{margin:4px 0 5px;font-size:22px}.seo-guides-head p{margin:0;color:#765941;font-size:12px;line-height:1.5}
 .seo-guide-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.seo-guide-links a{padding:9px 13px;border:1px solid #d8c3a7;border-radius:999px;background:#fff7ed;font-size:12px;font-weight:900;color:#604733}
+.quick-service{display:flex;align-items:center;justify-content:center;text-decoration:none}
+@media(min-width:651px){.compare-launcher{grid-template-columns:repeat(5,1fr)}}
+#aiPlanner>p{max-width:620px}
+@media(max-width:650px){
+  #aiPlanner>p{display:none}
+  .ai-planner{padding:16px 13px}
+  .ai-planner h2{font-size:22px}
+  .compare-launcher{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1309,9 +1318,9 @@ nav a:hover,.share-site:hover{
 
 <section class="hero" id="planner">
 <div class="eyebrow"><span class="eyebrow-dot"></span> TAKE ME · SMART TRAVEL</div>
-<h1>כל החופשה שלך,<br>במקום אחד.</h1>
-<p id="heroDescription">יעד, תאריכים ונוסעים — ואנחנו מרכזים לך במקום אחד את הטיסות, המלונות, האטרקציות וכל מה שצריך מסביב.</p>
-<div class="proof"><span>✓ הכול במקום אחד</span><span>✓ הצעות יעד בזמן ההקלדה</span><span id="modeProof">✓ טיסה + מלון</span><span>✓ בלי להתחיל מחדש</span></div>
+<h1>לאן בא לך לטוס?</h1>
+<p id="heroDescription">בחר יעד, תאריכים ונוסעים — אנחנו נעשה את השאר.</p>
+
 <div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
   <div class="field" id="originField"><label for="origin">מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
   <div class="field"><label for="dest">לאן נוסעים? · כל יעד</label><input id="dest" placeholder="עיר, אי או אזור בכל העולם" autocomplete="off" aria-autocomplete="list" aria-controls="destSuggest" aria-expanded="false"><div class="suggest" id="destSuggest" role="listbox" aria-label="הצעות ליעדים"></div></div>
@@ -1320,7 +1329,7 @@ nav a:hover,.share-site:hover{
   
   <div class="field"><label for="adults">מבוגרים</label><select id="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
   <div class="field"><label for="children">ילדים</label><select id="children"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-  <button class="go" type="button" id="build">בנה לי חופשה</button>
+  <button class="go" type="button" id="build">חפש חופשה</button>
 </div>
 <div class="child-ages" id="childAges"><div class="child-ages-title">גילאי הילדים</div><div class="age-grid" id="ageGrid"></div></div>
 <div class="status" id="engineStatus" role="status" aria-live="polite">טוען מנוע האתר…</div>
@@ -1336,10 +1345,12 @@ nav a:hover,.share-site:hover{
     
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
-  <div class="compare-launcher" id="compareLauncher" aria-label="בחר סוג השוואה">
+  <div class="compare-launcher" id="compareLauncher" aria-label="מה תרצה למצוא?">
     <button type="button" class="compare-launch-btn" data-compare="flights">✈️ טיסות</button>
     <button type="button" class="compare-launch-btn" data-compare="hotels">🏨 מלונות</button>
     <button type="button" class="compare-launch-btn" data-compare="package">✈️+🏨 חבילה</button>
+    <a class="compare-launch-btn quick-service" id="resultAttractions" href="https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="sponsored noopener">🎟️ אטרקציות</a>
+    <a class="compare-launch-btn quick-service" id="resultEsim" href="https://www.airalo.com/he/" target="_blank" rel="noopener">📱 eSIM</a>
   </div>
 
   <div class="tpwl-shell" id="tpwlComparisonMount" aria-live="polite">

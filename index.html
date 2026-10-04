@@ -1344,6 +1344,18 @@ header{align-items:center}
  .ai-quick{overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;padding-bottom:4px}
  .ai-chip{white-space:nowrap}
 }
+
+.trip-progress{display:block;text-align:center;font-weight:800;letter-spacing:.02em;margin-bottom:4px}
+.result.show .trip-steps{order:2}
+.next-trip-step{display:block;width:min(100%,420px);margin:18px auto 4px;min-height:52px;font-size:16px}
+@media(max-width:650px){
+ .result.show{padding-top:16px}
+ .result.show>h2,.result.show>p,.result.show>.resultgrid{display:none}
+ .result.show .trip-steps{display:flex;gap:6px;overflow-x:auto;padding-bottom:5px}
+ .result.show .trip-steps .compare-launch-btn{min-width:105px;white-space:nowrap}
+ .compare-drawer.open{margin-top:10px}
+ .compare-drawer-head strong{font-size:20px}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1382,7 +1394,7 @@ header{align-items:center}
 <div class="status" id="status" role="status" aria-live="polite">כתוב יעד — ותופיע רשימה לבחירה.</div>
 
 <div class="result" id="result">
-  <small>סיכום החופשה שלך</small>
+  <small class="trip-progress">שלב 1 מתוך 4 · בוחרים טיסה</small>
   <h2 id="resultTitle">—</h2>
   <p id="resultText">—</p>
   <div class="resultgrid">
@@ -1391,7 +1403,7 @@ header{align-items:center}
     
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
-  <div class="compare-launcher" id="compareLauncher" aria-label="מה תרצה למצוא?">
+  <div class="compare-launcher trip-steps" id="compareLauncher" aria-label="שלבי בניית החופשה">
     <button type="button" class="compare-launch-btn" data-compare="flights">✈️ טיסות</button>
     <button type="button" class="compare-launch-btn" data-compare="hotels">🏨 מלונות</button>
     <button type="button" class="compare-launch-btn" data-compare="package">✈️+🏨 חבילה</button>
@@ -1421,6 +1433,7 @@ header{align-items:center}
       <div class="sky-widget-wrap" id="skyscannerWidgetMount"></div>
       <div class="sky-widget-note">המחיר הסופי נקבע אצל הספק.</div>
     </details>
+    <button type="button" class="btn brown next-trip-step" data-next-step="hotels">המשך למלונות ←</button>
   </div>
 
   <div class="compare-drawer" id="compareHotelsDrawer">
@@ -2083,8 +2096,10 @@ function openCompareDrawer(type){
  }
 }
 document.addEventListener("click",event=>{
+ const next=event.target.closest&&event.target.closest("[data-next-step]");
+ if(next){openCompareDrawer(next.dataset.nextStep);return;}
  const btn=event.target.closest&&event.target.closest(".compare-launch-btn");
- if(btn)openCompareDrawer(btn.dataset.compare);
+ if(btn&&btn.dataset.compare)openCompareDrawer(btn.dataset.compare);
 
  const partner=event.target.closest&&event.target.closest(".compare-row,.extra-link,.kosher-shortcut,.provider-link");
  if(partner){

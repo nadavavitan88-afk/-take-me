@@ -1415,6 +1415,7 @@ header{align-items:center}
 .go{font-weight:950}
 
 .trip-steps{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.trip-steps.domestic{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 .trip-steps .compare-launch-btn[hidden]{display:none!important}
 @media(max-width:650px){.trip-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 
@@ -1920,6 +1921,8 @@ const destinations = [
 
 function setTravelMode(mode){
  travelMode=mode;
+ const tripSteps=document.querySelector(".trip-steps");
+ if(tripSteps)tripSteps.classList.toggle("domestic",mode==="israel");
  for(const [id,active] of [["modeAbroad",mode==="abroad"],["modeIsrael",mode==="israel"]]){$(id).classList.toggle("mode-active",active);$(id).setAttribute("aria-pressed",String(active));}
  $("originField").hidden=mode==="israel";
  $("heroDescription").textContent=mode==="israel"?"יעד בארץ, תאריכים ונוסעים — ואנחנו מרכזים לך אירוח, אטרקציות וכל מה שצריך מסביב.":"יעד, תאריכים ונוסעים — ואנחנו מרכזים לך במקום אחד טיסות, מלונות, אטרקציות וכל מה שצריך מסביב.";

@@ -1375,6 +1375,16 @@ header{align-items:center}
 .destination-info-grid a b{color:#2b2119!important;opacity:1!important;font-weight:950}
 .destination-info-grid a small{color:#6b5543!important;opacity:1!important;font-weight:700}
 .destination-info-grid a span{opacity:1!important}
+
+.destination-info-grid a{min-height:74px;transition:transform .18s ease,border-color .18s ease}
+.destination-info-grid a:active{transform:scale(.98)}
+.destination-info-grid a b{font-size:14px!important}
+.destination-info-grid a small{font-size:11px!important;line-height:1.3}
+@media(max-width:650px){
+ .destination-info-grid{gap:8px}
+ .destination-info-grid a{min-height:78px;border-radius:14px}
+ .destination-info-grid a span{font-size:24px}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1501,14 +1511,14 @@ header{align-items:center}
     </div>
   </div>
   <div class="destination-info" id="destinationInfo">
-    <div class="destination-info-head"><small>אחרי שבנית את החופשה</small><h3>הכירו את <span id="infoDestination">היעד</span></h3></div>
+    <div class="destination-info-head"><small>כל מה שצריך לדעת לפני שטסים</small><h3>הכירו את <span id="infoDestination">היעד</span></h3></div>
     <div class="destination-info-grid">
-      <a id="infoWeather" target="_blank" rel="noopener"><span>☀️</span><b>מזג אוויר</b><small>מה צפוי בתאריכים שלך</small></a>
-      <a id="infoAreas" target="_blank" rel="noopener"><span>📍</span><b>איפה כדאי לישון</b><small>אזורים ושכונות מומלצים</small></a>
-      <a id="infoThings" target="_blank" rel="noopener"><span>🎟️</span><b>מה עושים</b><small>אטרקציות ודברים שאסור לפספס</small></a>
-      <a id="infoFood" target="_blank" rel="noopener"><span>🍽️</span><b>אוכל וכשר</b><small>מסעדות ומקומות מומלצים</small></a>
-      <a id="infoTransport" target="_blank" rel="noopener"><span>🚇</span><b>תחבורה</b><small>איך מתניידים ביעד</small></a>
-      <a id="infoGuide"><span>💡</span><b>המדריך המלא</b><small>כל מה שכדאי לדעת לפני שטסים</small></a>
+      <a id="infoWeather" target="_blank" rel="noopener"><span>☀️</span><b>מזג אוויר</b><small>תחזית לתאריכים שלך</small></a>
+      <a id="infoAreas" target="_blank" rel="noopener"><span>📍</span><b>איפה כדאי לישון</b><small>האזורים שכדאי להכיר</small></a>
+      <a id="infoThings" target="_blank" rel="noopener"><span>🎟️</span><b>מה עושים</b><small>המקומות שלא כדאי לפספס</small></a>
+      <a id="infoFood" target="_blank" rel="noopener"><span>🍽️</span><b>אוכל וכשר</b><small>מסעדות וכשרות ביעד</small></a>
+      <a id="infoTransport" target="_blank" rel="noopener"><span>🚇</span><b>תחבורה</b><small>מוניות, רכבת ותחבורה</small></a>
+      <a id="infoGuide"><span>💡</span><b>המדריך המלא</b><small>טיפים ומידע שימושי</small></a>
     </div>
   </div>
   <div class="live-note">המחיר הסופי והזמינות נקבעים אצל הספק.</div>

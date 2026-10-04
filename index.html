@@ -1407,8 +1407,8 @@ header{align-items:center}
     <button type="button" class="compare-launch-btn" data-compare="flights">✈️ טיסות</button>
     <button type="button" class="compare-launch-btn" data-compare="hotels">🏨 מלונות</button>
     <button type="button" class="compare-launch-btn" data-compare="package">✈️+🏨 חבילה</button>
-    <a class="compare-launch-btn quick-service" id="resultAttractions" href="https://www.getyourguide.com/?partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site" target="_blank" rel="sponsored noopener">🎟️ אטרקציות</a>
-    <a class="compare-launch-btn quick-service" id="resultEsim" href="https://www.airalo.com/he/" target="_blank" rel="noopener">📱 eSIM</a>
+    <button type="button" class="compare-launch-btn" data-compare="attractions">🎟️ אטרקציות</button>
+    <button type="button" class="compare-launch-btn" data-compare="esim">📱 eSIM</button>
   </div>
 
   <div class="tpwl-shell" id="tpwlComparisonMount" aria-live="polite">
@@ -1452,6 +1452,27 @@ header{align-items:center}
       <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
     </details>
     <div class="compare-honesty">המחיר הסופי מוצג אצל הספק. TAKE ME לא מציג מחיר מלון כאילו הוא חי עד שנחבר מקור מחירים מאושר.</div>
+    <button type="button" class="btn brown next-trip-step" data-next-step="attractions">המשך לאטרקציות ←</button>
+  </div>
+
+  <div class="compare-drawer" id="compareAttractionsDrawer">
+    <div class="compare-drawer-head"><strong>אטרקציות ביעד</strong><small>שלב 3 מתוך 4</small></div>
+    <div class="compare-service">
+      <div class="compare-list">
+        <a class="compare-row compare-row-primary" id="resultAttractions" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>GetYourGuide</strong><small>סיורים, כרטיסים ואטרקציות ביעד</small></span><span class="compare-price">מצא אטרקציות</span><span class="compare-open">פתח ↗</span></a>
+      </div>
+    </div>
+    <button type="button" class="btn brown next-trip-step" data-next-step="esim">המשך ל־eSIM ←</button>
+  </div>
+
+  <div class="compare-drawer" id="compareEsimDrawer">
+    <div class="compare-drawer-head"><strong>אינטרנט בחו״ל</strong><small>שלב 4 מתוך 4</small></div>
+    <div class="compare-service">
+      <div class="compare-list">
+        <a class="compare-row compare-row-primary" id="resultEsim" href="https://www.airalo.com/he/" target="_blank" rel="noopener"><span class="compare-brand"><strong>Airalo eSIM</strong><small>בחר חבילת גלישה ליעד</small></span><span class="compare-price">בדוק חבילות</span><span class="compare-open">פתח ↗</span></a>
+      </div>
+    </div>
+    <button type="button" class="btn brown next-trip-step" data-next-step="flights">חזור לטיסות</button>
   </div>
 
   <div class="compare-drawer" id="comparePackageDrawer">
@@ -2085,7 +2106,7 @@ function flightSearchInfo(d){
  '<p>אפשר להמשיך ל־Expedia או ל־Google Flights ולהשתמש בפרטי החיפוש שלמעלה.</p>';
 }
 function openCompareDrawer(type){
- const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",package:"comparePackageDrawer"};
+ const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",attractions:"compareAttractionsDrawer",esim:"compareEsimDrawer",package:"comparePackageDrawer"};
  document.querySelectorAll(".compare-drawer").forEach(el=>el.classList.remove("open"));
  document.querySelectorAll(".compare-launch-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.compare===type));
  const target=$(map[type]);
@@ -2147,6 +2168,7 @@ function updateLinks(d){
  $("resBookingHotels").href=bookingHotelsLink(label);
  $("resAgodaHotels").href=agodaHotelsLink(label);
  $("resGoogleHotels").href=googleHotelsLink(label);
+ $("resultAttractions").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
  if($("referenceFare"))$("referenceFare").hidden=true;
 }
 

@@ -227,9 +227,9 @@ test('conversion funnel distinguishes attempts, successful results and CTA sourc
 });
 
 
-test('homepage explains the flow and exposes matching FAQ content',()=>{
+test('homepage keeps the simplified flow and matching FAQ content',()=>{
  assert.match(html,/id="howItWorks"/);
- assert.match(html,/איך TAKE ME עובד/);
+ assert.match(html,/איך זה עובד\?/);
  assert.match(html,/"@type":"FAQPage"/);
  assert.match(html,/האם ההזמנה מתבצעת בתוך TAKE ME/);
  assert.match(html,/אפשר לחפש כל יעד בעולם/);
@@ -351,22 +351,26 @@ test('main search supports labels, autocomplete semantics and keyboard submit',(
 });
 
 
-test('trip results clearly explain flight hotel and package paths',()=>{
- assert.match(html,/id="resultChoiceHelp"/);
- assert.match(html,/id="flightStep">שלב 1/);
- assert.match(html,/id="hotelStep">שלב 2/);
- assert.match(html,/id="packageStep">הכול יחד/);
- assert.match(html,/בחר מלון, ואז אפשר להמשיך לאטרקציות/);
- assert.match(html,/אפשר לבחור חבילה אחת, או להרכיב טיסה ומלון בנפרד/);
+test('trip results expose the current guided four-step flow',()=>{
+ for(const step of ['flights','hotels','attractions','esim'])assert.match(html,new RegExp('data-compare="'+step+'"'));
+ assert.match(html,/id="compareFlightsDrawer"/);
+ assert.match(html,/id="compareHotelsDrawer"/);
+ assert.match(html,/id="compareAttractionsDrawer"/);
+ assert.match(html,/id="compareEsimDrawer"/);
+ assert.match(html,/data-next-step="hotels"/);
+ assert.match(html,/data-next-step="attractions"/);
+ assert.match(html,/data-next-step="esim"/);
+ assert.match(html,/class="btn brown trip-finish"/);
+ assert.match(html,/travelMode==="israel"\?\["hotels","attractions"\]/);
 });
 
 
-test('trip result exposes quick edit and share actions',()=>{
- assert.match(html,/id="editTrip"/);
- assert.match(html,/id="resultShareTrip"/);
- assert.match(html,/async function shareCurrentTrip\(status\)/);
- assert.match(html,/trackEvent\("result_edit_search"/);
- assert.match(html,/trackEvent\("result_share_trip"/);
+test('trip result keeps one clear build flow and site sharing',()=>{
+ assert.match(html,/id="build">בנה לי חופשה/);
+ assert.match(html,/id="shareSite"/);
+ assert.match(html,/id="shareTrip">שתף את החופשה/);
+ assert.match(html,/function openCompareDrawer\(type\)/);
+ assert.match(html,/trackEvent\("trip_builder_complete"/);
 });
 
 

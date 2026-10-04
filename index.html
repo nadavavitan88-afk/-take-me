@@ -1298,6 +1298,40 @@ nav a:hover,.share-site:hover{
   .ai-planner h2{font-size:22px}
   .compare-launcher{grid-template-columns:repeat(2,1fr)}
 }
+
+/* TAKE ME practical homepage — one clear task first */
+header{align-items:center}
+.hero{min-height:calc(100vh - 110px);display:flex;flex-direction:column;justify-content:center}
+.hero h1{text-align:center;max-width:none;margin:0 0 8px;font-size:clamp(42px,6vw,72px)}
+.hero>p{text-align:center;max-width:none;margin:0 auto 22px;font-size:16px}
+.travel-mode{margin:0 auto 12px;width:260px}
+.search{width:100%;max-width:1050px;margin:0 auto}
+#status{max-width:1050px;width:100%;margin:8px auto 0;text-align:center}
+#engineStatus{display:none}
+.result{width:100%;max-width:1050px;margin:16px auto 0}
+.ai-planner,.extras-compact,.how-it-works,.home-faq,.lead,.seo-guides{margin-top:16px}
+.ai-planner,.how-it-works,.home-faq,.seo-guides{display:none}
+.extras-compact{display:none}
+.lead{display:none}
+.result.show ~ *{}
+@media(max-width:650px){
+ header nav a{display:none}
+ header{justify-content:center;text-align:center}
+ .brand-lockup{margin:auto}
+ nav{position:absolute;left:12px;top:12px;width:auto}
+ nav .share-site{font-size:0;width:36px;padding:0;justify-content:center}
+ nav .share-site::after{content:"↗";font-size:16px}
+ .hero{min-height:calc(100vh - 82px);padding:22px 12px;justify-content:flex-start;padding-top:11vh}
+ .hero h1{font-size:38px;margin-bottom:7px}
+ .hero>p{font-size:13px;margin-bottom:18px}
+ .travel-mode{width:210px;margin-bottom:10px}
+ .search{grid-template-columns:1fr 1fr;background:transparent;border:0;box-shadow:none;padding:0;backdrop-filter:none}
+ #originField,.search>.field:nth-child(2),.search>.go{grid-column:1/-1}
+ .field{box-shadow:none}
+ .go{min-height:56px;font-size:17px}
+ #status{font-size:10px}
+ .result{margin-top:12px}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1314,14 +1348,14 @@ nav a:hover,.share-site:hover{
 </head>
 <body>
 <div class="wrap">
-<header><div class="brand-lockup"><div class="brand-mark" aria-hidden="true">TM</div><div><div class="brand">TAKE <span>ME</span></div><div class="tag">תבחר יעד ואנחנו נבנה את הדרך</div></div></div><nav aria-label="ניווט ראשי"><a href="#planner">חיפוש</a><a href="/destinations.html">יעדים</a><a href="#aiPlanner">AI</a><a href="#extras">שירותים</a><a href="#lead">עזרה אישית</a><button type="button" id="shareSite" class="share-site">שיתוף ↗</button></nav></header><p id="shareSiteStatus" role="status" aria-live="polite" class="share-site-status"></p>
+<header><div class="brand-lockup"><div class="brand-mark" aria-hidden="true">TM</div><div><div class="brand">TAKE <span>ME</span></div><div class="tag">תבחר יעד ואנחנו נבנה את הדרך</div></div></div><nav aria-label="ניווט ראשי"><a href="/destinations.html">יעדים</a><button type="button" id="shareSite" class="share-site">שיתוף ↗</button></nav></header><p id="shareSiteStatus" role="status" aria-live="polite" class="share-site-status"></p>
 
 <section class="hero" id="planner">
-<div class="eyebrow"><span class="eyebrow-dot"></span> TAKE ME · SMART TRAVEL</div>
+
 <h1>לאן בא לך לטוס?</h1>
 <p id="heroDescription">בחר יעד, תאריכים ונוסעים — אנחנו נעשה את השאר.</p>
 
-<div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">✈️ חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">🇮🇱 ישראל</button></div><div class="search">
+<div class="travel-mode"><button type="button" id="modeAbroad" class="mode-active" aria-pressed="true">חו״ל</button><button type="button" id="modeIsrael" aria-pressed="false">ישראל</button></div><div class="search">
   <div class="field" id="originField"><label for="origin">מאיפה יוצאים?</label><input id="origin" value="תל אביב (TLV)" autocomplete="off"></div>
   <div class="field"><label for="dest">לאן נוסעים? · כל יעד</label><input id="dest" placeholder="עיר, אי או אזור בכל העולם" autocomplete="off" aria-autocomplete="list" aria-controls="destSuggest" aria-expanded="false"><div class="suggest" id="destSuggest" role="listbox" aria-label="הצעות ליעדים"></div></div>
   <div class="field"><label for="from">יציאה</label><input id="from" type="date"></div>

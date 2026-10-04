@@ -1413,6 +1413,10 @@ header{align-items:center}
 .trip-steps .compare-launch-btn.done b{background:#2f6f4e!important;border-color:#2f6f4e!important;color:#fff!important;font-size:0}
 .trip-steps .compare-launch-btn.done b::after{content:"✓";font-size:12px}
 .go{font-weight:950}
+
+.trip-steps{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.trip-steps .compare-launch-btn[hidden]{display:none!important}
+@media(max-width:650px){.trip-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -2175,10 +2179,12 @@ function flightSearchInfo(d){
 }
 function openCompareDrawer(type){
  const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",attractions:"compareAttractionsDrawer",esim:"compareEsimDrawer",package:"comparePackageDrawer"};
- const stepMeta={flights:"שלב 1 מתוך 4 · בוחרים טיסה",hotels:"שלב 2 מתוך 4 · בוחרים מלון",attractions:"שלב 3 מתוך 4 · בוחרים אטרקציות",esim:"שלב 4 מתוך 4 · מסדרים אינטרנט"};
+ const stepMeta=travelMode==="israel"
+  ? {hotels:"שלב 1 מתוך 2 · בוחרים מלון",attractions:"שלב 2 מתוך 2 · בוחרים אטרקציות"}
+  : {flights:"שלב 1 מתוך 4 · בוחרים טיסה",hotels:"שלב 2 מתוך 4 · בוחרים מלון",attractions:"שלב 3 מתוך 4 · בוחרים אטרקציות",esim:"שלב 4 מתוך 4 · מסדרים אינטרנט"};
  const progress=document.querySelector(".trip-progress");
  if(progress&&stepMeta[type])progress.textContent=stepMeta[type];
- const order=["flights","hotels","attractions","esim"];
+ const order=travelMode==="israel"?["hotels","attractions"]:["flights","hotels","attractions","esim"];
  const currentIndex=order.indexOf(type);
  document.querySelectorAll(".trip-steps .compare-launch-btn").forEach(btn=>{
   const idx=order.indexOf(btn.dataset.compare);
@@ -2243,10 +2249,25 @@ function updateLinks(d){
  $("packageProviders").hidden=travelMode==="israel";
  const flightLaunch=document.querySelector('.compare-launch-btn[data-compare="flights"]');
  const packageLaunch=document.querySelector('.compare-launch-btn[data-compare="package"]');
+ const esimLaunch=document.querySelector('.compare-launch-btn[data-compare="esim"]');
  if(flightLaunch)flightLaunch.hidden=travelMode==="israel";
  if(packageLaunch)packageLaunch.hidden=travelMode==="israel";
+ if(esimLaunch)esimLaunch.hidden=travelMode==="israel";
+ const attractionsNext=document.querySelector('#compareAttractionsDrawer [data-next-step="esim"],#compareAttractionsDrawer .trip-finish');
+ if(attractionsNext){
+  if(travelMode==="israel"){
+   attractionsNext.dataset.nextStep="";
+   attractionsNext.classList.add("trip-finish");
+   attractionsNext.textContent="סיימתי לבנות את החופשה ✓";
+  }else{
+   attractionsNext.dataset.nextStep="esim";
+   attractionsNext.classList.remove("trip-finish");
+   attractionsNext.textContent="סיימתי אטרקציות · המשך ל־eSIM ←";
+  }
+ }
  if(travelMode==="israel"&&$("compareFlightsDrawer"))$("compareFlightsDrawer").classList.remove("open");
  if(travelMode==="israel"&&$("comparePackageDrawer"))$("comparePackageDrawer").classList.remove("open");
+ if(travelMode==="israel"&&$("compareEsimDrawer"))$("compareEsimDrawer").classList.remove("open");
  $("hotelStep").textContent=$("from").value+" → "+$("to").value+" · "+passengerText();
  $("flightStep").textContent=$("from").value+" → "+$("to").value;
  $("packageStep").textContent="הכול יחד";

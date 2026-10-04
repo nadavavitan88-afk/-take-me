@@ -2715,7 +2715,7 @@ $("aiAnswer").addEventListener("click",e=>{
  });
 });
 
-const start=new Date(); start.setDate(start.getDate()+30);
+const start=new Date(); start.setDate(start.getDate()+1);
 const end=new Date(start); end.setDate(end.getDate()+4);
 const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
 $("from").value=iso(start); $("to").value=iso(end);

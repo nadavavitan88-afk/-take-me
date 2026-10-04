@@ -2345,7 +2345,7 @@ async function loadReferenceFare(d){
  const origin=String(originCode()||"").trim().toUpperCase();
  if(!/^[A-Z]{3}$/.test(origin)||!/^[A-Z]{3}$/.test(destination)){
   if(box)box.hidden=true;
-  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">לא הצלחנו לזהות את שדות התעופה לחיפוש.</div>';
+  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">ליעד הזה ההשוואה האוטומטית לא זמינה כרגע. אפשר להשוות טיסות אצל הספקים למטה.</div>';
   return;
  }
  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">בודק אפשרויות למסלול ולתאריכים שבחרת…</div>';

@@ -1314,6 +1314,7 @@ header{align-items:center}
 .how-it-works,.home-faq,.seo-guides{display:none}
 .extras-compact{display:none}
 .lead{display:none}
+.lead.lead-open{display:block}
 .result.show ~ *{}
 @media(max-width:650px){
  header nav a{display:none}
@@ -2692,6 +2693,7 @@ function openLeadForm(source){
  refreshLeadSummary();
  trackEvent("lead_cta_click",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource});
  trackEvent("begin_lead_form",{destination:$("dest").value||"unknown",travel_mode:travelMode,source:lastLeadSource});
+ $("lead").classList.add("lead-open");
  $("leadForm").hidden=false;
  $("lead").scrollIntoView({behavior:"smooth",block:"start"});
  setTimeout(()=>$("leadName").focus(),420);

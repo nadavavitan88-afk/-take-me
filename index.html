@@ -2342,7 +2342,7 @@ async function loadReferenceFare(d){
   if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">לא הצלחנו לזהות את שדות התעופה לחיפוש.</div>';
   return;
  }
- if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">מחפש עד 5 מחירים זולים למסלול שבחרת…</div>';
+ if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">בודק אפשרויות למסלול ולתאריכים שבחרת…</div>';
  if(box)box.hidden=true;
  try{
   const response=await fetch("/api/compare",{
@@ -2374,7 +2374,7 @@ async function loadReferenceFare(d){
    }).join("");
   }else if(topDeals){
    const connected=!!(data&&data.connected);
-   topDeals.innerHTML='<div class="top-deals-empty">'+(connected?'לא נמצאו כרגע מחירי ייחוס למסלול ולתאריכים האלה. אפשר לבדוק מיד ב־Expedia, Google Flights ו־Skyscanner למטה.':'מקור המחירים האוטומטי עדיין לא מחובר. אפשר בינתיים להשוות ב־Expedia, Google Flights ו־Skyscanner למטה.')+'</div>';
+   topDeals.innerHTML='<div class="top-deals-empty">'+(connected?'לא נמצאו כרגע מחירי ייחוס למסלול ולתאריכים האלה. אפשר לבדוק מיד ב־Expedia, Google Flights ו־Skyscanner למטה.':'בדוק והשווה את המחיר אצל כמה מקורות מובילים למטה.')+'</div>';
   }
 
   const fare=fares[0]||null;
@@ -2385,7 +2385,7 @@ async function loadReferenceFare(d){
   box.hidden=false;
  }catch{
   if(box)box.hidden=true;
-  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">לא הצלחנו לטעון מחירים אוטומטיים כרגע. אפשר להמשיך להשוואה אצל הספקים למטה.</div>';
+  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">אפשר להמשיך עכשיו להשוואת המחירים אצל הספקים למטה.</div>';
  }
 }
 function leadTrackingText(){

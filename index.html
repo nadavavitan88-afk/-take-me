@@ -1356,6 +1356,11 @@ header{align-items:center}
  .compare-drawer.open{margin-top:10px}
  .compare-drawer-head strong{font-size:20px}
 }
+
+.trip-steps .compare-launch-btn b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid currentColor;font-size:12px;margin-left:4px}
+.trip-steps .compare-launch-btn.active b{background:currentColor}
+.trip-steps .compare-launch-btn.active b{color:var(--bg,#111)}
+#comparePackageDrawer{display:none!important}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"האם ההזמנה מתבצעת בתוך TAKE ME?","acceptedAnswer":{"@type":"Answer","text":"ברוב המקרים לא. TAKE ME מרכז את החיפוש ומפנה לאתרי ספקים חיצוניים, שבהם מוצגים המחיר, הזמינות ותנאי ההזמנה המחייבים."}},{"@type":"Question","name":"אפשר לחפש כל יעד בעולם?","acceptedAnswer":{"@type":"Answer","text":"כן. אפשר לכתוב עיר, אי או אזור גם אם הוא לא מופיע ברשימת ההצעות, והמערכת תנסה לבנות סביבו את החיפוש."}},{"@type":"Question","name":"מה קורה אם אני עדיין לא יודע לאן לטוס?","acceptedAnswer":{"@type":"Answer","text":"אפשר להשתמש באזור ה-AI ולתאר את סגנון החופשה, ההרכב ומה חשוב לכם כדי לקבל כיוון ליעד ולחיפוש."}},{"@type":"Question","name":"אפשר לקבל עזרה אישית אחרי החיפוש?","acceptedAnswer":{"@type":"Answer","text":"כן. לאחר בניית החופשה אפשר להשאיר שם וטלפון; פרטי החיפוש שכבר הזנתם מצורפים אוטומטית לפנייה."}}]}
@@ -1404,11 +1409,10 @@ header{align-items:center}
     <div class="stat"><small>נוסעים</small><b id="rTrav">—</b></div>
   </div>
   <div class="compare-launcher trip-steps" id="compareLauncher" aria-label="שלבי בניית החופשה">
-    <button type="button" class="compare-launch-btn" data-compare="flights">✈️ טיסות</button>
-    <button type="button" class="compare-launch-btn" data-compare="hotels">🏨 מלונות</button>
-    <button type="button" class="compare-launch-btn" data-compare="package">✈️+🏨 חבילה</button>
-    <button type="button" class="compare-launch-btn" data-compare="attractions">🎟️ אטרקציות</button>
-    <button type="button" class="compare-launch-btn" data-compare="esim">📱 eSIM</button>
+    <button type="button" class="compare-launch-btn" data-compare="flights"><b>1</b> ✈️ טיסות</button>
+    <button type="button" class="compare-launch-btn" data-compare="hotels"><b>2</b> 🏨 מלונות</button>
+    <button type="button" class="compare-launch-btn" data-compare="attractions"><b>3</b> 🎟️ אטרקציות</button>
+    <button type="button" class="compare-launch-btn" data-compare="esim"><b>4</b> 📱 eSIM</button>
   </div>
 
   <div class="tpwl-shell" id="tpwlComparisonMount" aria-live="polite">
@@ -2107,6 +2111,9 @@ function flightSearchInfo(d){
 }
 function openCompareDrawer(type){
  const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",attractions:"compareAttractionsDrawer",esim:"compareEsimDrawer",package:"comparePackageDrawer"};
+ const stepMeta={flights:"שלב 1 מתוך 4 · בוחרים טיסה",hotels:"שלב 2 מתוך 4 · בוחרים מלון",attractions:"שלב 3 מתוך 4 · בוחרים אטרקציות",esim:"שלב 4 מתוך 4 · מסדרים אינטרנט"};
+ const progress=document.querySelector(".trip-progress");
+ if(progress&&stepMeta[type])progress.textContent=stepMeta[type];
  document.querySelectorAll(".compare-drawer").forEach(el=>el.classList.remove("open"));
  document.querySelectorAll(".compare-launch-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.compare===type));
  const target=$(map[type]);

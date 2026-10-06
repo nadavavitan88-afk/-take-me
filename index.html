@@ -2127,10 +2127,11 @@ function bookingHotelsLink(place){
  return "https://www.booking.com/searchresults.html?"+params.toString();
 }
 function agodaHotelsLink(place){
- // Agoda affiliate CID is not active yet, so keep this as a regular search
- // link until the Partner Center verification/CID is completed.
+ // Verified Agoda Affiliate Partner site CID from Partner Center.
  const ages=childAges().filter(age=>Number.isInteger(age));
  const params=new URLSearchParams({
+  pcs:"1",
+  cid:"1974491",
   textToSearch:place,
   checkIn:$("from").value,
   checkOut:$("to").value,
@@ -2140,7 +2141,7 @@ function agodaHotelsLink(place){
   currency:"ILS"
  });
  if(ages.length)params.set("childages",ages.join(","));
- return "https://www.agoda.com/search?"+params.toString();
+ return "https://www.agoda.com/partners/partnersearch.aspx?"+params.toString();
 }
 function googleHotelsLink(place){
  const ages=childAges().filter(age=>Number.isInteger(age));
@@ -2727,7 +2728,7 @@ function outboundPartnerMeta(id){
   resExpediaFlights:{provider:"expedia",service:"flights",monetized:true,location:"trip_result"},
   resExpediaHotels:{provider:"expedia",service:"hotels",monetized:true,location:"trip_result"},
   resBookingHotels:{provider:"booking",service:"hotels",monetized:false,location:"trip_result"},
-  resAgodaHotels:{provider:"agoda",service:"hotels",monetized:false,location:"trip_result"},
+  resAgodaHotels:{provider:"agoda",service:"hotels",monetized:true,location:"trip_result"},
   resGoogleHotels:{provider:"google_hotels",service:"hotels",monetized:false,location:"trip_result"},
   resGoogleFlights:{provider:"google_flights",service:"flights",monetized:false,location:"trip_result"},
   gyg:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"services"},

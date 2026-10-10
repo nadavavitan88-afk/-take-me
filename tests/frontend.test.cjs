@@ -380,3 +380,12 @@ test('AI and lead submission show reliable loading states',()=>{
  assert.match(html,/החיפוש התארך מהרגיל/);
  assert.doesNotMatch(html,/החיפוש התארך מעבר ל־10 שניות/);
 });
+
+
+test('mobile comparison shows four tabs and keeps destination guide collapsed by default',()=>{
+ assert.match(html,/\.result\.show \.trip-steps\{display:grid!important;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/);
+ assert.match(html,/data-compare="attractions"/);
+ assert.match(html,/<details class="destination-info" id="destinationInfo">/);
+ assert.match(html,/<summary class="destination-info-toggle">/);
+ assert.match(html,/if\(info\)info\.open=true/);
+});

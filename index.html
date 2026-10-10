@@ -1442,6 +1442,26 @@ header{align-items:center}
 
 .skip-link{position:fixed;top:8px;right:8px;z-index:9999;padding:10px 14px;border-radius:10px;background:#fff;color:#2b1d14;font-weight:900;transform:translateY(-160%)}.skip-link:focus{transform:translateY(0)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+
+/* Mobile usability: all four comparison categories visible without horizontal scrolling. */
+.trip-steps{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;overflow:visible!important}
+.trip-steps.domestic{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.trip-steps .compare-launch-btn{min-width:0!important;white-space:normal!important;line-height:1.35}
+.destination-info{display:block}
+.destination-info-toggle{cursor:pointer;list-style:none;font-size:17px;font-weight:900;color:#30231a;text-align:center;padding:6px 0;min-height:36px}
+.destination-info-toggle::-webkit-details-marker{display:none}
+.destination-info-toggle span{display:inline-block;transition:transform .2s ease}
+.destination-info[open] .destination-info-toggle span{transform:rotate(180deg)}
+.destination-info:not([open]){padding:14px 18px;background:#f2e6d7}
+.destination-info[open] .destination-info-toggle{margin-bottom:14px}
+@media(max-width:650px){
+ .result.show .trip-steps{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;overflow:visible!important;gap:8px!important;padding:8px!important}
+ .result.show .trip-steps.domestic{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .result.show .trip-steps .compare-launch-btn{min-width:0!important;min-height:54px!important;font-size:14px!important;padding:9px 6px!important;white-space:normal!important}
+ .compare-row .compare-brand small,.compare-drawer .compare-honesty{font-size:12px!important;line-height:1.55}
+ .compare-row .compare-price{font-size:12px!important}
+ .destination-info-toggle{font-size:16px}
+}
 </style>
 <script nowprocket data-noptimize="1" data-cfasync="false" data-wpfc-render="false" seraph-accel-crit="1" data-no-defer="1" data-cmp-ab="2">
 (function () {
@@ -1599,7 +1619,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <small id="packageStep" hidden>הכול יחד</small>
     </div>
   </div>
-  <div class="destination-info" id="destinationInfo">
+  <details class="destination-info" id="destinationInfo">
+    <summary class="destination-info-toggle">📍 מידע ומדריכים לכל יעד <span aria-hidden="true">⌄</span></summary>
     <div class="destination-info-head"><small>כל מה שצריך לדעת לפני שטסים</small><h3>הכירו את <span id="infoDestination">היעד</span></h3></div>
     <div class="destination-info-grid">
       <a id="infoWeather" target="_blank" rel="noopener"><span>☀️</span><b>מזג אוויר</b><small>תחזית לתאריכים שלך</small></a>
@@ -1609,7 +1630,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <a id="infoTransport" target="_blank" rel="noopener"><span>🚇</span><b>תחבורה</b><small>מוניות, רכבת ותחבורה</small></a>
       <a id="infoGuide"><span>💡</span><b>המדריך המלא</b><small>טיפים ומידע שימושי</small></a>
     </div>
-  </div>
+  </details>
   <div class="live-note">המחיר הסופי והזמינות נקבעים אצל הספק.</div>
   
   <div class="result-help">
@@ -2249,6 +2270,7 @@ document.addEventListener("click",event=>{
   if(progress)progress.textContent="החופשה שלך מוכנה ✓";
   document.querySelectorAll(".trip-steps .compare-launch-btn").forEach(btn=>btn.classList.add("done"));
   const info=$("destinationInfo");
+  if(info)info.open=true;
   if(info&&typeof info.scrollIntoView==="function")setTimeout(()=>info.scrollIntoView({behavior:"smooth",block:"start"}),60);
   trackEvent("trip_builder_complete",{destination:$("dest").value||"unknown",travel_mode:travelMode});
   return;

@@ -357,6 +357,9 @@ test('trip results expose three primary comparison categories',()=>{
  assert.match(html,/data-next-step="car"/);
  assert.match(html,/travelMode==="israel"\?\["hotels","car"\]/);
  assert.match(html,/resultCar:\{provider:/);
+ assert.match(html,/data-compare="attractions"/);
+ assert.match(html,/id="resultAttractionsMaps"/);
+ assert.match(html,/אטרקציות ביעד · שירות משלים/);
 });
 
 

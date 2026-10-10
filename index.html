@@ -2332,6 +2332,8 @@ function updateLinks(d){
  $("resultAttractionsMaps").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label);
  $("resultAttractions").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
  $("resultAttractions").rel=travelMode==="israel"?"noopener":"sponsored noopener";
+ const attractionBrand=$("resultAttractions").querySelector(".compare-brand strong");
+ if(attractionBrand)attractionBrand.textContent=travelMode==="israel"?"Google Maps":"GetYourGuide";
  $("infoDestination").textContent=label;
  $("infoWeather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label+" "+$("from").value);
  $("infoAreas").href="https://www.google.com/search?q="+encodeURIComponent("איפה כדאי לישון "+label);

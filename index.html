@@ -1502,7 +1502,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <div class="result" id="result">
-  <small class="trip-progress">שלב 1 מתוך 4 · בוחרים טיסה</small>
+  <small class="trip-progress">שלב 1 מתוך 3 · בוחרים טיסה</small>
   <h2 id="resultTitle">—</h2>
   <p id="resultText">—</p>
   <div class="resultgrid">
@@ -1514,8 +1514,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="compare-launcher trip-steps" id="compareLauncher" aria-label="שלבי בניית החופשה">
     <button type="button" class="compare-launch-btn" data-compare="flights"><b>1</b> ✈️ טיסות</button>
     <button type="button" class="compare-launch-btn" data-compare="hotels"><b>2</b> 🏨 מלונות</button>
-    <button type="button" class="compare-launch-btn" data-compare="attractions"><b>3</b> 🎟️ אטרקציות</button>
-    <button type="button" class="compare-launch-btn" data-compare="esim"><b>4</b> 📱 eSIM</button>
+    <button type="button" class="compare-launch-btn" data-compare="car"><b>3</b> 🚗 רכב</button>
+    <button type="button" class="compare-launch-btn" data-compare="attractions"><b>✦</b> 🎟️ אטרקציות</button>
   </div>
 
   <div class="tpwl-shell" id="tpwlComparisonMount" aria-live="polite">
@@ -1559,17 +1559,27 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
     </details>
     <div class="compare-honesty">המחיר הסופי מוצג אצל הספק. TAKE ME לא מציג מחיר מלון כאילו הוא חי עד שנחבר מקור מחירים מאושר.</div>
-    <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="attractions">המשך לאטרקציות ←</button><small>אפשר להשוות בין הספקים; ההזמנה מתבצעת אצל הספק.</small></div>
+    <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="car">המשך לרכב ←</button><small>אפשר להשוות בין הספקים; ההזמנה מתבצעת אצל הספק.</small></div>
+  </div>
+
+  <div class="compare-drawer" id="compareCarDrawer">
+    <div class="compare-drawer-head"><strong>🚗 השכרת רכב</strong><small>שלב 3 מתוך 3 · בדיקת מחיר אצל הספק</small></div>
+    <div class="compare-service"><div class="compare-list">
+      <a class="compare-row compare-row-primary" id="resultCar" href="https://www.discovercars.com/?a_aid=Nadavavitan050" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>DiscoverCars</strong><small>בדיקת השכרת רכב ליעד שבחרת</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+    </div></div>
+    <div class="compare-honesty">המחיר והזמינות נקבעים באתר ספק הרכב. אין כאן מחיר בזמן אמת.</div>
+    <div class="step-actions"><button type="button" class="btn brown trip-finish">סיימתי להשוות ✓</button></div>
   </div>
 
   <div class="compare-drawer" id="compareAttractionsDrawer">
-    <div class="compare-drawer-head"><strong>אטרקציות ביעד</strong><small>שלב 3 מתוך 4</small></div>
+    <div class="compare-drawer-head"><strong>🎟️ אטרקציות ביעד</strong><small>שירות משלים · חיפוש פעילויות</small></div>
     <div class="compare-service">
       <div class="compare-list">
         <a class="compare-row compare-row-primary" id="resultAttractions" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>GetYourGuide</strong><small>סיורים, כרטיסים ואטרקציות ביעד</small></span><span class="compare-price">מצא אטרקציות</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resultAttractionsMaps" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Maps</strong><small>חיפוש פעילויות וביקורות ביעד</small></span><span class="compare-price">מצא פעילויות</span><span class="compare-open">למפה ↗</span></a>
       </div>
     </div>
-    <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="esim">המשך ל־eSIM ←</button></div>
+    <div class="compare-honesty">אלה מקורות למציאת אטרקציות, לא השוואת מחירים חיה. מחירים וזמינות יש לבדוק באתר הספק.</div>
   </div>
 
   <div class="compare-drawer" id="compareEsimDrawer">
@@ -2210,17 +2220,17 @@ function flightSearchInfo(d){
  '<p>אפשר להמשיך ל־Expedia או ל־Google Flights ולהשתמש בפרטי החיפוש שלמעלה.</p>';
 }
 function openCompareDrawer(type){
- const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",attractions:"compareAttractionsDrawer",esim:"compareEsimDrawer",package:"comparePackageDrawer"};
+ const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",car:"compareCarDrawer",attractions:"compareAttractionsDrawer",esim:"compareEsimDrawer",package:"comparePackageDrawer"};
  const stepMeta=travelMode==="israel"
-  ? {hotels:"שלב 1 מתוך 2 · בוחרים מלון",attractions:"שלב 2 מתוך 2 · בוחרים אטרקציות"}
-  : {flights:"שלב 1 מתוך 4 · בוחרים טיסה",hotels:"שלב 2 מתוך 4 · בוחרים מלון",attractions:"שלב 3 מתוך 4 · בוחרים אטרקציות",esim:"שלב 4 מתוך 4 · מסדרים אינטרנט"};
+  ? {hotels:"שלב 1 מתוך 2 · בוחרים מלון",car:"שלב 2 מתוך 2 · בודקים רכב",attractions:"אטרקציות ביעד · שירות משלים"}
+  : {flights:"שלב 1 מתוך 3 · בוחרים טיסה",hotels:"שלב 2 מתוך 3 · בוחרים מלון",car:"שלב 3 מתוך 3 · בודקים רכב",attractions:"אטרקציות ביעד · שירות משלים"};
  const progress=document.querySelector(".trip-progress");
  if(progress&&stepMeta[type])progress.textContent=stepMeta[type];
- const order=travelMode==="israel"?["hotels","attractions"]:["flights","hotels","attractions","esim"];
+ const order=travelMode==="israel"?["hotels","car"]:["flights","hotels","car"];
  const currentIndex=order.indexOf(type);
  document.querySelectorAll(".trip-steps .compare-launch-btn").forEach(btn=>{
   const idx=order.indexOf(btn.dataset.compare);
-  btn.classList.toggle("done",idx>=0&&currentIndex>idx);
+  btn.classList.toggle("done",currentIndex>=0&&idx>=0&&currentIndex>idx);
  });
  document.querySelectorAll(".compare-drawer").forEach(el=>el.classList.remove("open"));
  document.querySelectorAll(".compare-launch-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.compare===type));
@@ -2282,6 +2292,13 @@ function updateLinks(d){
  $("packageLive").textContent=travelMode==="israel"?"מלונות ואירוח בישראל":"טיסה + מלון ב־Expedia";
  $("flightProviders").hidden=travelMode==="israel";
  $("packageProviders").hidden=travelMode==="israel";
+ const resultCar=$("resultCar");
+ if(resultCar){
+  resultCar.href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("השכרת רכב "+label):$("car").href;
+  resultCar.rel=travelMode==="israel"?"noopener":"sponsored noopener";
+  const brand=resultCar.querySelector(".compare-brand strong");
+  if(brand)brand.textContent=travelMode==="israel"?"השכרת רכב בישראל":"DiscoverCars";
+ }
  const flightLaunch=document.querySelector('.compare-launch-btn[data-compare="flights"]');
  const packageLaunch=document.querySelector('.compare-launch-btn[data-compare="package"]');
  const esimLaunch=document.querySelector('.compare-launch-btn[data-compare="esim"]');
@@ -2312,8 +2329,12 @@ function updateLinks(d){
  $("resBookingHotels").href=bookingHotelsLink(label);
  $("resAgodaHotels").href=agodaHotelsLink(label);
  $("resGoogleHotels").href=googleHotelsLink(label);
+ $("resultAttractionsMaps").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label);
+ $("resultAttractionsMaps").hidden=travelMode==="israel";
  $("resultAttractions").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
  $("resultAttractions").rel=travelMode==="israel"?"noopener":"sponsored noopener";
+ const attractionBrand=$("resultAttractions").querySelector(".compare-brand strong");
+ if(attractionBrand)attractionBrand.textContent=travelMode==="israel"?"Google Maps":"GetYourGuide";
  $("infoDestination").textContent=label;
  $("infoWeather").href="https://www.google.com/search?q="+encodeURIComponent("מזג אוויר "+label+" "+$("from").value);
  $("infoAreas").href="https://www.google.com/search?q="+encodeURIComponent("איפה כדאי לישון "+label);
@@ -2733,8 +2754,10 @@ function outboundPartnerMeta(id){
   resGoogleFlights:{provider:"google_flights",service:"flights",monetized:false,location:"trip_result"},
   gyg:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"services"},
   car:{provider:travelMode==="israel"?"google_maps":"discovercars",service:"car",monetized:travelMode!=="israel",location:"services"},
+  resultCar:{provider:travelMode==="israel"?"google_maps":"discovercars",service:"car",monetized:travelMode!=="israel",location:"trip_result"},
   esim:{provider:"airalo",service:"esim",monetized:false,location:"services"},
   resultAttractions:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"trip_result"},
+  resultAttractionsMaps:{provider:"google_maps",service:"attractions",monetized:false,location:"trip_result"},
   resultEsim:{provider:"airalo",service:"esim",monetized:false,location:"trip_result"},
   infoThings:{provider:travelMode==="israel"?"google_maps":"getyourguide",service:"attractions",monetized:travelMode!=="israel",location:"destination_info"},
   food:{provider:"google_maps",service:"restaurants",monetized:false,location:"services"},
@@ -2745,7 +2768,7 @@ function outboundPartnerMeta(id){
  if(id==="packageLive")return {provider:travelMode==="israel"?"booking":"expedia",service:travelMode==="israel"?"hotels":"package",monetized:travelMode!=="israel",location:"trip_result"};
  return base[id]||null;
 }
-const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","resultAttractions","resultEsim","infoThings","gyg","car","esim","food","kosher","weather","map"];
+const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","resultCar","resultAttractions","resultAttractionsMaps","resultEsim","infoThings","gyg","car","esim","food","kosher","weather","map"];
 for(const id of outboundTrackedIds){
  const el=$(id);
  if(!el)continue;

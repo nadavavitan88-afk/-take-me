@@ -350,17 +350,13 @@ test('main search supports labels, autocomplete semantics and keyboard submit',(
 });
 
 
-test('trip results expose the current guided four-step flow',()=>{
- for(const step of ['flights','hotels','attractions','esim'])assert.match(html,new RegExp('data-compare="'+step+'"'));
- assert.match(html,/id="compareFlightsDrawer"/);
- assert.match(html,/id="compareHotelsDrawer"/);
- assert.match(html,/id="compareAttractionsDrawer"/);
- assert.match(html,/id="compareEsimDrawer"/);
+test('trip results expose three primary comparison categories',()=>{
+ for(const step of ['flights','hotels','car'])assert.match(html,new RegExp('data-compare="'+step+'"'));
+ for(const id of ['compareFlightsDrawer','compareHotelsDrawer','compareCarDrawer','resultCar'])assert.ok(html.includes('id="'+id+'"'));
  assert.match(html,/data-next-step="hotels"/);
- assert.match(html,/data-next-step="attractions"/);
- assert.match(html,/data-next-step="esim"/);
- assert.match(html,/class="btn brown trip-finish"/);
- assert.match(html,/travelMode==="israel"\?\["hotels","attractions"\]/);
+ assert.match(html,/data-next-step="car"/);
+ assert.match(html,/travelMode==="israel"\?\["hotels","car"\]/);
+ assert.match(html,/resultCar:\{provider:/);
 });
 
 

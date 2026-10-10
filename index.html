@@ -2330,6 +2330,7 @@ function updateLinks(d){
  $("resAgodaHotels").href=agodaHotelsLink(label);
  $("resGoogleHotels").href=googleHotelsLink(label);
  $("resultAttractionsMaps").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label);
+ $("resultAttractionsMaps").hidden=travelMode==="israel";
  $("resultAttractions").href=travelMode==="israel"?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("אטרקציות "+label):"https://www.getyourguide.com/s/?q="+q+"&partner_id=GJ3WGHV&utm_medium=online_publisher&cmp=take_me_site";
  $("resultAttractions").rel=travelMode==="israel"?"noopener":"sponsored noopener";
  const attractionBrand=$("resultAttractions").querySelector(".compare-brand strong");

@@ -1555,7 +1555,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="compare-service-head"><span>אפשרויות נוספות להשוואה</span><small id="flightStep">אותו יעד ואותם תאריכים</small></div>
       <div class="compare-list">
         <a class="compare-row" id="resExpediaFlights" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו מסלול ותאריכים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
-        <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>השוואת טיסות רחבה</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resGoogleFlights" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Flights</strong><small>מסלול, תאריכים ונוסעים בקישור · יש לוודא שהחיפוש נשמר</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
     <details class="sky-compare" id="skyscannerCompare">
@@ -2198,18 +2198,50 @@ function hotelSearchInfo(){
  (ages.length?' (גילים: '+esc(ages.join(", "))+')':'')+'</p>'+
  '<p>המחיר, הזמינות והרכב האורחים הסופי מחייבים בדיקה באתר ההזמנה.</p>';
 }
+// Google Flights uses a base64url-encoded protobuf "tfs" search state.
+// This is an undocumented Google URL format; validate after Google-side changes.
+function googleFlightsTfs(origin,destination,depart,ret,adults,ages){
+ const varint=n=>{
+  const out=[];
+  do{const part=n%128;n=Math.floor(n/128);out.push(n?part+128:part);}while(n);
+  return out;
+ };
+ const fieldInt=(id,value)=>[...varint(id*8),...varint(value)];
+ const fieldBytes=(id,bytes)=>[...varint(id*8+2),...varint(bytes.length),...bytes];
+ const ascii=str=>[...String(str)].map(ch=>ch.charCodeAt(0));
+ const airport=code=>[...fieldInt(1,1),...fieldBytes(2,ascii(code))];
+ const leg=(date,from,to)=>[
+  ...fieldBytes(2,ascii(date)),
+  ...fieldBytes(13,airport(from)),
+  ...fieldBytes(14,airport(to))
+ ];
+ const parts=[
+  ...fieldInt(2,0),
+  ...fieldBytes(3,leg(depart,origin,destination)),
+  ...fieldBytes(3,leg(ret,destination,origin))
+ ];
+ for(let i=0;i<adults;i++)parts.push(...fieldInt(8,1));
+ for(const age of ages)parts.push(...fieldInt(8,age<2?4:2));
+ parts.push(...fieldInt(9,1),...fieldInt(19,1));
+ return btoa(String.fromCharCode(...parts)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
 function googleFlightLink(d){
  const chosen=d||resolveDestination($("dest").value)||{};
- const airport=String(chosen.iata||"").split("/")[0]||String(chosen.en||chosen.city||$("dest").value||"");
+ const airport=String(chosen.iata||"").split("/")[0];
+ const origin=originCode(),from=$("from").value,to=$("to").value;
+ const adults=Number($("adults").value);
  const ages=childAges().filter(age=>Number.isInteger(age));
- const query=[
-  "round trip flights from",originCode(),"to",airport,
-  "departing",$("from").value,"returning",$("to").value,
-  "for",$("adults").value,"adults",
-  ages.length?("and "+ages.length+" children"):""
- ].filter(Boolean).join(" ");
- const params=new URLSearchParams({q:query,hl:"he",curr:"ILS"});
- return "https://www.google.com/travel/flights?"+params.toString();
+ if(/^[A-Z]{3}$/.test(origin)&&/^[A-Z]{3}$/.test(airport)&&
+    /^\d{4}-\d{2}-\d{2}$/.test(from)&&/^\d{4}-\d{2}-\d{2}$/.test(to)&&
+    adults>=1&&adults+ages.length<=9){
+  const tfs=googleFlightsTfs(origin,airport,from,to,adults,ages);
+  const params=new URLSearchParams({tfs,hl:"he",gl:"IL",curr:"ILS",tfu:"EgQIABABIgA"});
+  return "https://www.google.com/travel/flights/search?"+params.toString();
+ }
+ // Fallback for destinations without an airport code: Google may not retain details.
+ const query=["round trip flights from",origin,"to",chosen.en||chosen.city||$("dest").value,
+  "departing",from,"returning",to].filter(Boolean).join(" ");
+ return "https://www.google.com/travel/flights?"+new URLSearchParams({q:query,hl:"he",curr:"ILS"});
 }
 function expediaFlightLink(d){
  // Expedia's documented flight deeplink keeps route, dates and passenger count.

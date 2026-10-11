@@ -300,7 +300,8 @@ test('Expedia hotel and package links keep trip details',()=>{
 
 test('Google Flights and Agoda links preserve trip context',()=>{
  assert.match(html,/function googleFlightLink\(d\)/);
- assert.match(html,/round trip flights from/);
+ assert.match(html,/function googleFlightsTfs\(origin,destination,depart,ret,adults,ages\)/);
+ assert.match(html,/\/travel\/flights\/search\?/);
  assert.match(html,/curr:"ILS"/);
  assert.match(html,/function agodaHotelsLink\(place\)/);
  assert.match(html,/textToSearch:place/);
@@ -418,4 +419,33 @@ test('Agoda is clearly marked as requiring manual re-entry of trip details',()=>
  assert.match(html,/Agoda<\/strong><small>חיפוש נוסף · יש להזין יעד, תאריכים ונוסעים באתר Agoda/);
  assert.match(html,/Agoda — יש להזין יעד, תאריכים ונוסעים מחדש/);
  assert.doesNotMatch(html,/Agoda — בדיקת פרטים באתר/);
+});
+
+test('Google Flights deep link encodes dates, airports and two adults in tfs',()=>{
+ const begin=html.indexOf('function googleFlightsTfs(');
+ const end=html.indexOf('function expediaFlightLink(',begin);
+ assert.ok(begin>0&&end>begin);
+ const script=html.slice(begin,end);
+ const values={dest:'דובאי',from:'2026-10-12',to:'2026-10-16',adults:'2'};
+ const context={
+  btoa:v=>Buffer.from(v,'binary').toString('base64'),
+  URLSearchParams,
+  $:id=>({value:values[id]}),
+  childAges:()=>[],
+  originCode:()=> 'TLV',
+  resolveDestination:()=>({city:'דובאי',iata:'DXB',en:'Dubai'})
+ };
+ const url=vm.runInNewContext(script+'\n googleFlightLink();',context);
+ const parsed=new URL(url);
+ assert.equal(parsed.pathname,'/travel/flights/search');
+ assert.equal(parsed.searchParams.get('curr'),'ILS');
+ const tfs=parsed.searchParams.get('tfs');
+ assert.ok(tfs);
+ const decoded=Buffer.from(tfs,'base64url');
+ for(const value of ['2026-10-12','2026-10-16','TLV','DXB'])
+  assert.ok(decoded.includes(Buffer.from(value)),value);
+ let adults=0;
+ for(let i=0;i<decoded.length-1;i++)
+  if(decoded[i]===0x40&&decoded[i+1]===0x01)adults++;
+ assert.equal(adults,2);
 });

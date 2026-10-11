@@ -412,3 +412,10 @@ test('Agoda opens a search URL with the requested destination, stay dates and oc
  assert.match(html,/los:String\(nights\)/);
  assert.doesNotMatch(html,/partners\/partnersearch\.aspx\?"+params\.toString\(\)/);
 });
+
+
+test('Agoda is clearly marked as requiring manual re-entry of trip details',()=>{
+ assert.match(html,/Agoda<\/strong><small>חיפוש נוסף · יש להזין יעד, תאריכים ונוסעים באתר Agoda/);
+ assert.match(html,/Agoda — יש להזין יעד, תאריכים ונוסעים מחדש/);
+ assert.doesNotMatch(html,/Agoda — בדיקת פרטים באתר/);
+});

@@ -449,3 +449,10 @@ test('Google Flights deep link encodes dates, airports and two adults in tfs',()
   if(decoded[i]===0x40&&decoded[i+1]===0x01)adults++;
  assert.equal(adults,2);
 });
+
+
+test('car affiliate link never promises retained rental dates and pickup location',()=>{
+ assert.match(html,/חיפוש נוסף · יש לבחור מיקום איסוף, תאריכים ושעות באתר/);
+ assert.match(html,/פתח DiscoverCars/);
+ assert.match(html,/DiscoverCars · בחירת פרטים באתר/);
+});

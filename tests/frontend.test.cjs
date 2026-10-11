@@ -399,3 +399,15 @@ test('hotel offers UI displays only verified supplier quotes and transparent emp
  assert.match(html,/כרגע אין הצעות מחיר מאומתות/);
  assert.match(html,/hotel-offer/);
 });
+
+
+test('Agoda opens a search URL with the requested destination, stay dates and occupancy',()=>{
+ assert.match(html,/function agodaHotelsLink\(place\)/);
+ assert.match(html,/return "https:\/\/www\.agoda\.com\/search\?"/);
+ assert.match(html,/cid:"1974491"/);
+ assert.match(html,/textToSearch:place/);
+ assert.match(html,/checkIn:from/);
+ assert.match(html,/checkOut:to/);
+ assert.match(html,/los:String\(nights\)/);
+ assert.doesNotMatch(html,/partners\/partnersearch\.aspx\?"+params\.toString\(\)/);
+});

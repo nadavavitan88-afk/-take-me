@@ -389,3 +389,13 @@ test('mobile comparison shows four tabs and keeps destination guide collapsed by
  assert.match(html,/<summary class="destination-info-toggle">/);
  assert.match(html,/if\(info\)info\.open=true/);
 });
+
+
+test('hotel offers UI displays only verified supplier quotes and transparent empty state',()=>{
+ assert.match(html,/id="hotelTopDeals"/);
+ assert.match(html,/fetch\("\/api\/hotels"/);
+ assert.match(html,/loadHotelOffers\(label\)/);
+ assert.match(html,/item\.currency==="ILS"/);
+ assert.match(html,/כרגע אין הצעות מחיר מאומתות/);
+ assert.match(html,/hotel-offer/);
+});

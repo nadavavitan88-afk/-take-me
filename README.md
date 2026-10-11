@@ -42,3 +42,11 @@
 - טופס ליד מובנה עם שיוך מקור / קמפיין.
 - דשבורד תפעולי ושיווקי בגוגל שיטס.
 - עיצוב מובייל, SEO בסיסי, Manifest ועמודי מערכת ממותגים.
+
+## Hotel offers feed (optional; no mock prices)
+
+The hotel comparison section is ready to consume real, authorized quotes through `POST /api/hotels`. It **does not** have live pricing until a contracted supplier feed is configured.
+
+Set `HOTEL_OFFERS_ENDPOINT` to the HTTPS endpoint of an approved supplier adapter and, if needed, `HOTEL_OFFERS_API_KEY` in Vercel environment variables (never in the frontend). The server posts `{destination, checkin, checkout, adults, children, currency:"ILS", rooms:1}`.
+
+Expected JSON response: `{checkin,checkout,adults,children,currency:"ILS",offers:[{hotel,provider,totalPrice,currency:"ILS",bookingUrl,quotedAt}]}`. Each quote must represent the **entire stay** and exact guests and dates; `quotedAt` must be within the past 30 minutes. The endpoint validates HTTPS booking links, sorts by total price, and displays at most five. With no feed or no verified quotes, the UI clearly directs users to existing supplier searches without claiming live prices. Actual supplier integration requires commercial/API approval and adapter mapping.

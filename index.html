@@ -1575,7 +1575,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="compare-row compare-row-primary" id="resGoogleHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Google Hotels</strong><small>משווה מחירים בין כמה אתרי הזמנות</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
         <a class="compare-row" id="resExpediaHotels" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>Expedia</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
         <a class="compare-row" id="resBookingHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Booking</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
-        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>אותו יעד, תאריכים ונוסעים</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+        <a class="compare-row" id="resAgodaHotels" target="_blank" rel="noopener"><span class="compare-brand"><strong>Agoda</strong><small>מעבירים יעד, תאריכים ונוסעים · יש לוודא שהחיפוש נשמר</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
       </div>
     </div>
     <details class="trip-compare" id="tripCompare">
@@ -2162,21 +2162,25 @@ function bookingHotelsLink(place){
  return "https://www.booking.com/searchresults.html?"+params.toString();
 }
 function agodaHotelsLink(place){
- // Verified Agoda Affiliate Partner site CID from Partner Center.
+ // Go to Agoda's search page directly. Partnersearch is a router and can drop
+ // the search fields on its way to the landing page.
  const ages=childAges().filter(age=>Number.isInteger(age));
+ const from=$("from").value,to=$("to").value;
+ const nights=Math.round((Date.parse(to+"T00:00:00Z")-Date.parse(from+"T00:00:00Z"))/86400000);
  const params=new URLSearchParams({
-  pcs:"1",
   cid:"1974491",
   textToSearch:place,
-  checkIn:$("from").value,
-  checkOut:$("to").value,
+  checkIn:from,
+  checkOut:to,
   rooms:"1",
   adults:$("adults").value,
   children:String(ages.length),
-  currency:"ILS"
+  currency:"ILS",
+  currencyCode:"ILS",
+  ...(Number.isInteger(nights)&&nights>0?{los:String(nights)}:{})
  });
  if(ages.length)params.set("childages",ages.join(","));
- return "https://www.agoda.com/partners/partnersearch.aspx?"+params.toString();
+ return "https://www.agoda.com/search?"+params.toString();
 }
 function googleHotelsLink(place){
  const ages=childAges().filter(age=>Number.isInteger(age));

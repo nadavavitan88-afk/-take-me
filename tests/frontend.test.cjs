@@ -300,8 +300,8 @@ test('Expedia hotel and package links keep trip details',()=>{
 
 test('Google Flights and Agoda links preserve trip context',()=>{
  assert.match(html,/function googleFlightLink\(d\)/);
- assert.match(html,/function googleFlightsTfs\\(origin,destination,depart,ret,adults,ages\\)/);
- assert.match(html,/\\/travel\\/flights\\/search\\?/);
+ assert.match(html,/function googleFlightsTfs\(origin,destination,depart,ret,adults,ages\)/);
+ assert.match(html,/\/travel\/flights\/search\?/);
  assert.match(html,/curr:"ILS"/);
  assert.match(html,/function agodaHotelsLink\(place\)/);
  assert.match(html,/textToSearch:place/);
@@ -435,7 +435,7 @@ test('Google Flights deep link encodes dates, airports and two adults in tfs',()
   originCode:()=> 'TLV',
   resolveDestination:()=>({city:'דובאי',iata:'DXB',en:'Dubai'})
  };
- const url=vm.runInNewContext(script+'\\n googleFlightLink();',context);
+ const url=vm.runInNewContext(script+'\n googleFlightLink();',context);
  const parsed=new URL(url);
  assert.equal(parsed.pathname,'/travel/flights/search');
  assert.equal(parsed.searchParams.get('curr'),'ILS');

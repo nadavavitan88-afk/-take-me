@@ -17,5 +17,7 @@ jobs:
         run: node --test tests/lead.test.cjs
       - name: AI planner tests
         run: node --test tests/plan.test.cjs
+      - name: Hotel offers API tests
+        run: node --test tests/hotels.test.cjs
       - name: Search state tests
         run: node --test tests/search-state.test.cjs

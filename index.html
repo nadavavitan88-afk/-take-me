@@ -1589,7 +1589,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="compare-drawer" id="compareCarDrawer">
     <div class="compare-drawer-head"><strong>🚗 השכרת רכב</strong><small>שלב 3 מתוך 3 · בדיקת מחיר אצל הספק</small></div>
     <div class="compare-service"><div class="compare-list">
-      <a class="compare-row compare-row-primary" id="resultCar" href="https://www.discovercars.com/?a_aid=Nadavavitan050" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>DiscoverCars</strong><small>בדיקת השכרת רכב ליעד שבחרת</small></span><span class="compare-price">בדוק מחיר</span><span class="compare-open">לאתר ↗</span></a>
+      <a class="compare-row compare-row-primary" id="resultCar" href="https://www.discovercars.com/?a_aid=Nadavavitan050" target="_blank" rel="sponsored noopener"><span class="compare-brand"><strong>DiscoverCars</strong><small>חיפוש נוסף · יש לבחור מיקום איסוף, תאריכים ושעות באתר</small></span><span class="compare-price">פתח DiscoverCars</span><span class="compare-open">לאתר ↗</span></a>
     </div></div>
     <div class="compare-honesty">המחיר והזמינות נקבעים באתר ספק הרכב. אין כאן מחיר בזמן אמת.</div>
     <div class="step-actions"><button type="button" class="btn brown trip-finish">סיימתי להשוות ✓</button></div>
@@ -2336,7 +2336,7 @@ function updateLinks(d){
  {
   const car=$("car"),title=car&&car.querySelector("b"),meta=car&&car.querySelector("small");
   if(title)title.textContent=travelMode==="israel"?"מסלול":"רכב";
-  if(meta)meta.textContent=travelMode==="israel"?"Google Maps":"DiscoverCars";
+  if(meta)meta.textContent=travelMode==="israel"?"Google Maps":"DiscoverCars · בחירת פרטים באתר";
  }
  {
   const esim=$("esim"),resultEsim=$("resultEsim");

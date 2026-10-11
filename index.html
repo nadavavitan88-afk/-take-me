@@ -2223,7 +2223,7 @@ function googleFlightsTfs(origin,destination,depart,ret,adults,ages){
  for(let i=0;i<adults;i++)parts.push(...fieldInt(8,1));
  for(const age of ages)parts.push(...fieldInt(8,age<2?4:2));
  parts.push(...fieldInt(9,1),...fieldInt(19,1));
- return btoa(String.fromCharCode(...parts)).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/,"");
+ return btoa(String.fromCharCode(...parts)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 }
 function googleFlightLink(d){
  const chosen=d||resolveDestination($("dest").value)||{};
@@ -2232,7 +2232,7 @@ function googleFlightLink(d){
  const adults=Number($("adults").value);
  const ages=childAges().filter(age=>Number.isInteger(age));
  if(/^[A-Z]{3}$/.test(origin)&&/^[A-Z]{3}$/.test(airport)&&
-    /^\\d{4}-\\d{2}-\\d{2}$/.test(from)&&/^\\d{4}-\\d{2}-\\d{2}$/.test(to)&&
+    /^\d{4}-\d{2}-\d{2}$/.test(from)&&/^\d{4}-\d{2}-\d{2}$/.test(to)&&
     adults>=1&&adults+ages.length<=9){
   const tfs=googleFlightsTfs(origin,airport,from,to,adults,ages);
   const params=new URLSearchParams({tfs,hl:"he",gl:"IL",curr:"ILS",tfu:"EgQIABABIgA"});

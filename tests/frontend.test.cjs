@@ -304,8 +304,9 @@ test('Google Flights and Agoda links preserve trip context',()=>{
  assert.match(html,/curr:"ILS"/);
  assert.match(html,/function agodaHotelsLink\(place\)/);
  assert.match(html,/textToSearch:place/);
- assert.match(html,/checkIn:\$\("from"\)\.value/);
- assert.match(html,/checkOut:\$\("to"\)\.value/);
+ assert.match(html,/const from=\$\("from"\)\.value,to=\$\("to"\)\.value/);
+ assert.match(html,/checkIn:from/);
+ assert.match(html,/checkOut:to/);
 });
 
 
@@ -398,4 +399,16 @@ test('hotel offers UI displays only verified supplier quotes and transparent emp
  assert.match(html,/item\.currency==="ILS"/);
  assert.match(html,/כרגע אין הצעות מחיר מאומתות/);
  assert.match(html,/hotel-offer/);
+});
+
+
+test('Agoda opens a search URL with the requested destination, stay dates and occupancy',()=>{
+ assert.match(html,/function agodaHotelsLink\(place\)/);
+ assert.match(html,/return "https:\/\/www\.agoda\.com\/search\?"/);
+ assert.match(html,/cid:"1974491"/);
+ assert.match(html,/textToSearch:place/);
+ assert.match(html,/checkIn:from/);
+ assert.match(html,/checkOut:to/);
+ assert.match(html,/los:String\(nights\)/);
+ assert.doesNotMatch(html,/partners\/partnersearch\.aspx\?"+params\.toString\(\)/);
 });

@@ -304,8 +304,9 @@ test('Google Flights and Agoda links preserve trip context',()=>{
  assert.match(html,/curr:"ILS"/);
  assert.match(html,/function agodaHotelsLink\(place\)/);
  assert.match(html,/textToSearch:place/);
- assert.match(html,/checkIn:\$\("from"\)\.value/);
- assert.match(html,/checkOut:\$\("to"\)\.value/);
+ assert.match(html,/const from=\$\("from"\)\.value,to=\$\("to"\)\.value/);
+ assert.match(html,/checkIn:from/);
+ assert.match(html,/checkOut:to/);
 });
 
 

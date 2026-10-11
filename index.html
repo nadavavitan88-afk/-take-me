@@ -1447,6 +1447,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .trip-steps{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;overflow:visible!important}
 .trip-steps.domestic{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 .trip-steps .compare-launch-btn{min-width:0!important;white-space:normal!important;line-height:1.35}
+.hotel-offer{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;text-decoration:none;color:inherit;border:1px solid rgba(214,173,99,.25);border-radius:12px;padding:10px;margin-bottom:7px}
+.hotel-offer .top-deal-price{white-space:nowrap}
+@media(max-width:650px){.hotel-offer{gap:6px}.hotel-offer .top-deal-main strong{font-size:13px}.hotel-offer .top-deal-price{font-size:14px}}
 .destination-info{display:block}
 .destination-info-toggle{cursor:pointer;list-style:none;font-size:17px;font-weight:900;color:#30231a;text-align:center;padding:6px 0;min-height:36px}
 .destination-info-toggle::-webkit-details-marker{display:none}
@@ -1565,6 +1568,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
   <div class="compare-drawer" id="compareHotelsDrawer">
     <div class="compare-drawer-head"><strong>🏨 עכשיו בוחרים מלון</strong><small>השווה כמה אפשרויות לאותם תאריכים</small></div>
+    <div class="top-deals" id="hotelTopDeals" aria-live="polite"><div class="top-deals-empty">בודקים אם יש מחירי מלונות זמינים להשוואה…</div></div>
     <div class="compare-service" id="hotelProviders">
       <div class="compare-service-head"><span>מלונות ביעד שבחרת</span><small id="hotelStep">אותם תאריכים ונוסעים</small></div>
       <div class="compare-list">
@@ -1578,7 +1582,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <summary><span>Trip.com</span><small>אפשרות נוספת להשוואה</small></summary>
       <iframe src="https://www.trip.com/partners/ad/S19865323?Allianceid=10594354&SID=331399748&trip_sub1=take_me_site" scrolling="no" loading="lazy" title="Trip.com — חיפוש טיסות ומלונות"></iframe>
     </details>
-    <div class="compare-honesty">המחיר הסופי מוצג אצל הספק. TAKE ME לא מציג מחיר מלון כאילו הוא חי עד שנחבר מקור מחירים מאושר.</div>
+    <div class="compare-honesty">מחירי מלונות יוצגו כאן רק אם התקבלו ממקור מחירים מורשה שתואם לתאריכים ולנוסעים. המחיר הסופי והזמינות נקבעים אצל הספק.</div>
     <div class="step-actions"><button type="button" class="btn brown next-trip-step" data-next-step="car">המשך לרכב ←</button><small>אפשר להשוות בין הספקים; ההזמנה מתבצעת אצל הספק.</small></div>
   </div>
 
@@ -2343,6 +2347,7 @@ function updateLinks(d){
  if(travelMode==="israel"&&$("comparePackageDrawer"))$("comparePackageDrawer").classList.remove("open");
  if(travelMode==="israel"&&$("compareEsimDrawer"))$("compareEsimDrawer").classList.remove("open");
  $("hotelStep").textContent=$("from").value+" → "+$("to").value+" · "+passengerText();
+ loadHotelOffers(label);
  $("flightStep").textContent=$("from").value+" → "+$("to").value;
  $("packageStep").textContent="הכול יחד";
  $("resExpediaFlights").href=expediaFlightLink(d);
@@ -2367,6 +2372,44 @@ function updateLinks(d){
  const guideMap={דובאי:"/dubai.html",קפריסין:"/cyprus.html",תאילנד:"/thailand.html",יוון:"/greece.html",איטליה:"/italy.html",ספרד:"/spain.html",פראג:"/prague.html",בודפשט:"/budapest.html",ברצלונה:"/barcelona.html",מרבלה:"/marbella.html"};
  $("infoGuide").href=guideMap[d.city]||guideMap[d.country]||"/destinations.html";
  if($("referenceFare"))$("referenceFare").hidden=true;
+}
+
+
+let hotelOfferRequest=0;
+async function loadHotelOffers(destination){
+ const request=++hotelOfferRequest,box=$("hotelTopDeals");
+ if(!box)return;
+ box.innerHTML='<div class="top-deals-empty">בודקים אם יש מחירי מלונות זמינים להשוואה…</div>';
+ try{
+  const response=await fetch("/api/hotels",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({
+    destination,
+    checkin:$("from").value,
+    checkout:$("to").value,
+    adults:Number($("adults").value),
+    children:childAges()
+   })
+  });
+  const data=await response.json().catch(()=>null);
+  if(request!==hotelOfferRequest)return;
+  const offers=data&&Array.isArray(data.offers)?data.offers.filter(item=>{
+   try{
+    const u=new URL(item.bookingUrl);
+    return u.protocol==="https:"&&item.currency==="ILS"&&Number.isFinite(Number(item.totalPrice))&&Number(item.totalPrice)>0;
+   }catch{return false;}
+  }).sort((a,b)=>Number(a.totalPrice)-Number(b.totalPrice)).slice(0,5):[];
+  if(!offers.length){
+   box.innerHTML='<div class="top-deals-empty">כרגע אין הצעות מחיר מאומתות להצגה באתר. אפשר לבדוק את אותם תאריכים אצל הספקים שלמטה.</div>';
+   return;
+  }
+  box.innerHTML='<div class="compare-service-head"><span>הצעות מלונות לפי מחיר</span><small>מחיר כולל לשהייה · ₪ · יש לאמת באתר הספק</small></div>'+
+   offers.map((item,i)=>'<a class="top-deal hotel-offer" href="'+esc(item.bookingUrl)+'" target="_blank" rel="sponsored noopener"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+esc(item.hotel)+'</strong><small>'+esc(item.provider)+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.totalPrice)).toLocaleString("he-IL")+' <small>לכל השהייה</small></span></a>').join("");
+  trackEvent("hotel_quotes_shown",{destination,count:offers.length});
+ }catch{
+  if(request===hotelOfferRequest)box.innerHTML='<div class="top-deals-empty">השוואת מחירים אוטומטית אינה זמינה כרגע. אפשר לבדוק אצל הספקים שלמטה.</div>';
+ }
 }
 
 function renderSkyscannerWidget(d){

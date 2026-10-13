@@ -1366,7 +1366,13 @@ header{align-items:center}
 .trip-steps .compare-launch-btn b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid currentColor;font-size:12px;margin-left:4px}
 .trip-steps .compare-launch-btn.active b{background:currentColor}
 .trip-steps .compare-launch-btn.active b{color:var(--bg,#111)}
-#comparePackageDrawer{display:none!important}
+.fare-history[hidden]{display:none!important}
+.fare-history{border:1px solid rgba(214,173,99,.2);border-radius:14px;margin:8px 0 14px;padding:10px;background:rgba(255,255,255,.025)}
+.fare-history summary{cursor:pointer;color:#e7cf9f;font-size:12px;font-weight:900;line-height:1.5}
+.fare-history-note{color:#b6a287;font-size:11px;line-height:1.6;margin:8px 0 2px}
+#comparePackageDrawer .compare-list{margin-top:8px}
+#packageLeadCta{display:block;width:min(100%,420px);margin:0 auto;min-height:52px}
+
 
 .destination-info{margin:22px 0 6px;padding:20px;border:1px solid rgba(216,195,167,.8);border-radius:22px;background:rgba(255,250,243,.55)}
 .destination-info-head{text-align:center;margin-bottom:14px}.destination-info-head small{font-weight:900}.destination-info-head h3{font-size:25px;margin:4px 0}
@@ -1537,6 +1543,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
   <div class="compare-launcher trip-steps" id="compareLauncher" aria-label="שלבי בניית החופשה">
     <button type="button" class="compare-launch-btn" data-compare="flights"><b>1</b> ✈️ טיסות</button>
+    <button type="button" class="compare-launch-btn" data-compare="package"><b>✦</b> ✈️🏨 חבילות נופש</button>
     <button type="button" class="compare-launch-btn" data-compare="hotels"><b>2</b> 🏨 מלונות</button>
     <button type="button" class="compare-launch-btn" data-compare="car"><b>3</b> 🚗 רכב</button>
     <button type="button" class="compare-launch-btn" data-compare="attractions"><b>✦</b> 🎟️ אטרקציות</button>
@@ -1550,7 +1557,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
   <div class="compare-drawer" id="compareFlightsDrawer">
     <div class="compare-drawer-head"><strong>✈️ אפשרויות טיסה</strong><small>פתח כמה מקורות והשווה לפני שממשיכים</small></div>
-    <div class="top-deals" id="flightTopDeals" hidden></div>
+    <details class="fare-history" id="fareHistory" hidden>
+      <summary>מחירי ייחוס שנמצאו לאחרונה — לא הצעות להזמנה</summary>
+      <div class="top-deals" id="flightTopDeals" hidden></div>
+      <p class="fare-history-note">המחירים נשמרו במאגר בתקופה האחרונה ואינם מחירים בזמן אמת. הם לא מבטיחים זמינות או מחיר להזמנה. למחיר עדכני פתחו את אחד מאתרי הספקים למטה.</p>
+    </details>
     <div class="reference-fare" id="referenceFare" hidden></div>
     <div class="compare-service" id="flightProviders">
       <div class="compare-service-head"><span>אפשרויות נוספות להשוואה</span><small id="flightStep">אותו יעד ואותם תאריכים</small></div>
@@ -1616,11 +1627,23 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
 
   <div class="compare-drawer" id="comparePackageDrawer">
-    <div class="compare-drawer-head"><strong>חבילות טיסה + מלון</strong><small>הכול יחד</small></div>
-    <div class="package-compare" id="packageProviders">
-      <a class="provider-link featured wide" id="packageLive" href="https://expedia.com/affiliate?siteid=1&amp;landingPage=https%3A%2F%2Fwww.expedia.com%2FVacation-Packages&amp;camref=1110lQPq2&amp;creativeref=1100l68075&amp;adref=PZTkjr__Gt" target="_blank" rel="sponsored noopener">בדוק חבילה</a>
-      <small id="packageStep" hidden>הכול יחד</small>
+    <div class="compare-drawer-head"><strong>✈️🏨 חבילות נופש — טיסה + מלון</strong><small>חפשו את שני השירותים יחד, או בקשו הצעה אישית</small></div>
+    <div class="compare-service" id="packageProviders">
+      <div class="compare-list">
+        <a class="compare-row compare-row-primary" id="packageLive" target="_blank" rel="sponsored noopener noreferrer">
+          <span class="compare-brand"><strong>Expedia — חבילת טיסה ומלון</strong><small>חיפוש חבילה לפי יעד ותאריכים · יש לוודא את פרטי החיפוש באתר</small></span><span class="compare-price">בדוק חבילה</span><span class="compare-open">לאתר ↗</span>
+        </a>
+        <a class="compare-row" id="packageFlightLink" target="_blank" rel="sponsored noopener noreferrer">
+          <span class="compare-brand"><strong>השוואה בנפרד: טיסות</strong><small>פתח חיפוש טיסות ב־Expedia</small></span><span class="compare-price">בדוק טיסה</span><span class="compare-open">לאתר ↗</span>
+        </a>
+        <a class="compare-row" id="packageHotelLink" target="_blank" rel="sponsored noopener noreferrer">
+          <span class="compare-brand"><strong>השוואה בנפרד: מלונות</strong><small>פתח חיפוש מלונות ב־Expedia</small></span><span class="compare-price">בדוק מלון</span><span class="compare-open">לאתר ↗</span>
+        </a>
+      </div>
     </div>
+    <div class="compare-honesty">החבילות מוצגות באתר Expedia ולא ב־TAKE ME. אין לנו כרגע מחיר חבילה מאומת בזמן אמת; המחיר הסופי והזמינות נקבעים אצל הספק.</div>
+    <div class="step-actions"><button type="button" class="btn brown" id="packageLeadCta">קבל הצעה אישית לחופשה ←</button><small>אפשר להשאיר פרטים ולבקש עזרה בבניית החופשה.</small></div>
+    <small id="packageStep" hidden>הכול יחד</small>
   </div>
   <details class="destination-info" id="destinationInfo">
     <summary class="destination-info-toggle">📍 מידע ומדריכים לכל יעד <span aria-hidden="true">⌄</span></summary>
@@ -1680,7 +1703,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 <section class="lead" id="lead"><div class="lead-kicker">עזרה אישית · בלי התחייבות</div><h3>רוצה עזרה בבחירה?</h3><p>שלח לנו כמה פרטים ונעזור לך למקד את החופשה שמתאימה לך.</p><div id="leadSummary" role="region" aria-label="סיכום החופשה להעברה לנציג" tabindex="-1">פרטי החופשה שלך יופיעו כאן לאחר חיפוש</div><div class="lead-actions"><a class="btn brown lead-primary" href="#leadForm" id="openLeadForm">קבל הצעה אישית</a><button class="btn" type="button" id="shareTrip">שתף את החופשה</button><button class="btn" type="button" id="copyLead">העתק פרטים</button></div><p id="leadStatus" role="status">בלחיצה על ״קבל הצעה אישית״ פרטי החופשה יצורפו אוטומטית.</p><div id="leadForm" class="lead-form" hidden><h4>השאירו פרטים ונחזור אליכם</h4><p>פרטי החופשה יצורפו אוטומטית לפנייה.</p><form id="nativeLeadForm"><label for="leadName">שם מלא</label><input id="leadName" name="name" autocomplete="name" required maxlength="100"><label for="leadPhone">טלפון נייד בישראל</label><input id="leadPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" pattern="05[0-9]{8}" title="יש להזין מספר נייד ישראלי בן 10 ספרות, המתחיל ב־05. אפשר להקליד גם עם מקף או רווח" required><label for="leadEmail">אימייל (לא חובה)</label><input id="leadEmail" name="email" type="email" autocomplete="email"><div class="hp-field" aria-hidden="true"><label for="leadFax">Fax</label><input id="leadFax" name="fax_number" type="text" autocomplete="off" tabindex="-1"></div><label class="lead-consent"><input id="leadConsent" type="checkbox" required>אני מסכים/ה שיחזרו אליי בקשר לבקשת החופשה ומאשר/ת את <a href="/privacy.html" target="_blank" rel="noopener">מדיניות הפרטיות</a>.</label><button class="btn brown" id="leadSubmit" type="submit">שלח לי הצעה</button></form><p id="nativeLeadStatus" role="status" aria-live="polite"></p><button type="button" class="btn brown" id="newLeadRequest" hidden>שליחת בקשה נוספת</button><p id="leadFallback" hidden>נתקלתם בתקלה? <a href="https://formspry.com/f/cmuis5rb60001lk5lrdh5pr9b" target="_blank" rel="noopener noreferrer">פתחו טופס חלופי</a> (יש להעתיק אליו ידנית את סיכום החופשה).</p></div></section>
 <section class="seo-guides" aria-labelledby="seoGuidesTitle"><div class="seo-guides-head"><span>מדריכי יעד</span><h2 id="seoGuidesTitle">מידע ומדריכים לכל יעד</h2><p>מדריכים קצרים שיעזרו לבחור אזור לפני שמתחילים לחפש טיסות ומלונות.</p></div><div class="seo-guide-links"><a href="/cyprus.html">קפריסין</a><a href="/thailand.html">תאילנד</a><a href="/dubai.html">דובאי</a><a href="/greece.html">יוון</a><a href="/italy.html">איטליה</a><a href="/spain.html">ספרד</a><a href="/prague.html">פראג</a><a href="/budapest.html">בודפשט</a><a href="/barcelona.html">ברצלונה</a><a href="/marbella.html">מרבלה</a></div><a class="btn" href="/destinations.html" style="margin-top:12px">כל מדריכי היעדים</a></section>
-<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <a href="/accessibility.html">הצהרת נגישות</a> · <span class="version">גרסה: 2026-10-13b</span></div>
+<div class="footer">TAKE ME מרכז חיפוש וקישורי הזמנה לשירותי צד שלישי. מחירים וזמינות מוצגים אצל הספק. · <a href="/privacy.html">מדיניות פרטיות</a> · <a href="/terms.html">תנאי שימוש וגילוי נאות</a> · <a href="/accessibility.html">הצהרת נגישות</a> · <span class="version">גרסה: 2026-10-13c</span></div>
 </div>
 
 <script>
@@ -2283,7 +2306,7 @@ function openCompareDrawer(type){
  const map={flights:"compareFlightsDrawer",hotels:"compareHotelsDrawer",car:"compareCarDrawer",attractions:"compareAttractionsDrawer",esim:"compareEsimDrawer",package:"comparePackageDrawer"};
  const stepMeta=travelMode==="israel"
   ? {hotels:"שלב 1 מתוך 2 · בוחרים מלון",car:"שלב 2 מתוך 2 · בודקים רכב",attractions:"אטרקציות ביעד · שירות משלים"}
-  : {flights:"שלב 1 מתוך 3 · בוחרים טיסה",hotels:"שלב 2 מתוך 3 · בוחרים מלון",car:"שלב 3 מתוך 3 · בודקים רכב",attractions:"אטרקציות ביעד · שירות משלים"};
+  : {flights:"שלב 1 מתוך 3 · בוחרים טיסה",package:"חבילות נופש · טיסה ומלון יחד",hotels:"שלב 2 מתוך 3 · בוחרים מלון",car:"שלב 3 מתוך 3 · בודקים רכב",attractions:"אטרקציות ביעד · שירות משלים"};
  const progress=document.querySelector(".trip-progress");
  if(progress&&stepMeta[type])progress.textContent=stepMeta[type];
  const order=travelMode==="israel"?["hotels","car"]:["flights","hotels","car"];
@@ -2350,7 +2373,8 @@ function updateLinks(d){
  $("map").href="https://www.google.com/maps/search/?api=1&query="+q;
  $("packageLive").href=travelMode==="israel"?bookingHotelsLink(label):expediaPackageLink(d);
  $("packageLive").rel=travelMode==="israel"?"noopener":"sponsored noopener";
- $("packageLive").textContent=travelMode==="israel"?"מלונות ואירוח בישראל":"טיסה + מלון ב־Expedia";
+ $("packageFlightLink").href=expediaFlightLink(d);
+ $("packageHotelLink").href=expediaHotelLink(label);
  $("flightProviders").hidden=travelMode==="israel";
  $("packageProviders").hidden=travelMode==="israel";
  const resultCar=$("resultCar");
@@ -2471,6 +2495,8 @@ function renderSkyscannerWidget(d){
 async function loadReferenceFare(d){
  const box=$("referenceFare");
  const topDeals=$("flightTopDeals");
+ const history=$("fareHistory");
+ if(history)history.hidden=true;
  if(travelMode==="israel"){
   if(box)box.hidden=true;
   if(topDeals)topDeals.hidden=true;
@@ -2506,6 +2532,7 @@ async function loadReferenceFare(d){
 
   if(topDeals&&fares.length){
    topDeals.hidden=false;
+   if(history)history.hidden=false;
    topDeals.innerHTML=fares.map((item,i)=>{
     const airline=item.airline?esc(item.airline):"טיסה";
     const outboundStops=Number(item.transfers||0);
@@ -2518,12 +2545,7 @@ async function loadReferenceFare(d){
    topDeals.hidden=true;
   }
 
-  const fare=fares[0]||null;
-  if(!box||!response.ok||!data||!data.connected||!fare){if(box)box.hidden=true;return;}
-  const found=fare.foundAt?new Date(fare.foundAt):null;
-  const foundText=found&&!Number.isNaN(found.getTime())?" · נמצא "+found.toLocaleDateString("he-IL"):"";
-  box.innerHTML='<strong>החל מ־₪'+Math.round(Number(fare.price)).toLocaleString("he-IL")+' לאדם</strong>'+esc(foundText)+' · מחיר ייחוס למסלול ולתאריכים שבחרת, שנמצא במאגר ב־48 השעות האחרונות. המחיר והזמינות הסופיים נקבעים אצל הספק.';
-  box.hidden=false;
+  if(box)box.hidden=true;
  }catch{
   if(box)box.hidden=true;
   if(topDeals)topDeals.hidden=true;
@@ -2837,6 +2859,7 @@ function openLeadForm(source){
 $("openLeadForm").addEventListener("click",e=>{e.preventDefault();openLeadForm("lead_section");});
 $("resultLeadCta").addEventListener("click",()=>openLeadForm("trip_result"));
 $("aiLeadCta").addEventListener("click",()=>openLeadForm("ai_result"));
+$("packageLeadCta").addEventListener("click",()=>openLeadForm("package_result"));
 $("newLeadRequest").addEventListener("click",()=>{
  $("nativeLeadForm").hidden=false;$("newLeadRequest").hidden=true;$("leadFallback").hidden=true;
  const status=$("nativeLeadStatus");status.textContent="";delete status.dataset.state;
@@ -2846,6 +2869,8 @@ function outboundPartnerMeta(id){
  const base={
   resExpediaFlights:{provider:"expedia",service:"flights",monetized:true,location:"trip_result"},
   resExpediaHotels:{provider:"expedia",service:"hotels",monetized:true,location:"trip_result"},
+  packageFlightLink:{provider:"expedia",service:"flights",monetized:true,location:"package_result"},
+  packageHotelLink:{provider:"expedia",service:"hotels",monetized:true,location:"package_result"},
   resBookingHotels:{provider:"booking",service:"hotels",monetized:false,location:"trip_result"},
   resAgodaHotels:{provider:"agoda",service:"hotels",monetized:true,location:"trip_result"},
   resGoogleHotels:{provider:"google_hotels",service:"hotels",monetized:false,location:"trip_result"},
@@ -2866,7 +2891,7 @@ function outboundPartnerMeta(id){
  if(id==="packageLive")return {provider:travelMode==="israel"?"booking":"expedia",service:travelMode==="israel"?"hotels":"package",monetized:travelMode!=="israel",location:"trip_result"};
  return base[id]||null;
 }
-const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","resultCar","resultAttractions","resultAttractionsMaps","resultEsim","infoThings","gyg","car","esim","food","kosher","weather","map"];
+const outboundTrackedIds=["resExpediaFlights","resExpediaHotels","resBookingHotels","resAgodaHotels","resGoogleHotels","resGoogleFlights","packageLive","packageFlightLink","packageHotelLink","resultCar","resultAttractions","resultAttractionsMaps","resultEsim","infoThings","gyg","car","esim","food","kosher","weather","map"];
 for(const id of outboundTrackedIds){
  const el=$(id);
  if(!el)continue;

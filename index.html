@@ -2414,7 +2414,8 @@ let hotelOfferRequest=0;
 async function loadHotelOffers(destination){
  const request=++hotelOfferRequest,box=$("hotelTopDeals");
  if(!box)return;
- box.innerHTML='<div class="top-deals-empty">בודקים אם יש מחירי מלונות זמינים להשוואה…</div>';
+ box.hidden=true;
+ box.innerHTML="";
  try{
   const response=await fetch("/api/hotels",{
    method:"POST",
@@ -2435,15 +2436,13 @@ async function loadHotelOffers(destination){
     return u.protocol==="https:"&&item.currency==="ILS"&&Number.isFinite(Number(item.totalPrice))&&Number(item.totalPrice)>0;
    }catch{return false;}
   }).sort((a,b)=>Number(a.totalPrice)-Number(b.totalPrice)).slice(0,5):[];
-  if(!offers.length){
-   box.innerHTML='<div class="top-deals-empty">כרגע אין הצעות מחיר מאומתות להצגה באתר. אפשר לבדוק את אותם תאריכים אצל הספקים שלמטה.</div>';
-   return;
-  }
+  if(!offers.length){box.hidden=true;return;}
+  box.hidden=false;
   box.innerHTML='<div class="compare-service-head"><span>הצעות מלונות לפי מחיר</span><small>מחיר כולל לשהייה · ₪ · יש לאמת באתר הספק</small></div>'+
    offers.map((item,i)=>'<a class="top-deal hotel-offer" href="'+esc(item.bookingUrl)+'" target="_blank" rel="sponsored noopener"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+esc(item.hotel)+'</strong><small>'+esc(item.provider)+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.totalPrice)).toLocaleString("he-IL")+' <small>לכל השהייה</small></span></a>').join("");
   trackEvent("hotel_quotes_shown",{destination,count:offers.length});
  }catch{
-  if(request===hotelOfferRequest)box.innerHTML='<div class="top-deals-empty">השוואת מחירים אוטומטית אינה זמינה כרגע. אפשר לבדוק אצל הספקים שלמטה.</div>';
+  if(request===hotelOfferRequest)box.hidden=true;
  }
 }
 
@@ -2474,17 +2473,17 @@ async function loadReferenceFare(d){
  const topDeals=$("flightTopDeals");
  if(travelMode==="israel"){
   if(box)box.hidden=true;
-  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">בחופשה בישראל אין צורך בהשוואת טיסות.</div>';
+  if(topDeals)topDeals.hidden=true;
   return;
  }
  const destination=String((d&&d.iata)||"").split("/")[0].trim().toUpperCase();
  const origin=String(originCode()||"").trim().toUpperCase();
  if(!/^[A-Z]{3}$/.test(origin)||!/^[A-Z]{3}$/.test(destination)){
   if(box)box.hidden=true;
-  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">ליעד הזה ההשוואה האוטומטית לא זמינה כרגע. אפשר להשוות טיסות אצל הספקים למטה.</div>';
+  if(topDeals)topDeals.hidden=true;
   return;
  }
- if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">בודק אפשרויות למסלול ולתאריכים שבחרת…</div>';
+ if(topDeals)topDeals.hidden=true;
  if(box)box.hidden=true;
  try{
   const response=await fetch("/api/compare",{
@@ -2506,6 +2505,7 @@ async function loadReferenceFare(d){
    .slice(0,5):[];
 
   if(topDeals&&fares.length){
+   topDeals.hidden=false;
    topDeals.innerHTML=fares.map((item,i)=>{
     const airline=item.airline?esc(item.airline):"טיסה";
     const outboundStops=Number(item.transfers||0);
@@ -2515,8 +2515,7 @@ async function loadReferenceFare(d){
     return '<div class="top-deal"><span class="top-deal-rank">'+(i+1)+'</span><span class="top-deal-main"><strong>'+airline+'</strong><small>'+meta+'</small></span><span class="top-deal-price">₪'+Math.round(Number(item.price)).toLocaleString("he-IL")+' <small>לאדם</small></span></div>';
    }).join("");
   }else if(topDeals){
-   const connected=!!(data&&data.connected);
-   topDeals.innerHTML='<div class="top-deals-empty">'+(connected?'לא נמצאו כרגע מחירי ייחוס למסלול ולתאריכים האלה. אפשר לבדוק מיד ב־Expedia, Google Flights ו־Skyscanner למטה.':'בדוק והשווה את המחיר אצל כמה מקורות מובילים למטה.')+'</div>';
+   topDeals.hidden=true;
   }
 
   const fare=fares[0]||null;
@@ -2527,7 +2526,7 @@ async function loadReferenceFare(d){
   box.hidden=false;
  }catch{
   if(box)box.hidden=true;
-  if(topDeals)topDeals.innerHTML='<div class="top-deals-empty">אפשר להמשיך עכשיו להשוואת המחירים אצל הספקים למטה.</div>';
+  if(topDeals)topDeals.hidden=true;
  }
 }
 function leadTrackingText(){

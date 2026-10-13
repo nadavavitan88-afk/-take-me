@@ -3,7 +3,7 @@ module.exports = function handler(req,res){
  const host=String(req.headers.host||"").trim();
  if(!host)return res.status(400).send("Missing host");
  const base=proto+"://"+host;
- const updated="2026-10-06";
+ const updated="2026-10-13";
  const urls=[
   {path:"/",priority:"1.0",changefreq:"weekly"},
   {path:"/privacy.html",priority:"0.3"},
